@@ -1,4 +1,4 @@
-﻿import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+﻿import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
@@ -11,9 +11,10 @@ import { ProfilesApi } from '../infrastructure/profiles-api';
 })
 export class ProfilesStore {
   readonly #profilesApi = inject(ProfilesApi);
+  readonly #destroyRef = inject(DestroyRef);
 
-  readonly #profilesSignal = signal<CompanyProfile[]>([]);
-  readonly profiles = this.#profilesSignal.asReadonly();
+  readonly #profileSignal = signal<CompanyProfile | undefined>(undefined);
+  readonly profile = this.#profileSignal.asReadonly();
 
   readonly #loadingSignal = signal<boolean>(false);
   readonly loading = this.#loadingSignal.asReadonly();
@@ -21,12 +22,28 @@ export class ProfilesStore {
   readonly #errorSignal = signal<string | null>(null);
   readonly error = this.#errorSignal.asReadonly();
 
-  constructor() {
-    this.#loadProfiles();
-  }
+  loadProfileByUserId(userId: number): void {
+    this.#loadingSignal.set(true);
+    this.#errorSignal.set(null);
 
-  getProfileByUserId(userId: number): Signal<CompanyProfile | undefined> {
-    return computed(() => this.profiles().find((profile) => profile.userId === userId));
+    this.#profilesApi
+      .getProfileByUserId(userId)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (profile) => {
+          this.#profileSignal.set(profile);
+          this.#loadingSignal.set(false);
+          this.#errorSignal.set(null);
+        },
+
+        error: (err) => {
+          this.#profileSignal.set(undefined);
+
+          this.#errorSignal.set(this.#formatError(err, 'Failed to load profile'));
+
+          this.#loadingSignal.set(false);
+        },
+      });
   }
 
   updateProfile(updatedProfile: CompanyProfile): void {
@@ -35,14 +52,12 @@ export class ProfilesStore {
 
     this.#profilesApi
       .updateProfile(updatedProfile)
-      .pipe(retry(2))
+      .pipe(retry(2), takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (profile) => {
-          this.#profilesSignal.update((profiles) =>
-            profiles.map((current) => (current.id === profile.id ? profile : current)),
-          );
-
+          this.#profileSignal.set(profile);
           this.#loadingSignal.set(false);
+          this.#errorSignal.set(null);
         },
 
         error: (err) => {
@@ -53,26 +68,10 @@ export class ProfilesStore {
       });
   }
 
-  #loadProfiles(): void {
-    this.#loadingSignal.set(true);
+  clearProfile(): void {
+    this.#profileSignal.set(undefined);
     this.#errorSignal.set(null);
-
-    this.#profilesApi
-      .getProfiles()
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: (profiles) => {
-          this.#profilesSignal.set(profiles);
-          this.#loadingSignal.set(false);
-          this.#errorSignal.set(null);
-        },
-
-        error: (err) => {
-          this.#errorSignal.set(this.#formatError(err, 'Failed to load profiles'));
-
-          this.#loadingSignal.set(false);
-        },
-      });
+    this.#loadingSignal.set(false);
   }
 
   #formatError(error: unknown, fallback: string): string {

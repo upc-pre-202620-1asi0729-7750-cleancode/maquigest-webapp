@@ -20,6 +20,10 @@ export class ProfilesApi extends BaseApi {
     return this.#profilesEndpoint.getById(id);
   }
 
+  getProfileByUserId(userId: number): Observable<CompanyProfile | undefined> {
+    return this.#profilesEndpoint.getByUserId(userId);
+  }
+
   updateProfile(profile: CompanyProfile): Observable<CompanyProfile> {
     return this.#profilesEndpoint.update(profile, profile.id);
   }
