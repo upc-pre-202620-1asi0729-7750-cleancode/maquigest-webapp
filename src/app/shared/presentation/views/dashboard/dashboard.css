@@ -35,9 +35,21 @@
   color: #64748b;
 }
 
+.dashboard-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+
 @media (max-width: 600px) {
   .dashboard-page {
     padding: 16px;
+  }
+
+  .dashboard-heading {
+    flex-direction: column;
   }
 
   .dashboard-header {

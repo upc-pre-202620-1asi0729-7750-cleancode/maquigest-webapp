@@ -1,18 +1,29 @@
 <main class="dashboard-page">
   <section class="dashboard-header">
-    <div>
-      <span class="company-type">
-        {{ companyType | translate }}
-      </span>
 
-      <h1>
-        {{ dashboardTitle | translate }}
-      </h1>
+    <div class="dashboard-heading">
+      <div>
+        <span class="company-type">
+          {{ companyType | translate }}
+        </span>
 
-      <p>
-        {{ 'dashboard.welcome' | translate }}
-        {{ store.currentEmail() }}
-      </p>
+        <h1>
+          {{ dashboardTitle | translate }}
+        </h1>
+
+        <p>
+          {{ 'dashboard.welcome' | translate }}
+          {{ store.currentEmail() }}
+        </p>
+      </div>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="performSignOut()">
+        {{ 'dashboard.sign-out' | translate }}
+      </button>
     </div>
+
   </section>
 </main>
