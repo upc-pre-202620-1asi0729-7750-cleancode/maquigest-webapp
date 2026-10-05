@@ -140,7 +140,16 @@
       "information": "Información del equipo",
       "rental-conditions": "Condiciones de alquiler",
       "condition": "Estado y disponibilidad",
-      "not-found": "No se encontró la maquinaria solicitada."
+      "not-found": "No se encontró la maquinaria solicitada.",
+      "period-availability": "Disponibilidad para un periodo",
+      "period-description": "Selecciona las fechas en las que necesitas la maquinaria para comprobar su disponibilidad.",
+      "start-date": "Fecha de inicio",
+      "end-date": "Fecha de fin",
+      "date-required": "La fecha es obligatoria.",
+      "check-availability": "Consultar disponibilidad",
+      "available-for-period": "La maquinaria está disponible durante el periodo seleccionado.",
+      "not-available-for-period": "La maquinaria no está disponible durante el periodo seleccionado.",
+      "invalid-period": "La fecha de inicio debe ser anterior o igual a la fecha de fin."
     }
   }
 }

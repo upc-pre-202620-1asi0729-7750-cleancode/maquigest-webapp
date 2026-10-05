@@ -72,18 +72,27 @@
           <div class="detail-grid">
 
             <div class="detail-item">
+
               <span class="label">
-                {{ 'equipment.location' | translate }}
+                {{
+                  'equipment.location'
+                    | translate
+                }}
               </span>
 
               <span>
                 {{ equipment.location }}
               </span>
+
             </div>
 
             <div class="detail-item">
+
               <span class="label">
-                {{ 'equipment.category' | translate }}
+                {{
+                  'equipment.category'
+                    | translate
+                }}
               </span>
 
               <span>
@@ -92,6 +101,7 @@
                   ?? '-'
                 }}
               </span>
+
             </div>
 
           </div>
@@ -110,6 +120,7 @@
           <div class="detail-grid">
 
             <div class="detail-item">
+
               <span class="label">
                 {{
                   'equipment.daily-rate'
@@ -124,9 +135,11 @@
                     | number:'1.2-2'
                 }}
               </span>
+
             </div>
 
             <div class="detail-item">
+
               <span class="label">
                 {{
                   'equipment.weekly-rate'
@@ -141,6 +154,7 @@
                     | number:'1.2-2'
                 }}
               </span>
+
             </div>
 
           </div>
@@ -159,6 +173,7 @@
           <div class="detail-grid">
 
             <div class="detail-item">
+
               <span class="label">
                 {{
                   'equipment.status'
@@ -174,9 +189,11 @@
                   ) | translate
                 }}
               </span>
+
             </div>
 
             <div class="detail-item">
+
               <span class="label">
                 {{
                   'equipment.availability'
@@ -187,9 +204,148 @@
               <app-availability-badge
                 [equipment]="equipment">
               </app-availability-badge>
+
             </div>
 
           </div>
+
+        </section>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.period-availability'
+                | translate
+            }}
+          </h2>
+
+          <p>
+            {{
+              'equipment.detail.period-description'
+                | translate
+            }}
+          </p>
+
+          <form
+            class="availability-form"
+            [formGroup]="availabilityForm"
+            (ngSubmit)="checkAvailability()">
+
+            <mat-form-field appearance="outline">
+
+              <mat-label>
+                {{
+                  'equipment.detail.start-date'
+                    | translate
+                }}
+              </mat-label>
+
+              <input
+                matInput
+                type="date"
+                formControlName="startDate"
+                (input)="resetAvailabilityResult()">
+
+              @if (
+                availabilityForm.controls.startDate.touched &&
+                availabilityForm.controls.startDate.hasError('required')
+                ) {
+
+                <mat-error>
+                  {{
+                    'equipment.detail.date-required'
+                      | translate
+                  }}
+                </mat-error>
+
+              }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+              <mat-label>
+                {{
+                  'equipment.detail.end-date'
+                    | translate
+                }}
+              </mat-label>
+
+              <input
+                matInput
+                type="date"
+                formControlName="endDate"
+                (input)="resetAvailabilityResult()">
+
+              @if (
+                availabilityForm.controls.endDate.touched &&
+                availabilityForm.controls.endDate.hasError('required')
+                ) {
+
+                <mat-error>
+                  {{
+                    'equipment.detail.date-required'
+                      | translate
+                  }}
+                </mat-error>
+
+              }
+
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit">
+
+              {{
+                'equipment.detail.check-availability'
+                  | translate
+              }}
+
+            </button>
+
+          </form>
+
+          @if (invalidPeriod()) {
+
+            <div class="availability-result unavailable">
+
+              {{
+                'equipment.detail.invalid-period'
+                  | translate
+              }}
+
+            </div>
+
+          }
+
+          @if (availabilityResult() === true) {
+
+            <div class="availability-result available">
+
+              {{
+                'equipment.detail.available-for-period'
+                  | translate
+              }}
+
+            </div>
+
+          }
+
+          @if (availabilityResult() === false) {
+
+            <div class="availability-result unavailable">
+
+              {{
+                'equipment.detail.not-available-for-period'
+                  | translate
+              }}
+
+            </div>
+
+          }
 
         </section>
 
