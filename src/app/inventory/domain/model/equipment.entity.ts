@@ -1,5 +1,9 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+
 import { RentalRate } from '../value-object/rental-rate.value-object';
+import { DateRange } from '../../../shared/domain/value-object/date-range.value-object';
+
+import { AvailabilityBlock } from './availability-block.entity';
 import { EquipmentCategory } from './equipment-category.entity';
 import { EquipmentStatus } from './equipment-status.enum';
 
@@ -14,6 +18,7 @@ export class Equipment implements BaseEntity {
   #location: string;
   #rentalRate: RentalRate;
   #status: EquipmentStatus;
+  #availabilityBlocks: AvailabilityBlock[];
 
   constructor(props: {
     id: number;
@@ -26,6 +31,7 @@ export class Equipment implements BaseEntity {
     location: string;
     rentalRate: RentalRate;
     status?: EquipmentStatus;
+    availabilityBlocks?: AvailabilityBlock[];
   }) {
     this.#id = props.id;
     this.#userId = props.userId;
@@ -37,6 +43,7 @@ export class Equipment implements BaseEntity {
     this.#location = props.location;
     this.#rentalRate = props.rentalRate;
     this.#status = props.status ?? EquipmentStatus.AVAILABLE;
+    this.#availabilityBlocks = props.availabilityBlocks ?? [];
   }
 
   get id(): number {
@@ -117,5 +124,25 @@ export class Equipment implements BaseEntity {
 
   set status(value: EquipmentStatus) {
     this.#status = value;
+  }
+
+  get availabilityBlocks(): AvailabilityBlock[] {
+    return this.#availabilityBlocks;
+  }
+
+  set availabilityBlocks(value: AvailabilityBlock[]) {
+    this.#availabilityBlocks = value;
+  }
+
+  isAvailableFor(period: DateRange): boolean {
+    if (this.#status !== EquipmentStatus.AVAILABLE) {
+      return false;
+    }
+
+    return !this.#availabilityBlocks.some((block) => block.overlaps(period));
+  }
+
+  isReservedOn(date: Date): boolean {
+    return this.#availabilityBlocks.some((block) => block.period.contains(date));
   }
 }

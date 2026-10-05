@@ -127,6 +127,7 @@ export class EquipmentForm extends BaseForm {
         weeklyRate: this.form.controls.weeklyRate.value ?? 0,
       }),
       status: currentEquipment?.status,
+      availabilityBlocks: currentEquipment?.availabilityBlocks ?? [],
     });
 
     if (this.isEdit) {
