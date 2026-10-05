@@ -43,20 +43,37 @@
 }
 
 
-@media (max-width: 600px) {
-  .dashboard-page {
-    padding: 16px;
-  }
+.dashboard-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
 
+.dashboard-heading > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 8px;
+  color: #1e3a5f;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.1;
+}
+
+.dashboard-heading button {
+  flex-shrink: 0;
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
   .dashboard-heading {
     flex-direction: column;
   }
 
-  .dashboard-header {
-    padding: 24px;
-  }
-
-  .dashboard-header h1 {
-    font-size: 28px;
+  .dashboard-heading button {
+    width: 100%;
   }
 }
