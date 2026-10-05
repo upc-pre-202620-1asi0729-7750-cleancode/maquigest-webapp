@@ -5,6 +5,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "equipment": "Equipment",
+    "search-equipment": "Search equipment",
     "profile": "Profile"
   },
   "footer": {
@@ -94,7 +95,7 @@
     "location": "Location",
     "daily-rate": "Daily rate",
     "weekly-rate": "Weekly rate",
-    "status": "Status",
+    "status": "Operational status",
     "availability": "Availability",
     "actions": "Actions",
     "edit": "Edit equipment",
@@ -102,7 +103,7 @@
     "update": "Update equipment",
     "empty": "No equipment has been registered yet.",
     "status-values": {
-      "available": "Available",
+      "available": "Operational",
       "rented": "On rent",
       "maintenance": "Maintenance"
     },
@@ -120,6 +121,18 @@
       "location-required": "Location is required.",
       "daily-rate-invalid": "Enter a daily rate greater than zero.",
       "weekly-rate-invalid": "Enter a weekly rate greater than zero."
+    },
+    "search": {
+      "title": "Search equipment",
+      "subtitle": "Find equipment that matches your project needs.",
+      "query": "Search",
+      "query-placeholder": "Name, code or characteristics",
+      "all-categories": "All categories",
+      "location-placeholder": "Search by location",
+      "all-availability": "All availability",
+      "apply": "Search",
+      "clear": "Clear filters",
+      "no-results": "No equipment matches the selected filters."
     }
   }
 }

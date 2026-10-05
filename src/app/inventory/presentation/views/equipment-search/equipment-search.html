@@ -1,0 +1,143 @@
+<div class="equipment-search-page">
+
+  <header class="page-header">
+
+    <h1>
+      {{ 'equipment.search.title' | translate }}
+    </h1>
+
+    <p>
+      {{ 'equipment.search.subtitle' | translate }}
+    </p>
+
+  </header>
+
+  <app-equipment-filter
+    [categories]="store.categories()"
+    (filtersChanged)="applyFilters($event)">
+  </app-equipment-filter>
+
+  @if (store.loading()) {
+
+    <div class="loading-state">
+      <mat-spinner diameter="40">
+      </mat-spinner>
+    </div>
+
+  }
+
+  @if (store.error()) {
+
+    <mat-error>
+      {{ store.error() }}
+    </mat-error>
+
+  }
+
+  @if (
+    !store.loading() &&
+    filteredEquipment().length === 0
+    ) {
+
+    <p class="empty-state">
+      {{
+        'equipment.search.no-results'
+          | translate
+      }}
+    </p>
+
+  } @else {
+
+    <section class="equipment-grid">
+
+      @for (
+        equipment of filteredEquipment();
+        track equipment.id
+        ) {
+
+        <mat-card
+          class="equipment-card"
+          appearance="outlined">
+
+          <mat-card-header>
+
+            <mat-card-title>
+              {{ equipment.name }}
+            </mat-card-title>
+
+            <mat-card-subtitle>
+              {{ equipment.code }}
+              ·
+              {{
+                equipment.category?.name
+                ?? '-'
+              }}
+            </mat-card-subtitle>
+
+          </mat-card-header>
+
+          <mat-card-content>
+
+            <p class="description">
+              {{ equipment.description }}
+            </p>
+
+            <div class="equipment-information">
+
+              <div>
+                <span class="information-label">
+                  {{
+                    'equipment.location'
+                      | translate
+                  }}
+                </span>
+
+                <span>
+                  {{ equipment.location }}
+                </span>
+              </div>
+
+              <div>
+                <span class="information-label">
+                  {{
+                    'equipment.status'
+                      | translate
+                  }}
+                </span>
+
+                <span>
+                  {{
+                    (
+                      'equipment.status-values.' +
+                      equipment.status.toLowerCase()
+                    ) | translate
+                  }}
+                </span>
+              </div>
+
+              <div>
+                <span class="information-label">
+                  {{
+                    'equipment.availability'
+                      | translate
+                  }}
+                </span>
+
+                <app-availability-badge
+                  [equipment]="equipment">
+                </app-availability-badge>
+              </div>
+
+            </div>
+
+          </mat-card-content>
+
+        </mat-card>
+
+      }
+
+    </section>
+
+  }
+
+</div>
