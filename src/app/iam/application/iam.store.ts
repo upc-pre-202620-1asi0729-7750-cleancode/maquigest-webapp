@@ -73,6 +73,22 @@ export class IamStore {
     });
   }
 
+  signOut(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('role');
+    localStorage.removeItem('status');
+
+    this.#isSignedInSignal.set(false);
+    this.#currentUserIdSignal.set(null);
+    this.#currentEmailSignal.set(null);
+    this.#currentRoleSignal.set(null);
+    this.#currentStatusSignal.set(null);
+
+    this.#router.navigate(['/iam/sign-in']).then();
+  }
+
   private restoreSession(): void {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
