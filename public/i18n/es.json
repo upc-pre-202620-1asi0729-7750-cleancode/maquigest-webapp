@@ -25,5 +25,23 @@
     "construction-company": "Empresa constructora",
     "welcome": "Bienvenido,",
     "sign-out": "Cerrar sesión"
+  },
+  "sign-up": {
+    "title": "Crea tu cuenta",
+    "subtitle": "Registra tu empresa en MaquiGest",
+    "first-name": "Nombres",
+    "last-name": "Apellidos",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "company-name": "Nombre de la empresa",
+    "organization-type": "Tipo de organización",
+    "rental-company": "Empresa de alquiler",
+    "construction-company": "Empresa constructora",
+    "create-account": "Crear cuenta",
+    "already-account": "¿Ya tienes una cuenta?",
+    "sign-in": "Iniciar sesión",
+    "required": "Este campo es obligatorio.",
+    "invalid-email": "Ingresa un correo electrónico válido.",
+    "password-length": "La contraseña debe tener al menos 8 caracteres."
   }
 }

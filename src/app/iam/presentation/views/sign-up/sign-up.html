@@ -1,0 +1,192 @@
+<main class="sign-up-page">
+  <section class="sign-up-card">
+
+    <div class="brand">
+      <img
+        src="maquigest-logo.png"
+        alt="MaquiGest"
+        class="logo">
+    </div>
+
+    <div class="heading">
+      <h1>{{ 'sign-up.title' | translate }}</h1>
+
+      <p>
+        {{ 'sign-up.subtitle' | translate }}
+      </p>
+    </div>
+
+    <form
+      [formGroup]="form"
+      class="sign-up-form"
+      (ngSubmit)="performSignUp()">
+
+      <div class="two-columns">
+
+        <mat-form-field appearance="outline">
+          <mat-label>
+            {{ 'sign-up.first-name' | translate }}
+          </mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="firstName">
+
+          @if (
+            form.controls.firstName.touched &&
+            form.controls.firstName.invalid
+            ) {
+            <mat-error>
+              {{ 'sign-up.required' | translate }}
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>
+            {{ 'sign-up.last-name' | translate }}
+          </mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="lastName">
+
+          @if (
+            form.controls.lastName.touched &&
+            form.controls.lastName.invalid
+            ) {
+            <mat-error>
+              {{ 'sign-up.required' | translate }}
+            </mat-error>
+          }
+        </mat-form-field>
+
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'sign-up.email' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          type="email"
+          formControlName="email">
+
+        @if (
+          form.controls.email.touched &&
+          form.controls.email.hasError('required')
+          ) {
+          <mat-error>
+            {{ 'sign-up.required' | translate }}
+          </mat-error>
+        }
+
+        @if (
+          form.controls.email.touched &&
+          form.controls.email.hasError('email')
+          ) {
+          <mat-error>
+            {{ 'sign-up.invalid-email' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'sign-up.password' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          type="password"
+          formControlName="password">
+
+        @if (
+          form.controls.password.touched &&
+          form.controls.password.hasError('required')
+          ) {
+          <mat-error>
+            {{ 'sign-up.required' | translate }}
+          </mat-error>
+        }
+
+        @if (
+          form.controls.password.touched &&
+          form.controls.password.hasError('minlength')
+          ) {
+          <mat-error>
+            {{ 'sign-up.password-length' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'sign-up.company-name' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          type="text"
+          formControlName="companyName">
+
+        @if (
+          form.controls.companyName.touched &&
+          form.controls.companyName.invalid
+          ) {
+          <mat-error>
+            {{ 'sign-up.required' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'sign-up.organization-type' | translate }}
+        </mat-label>
+
+        <mat-select formControlName="role">
+
+          <mat-option value="rental_company">
+            {{ 'sign-up.rental-company' | translate }}
+          </mat-option>
+
+          <mat-option value="construction_company">
+            {{ 'sign-up.construction-company' | translate }}
+          </mat-option>
+
+        </mat-select>
+
+        @if (
+          form.controls.role.touched &&
+          form.controls.role.invalid
+          ) {
+          <mat-error>
+            {{ 'sign-up.required' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        type="submit"
+        class="sign-up-button"
+        [disabled]="form.invalid">
+        {{ 'sign-up.create-account' | translate }}
+      </button>
+
+    </form>
+
+    <p class="sign-in-link">
+      {{ 'sign-up.already-account' | translate }}
+
+      <a routerLink="/iam/sign-in">
+        {{ 'sign-up.sign-in' | translate }}
+      </a>
+    </p>
+
+  </section>
+</main>

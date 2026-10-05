@@ -25,5 +25,23 @@
     "construction-company": "Construction Company",
     "welcome": "Welcome,",
     "sign-out": "Sign out"
+  },
+  "sign-up": {
+    "title": "Create your account",
+    "subtitle": "Register your company in MaquiGest",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "email": "Email",
+    "password": "Password",
+    "company-name": "Company name",
+    "organization-type": "Organization type",
+    "rental-company": "Rental Company",
+    "construction-company": "Construction Company",
+    "create-account": "Create account",
+    "already-account": "Already have an account?",
+    "sign-in": "Sign in",
+    "required": "This field is required.",
+    "invalid-email": "Enter a valid email address.",
+    "password-length": "Password must contain at least 8 characters."
   }
 }
