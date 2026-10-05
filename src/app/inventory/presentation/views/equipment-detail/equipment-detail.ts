@@ -1,34 +1,19 @@
 import { DecimalPipe } from '@angular/common';
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import {
-  ActivatedRoute,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
+
 import { MatCardModule } from '@angular/material/card';
 
-import {
-  MatError,
-  MatFormFieldModule,
-} from '@angular/material/form-field';
+import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,6 +32,7 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
 
 @Component({
   selector: 'app-equipment-detail',
+
   imports: [
     DecimalPipe,
     ReactiveFormsModule,
@@ -59,69 +45,55 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
     TranslatePipe,
     AvailabilityBadge,
   ],
+
   templateUrl: './equipment-detail.html',
+
   styleUrl: './equipment-detail.css',
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EquipmentDetail {
   readonly #route = inject(ActivatedRoute);
+
   readonly #router = inject(Router);
+
   readonly #iamStore = inject(IamStore);
 
   readonly store = inject(InventoryStore);
 
-  readonly rentalsStore =
-    inject(RentalsStore);
+  readonly rentalsStore = inject(RentalsStore);
 
-  readonly equipmentId = Number(
-    this.#route.snapshot.paramMap.get('id'),
-  );
+  readonly equipmentId = Number(this.#route.snapshot.paramMap.get('id'));
 
   readonly equipment = computed(() =>
-    this.store
-      .equipment()
-      .find(
-        (equipment) =>
-          equipment.id === this.equipmentId,
-      ),
+    this.store.equipment().find((equipment) => equipment.id === this.equipmentId),
   );
 
-  readonly availabilityForm =
-    new FormGroup({
-      startDate: new FormControl('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-        ],
-      }),
+  readonly availabilityForm = new FormGroup({
+    startDate: new FormControl('', {
+      nonNullable: true,
 
-      endDate: new FormControl('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-        ],
-      }),
-    });
+      validators: [Validators.required],
+    }),
 
-  readonly availabilityResult =
-    signal<boolean | null>(null);
+    endDate: new FormControl('', {
+      nonNullable: true,
 
-  readonly invalidPeriod =
-    signal<boolean>(false);
+      validators: [Validators.required],
+    }),
+  });
 
-  readonly selectedPeriod =
-    signal<DateRange | null>(null);
+  readonly availabilityResult = signal<boolean | null>(null);
+
+  readonly invalidPeriod = signal<boolean>(false);
+
+  readonly selectedPeriod = signal<DateRange | null>(null);
 
   constructor() {
     this.rentalsStore.clearCreationState();
 
-    if (
-      Number.isInteger(this.equipmentId) &&
-      this.equipmentId > 0
-    ) {
-      this.store.loadEquipmentById(
-        this.equipmentId,
-      );
+    if (Number.isInteger(this.equipmentId) && this.equipmentId > 0) {
+      this.store.loadEquipmentById(this.equipmentId);
     }
   }
 
@@ -130,6 +102,7 @@ export class EquipmentDetail {
 
     if (this.availabilityForm.invalid) {
       this.availabilityForm.markAllAsTouched();
+
       return;
     }
 
@@ -139,36 +112,22 @@ export class EquipmentDetail {
       return;
     }
 
-    const {
-      startDate,
-      endDate,
-    } = this.availabilityForm.getRawValue();
+    const { startDate, endDate } = this.availabilityForm.getRawValue();
 
     try {
       const period = new DateRange({
-        startDate: new Date(
-          `${startDate}T00:00:00`,
-        ),
+        startDate: new Date(`${startDate}T00:00:00`),
 
-        endDate: new Date(
-          `${endDate}T23:59:59.999`,
-        ),
+        endDate: new Date(`${endDate}T23:59:59.999`),
       });
 
       this.invalidPeriod.set(false);
 
-      const isAvailable =
-        equipment.isAvailableFor(period);
+      const isAvailable = equipment.isAvailableFor(period);
 
-      this.availabilityResult.set(
-        isAvailable,
-      );
+      this.availabilityResult.set(isAvailable);
 
-      this.selectedPeriod.set(
-        isAvailable
-          ? period
-          : null,
-      );
+      this.selectedPeriod.set(isAvailable ? period : null);
     } catch {
       this.invalidPeriod.set(true);
 
@@ -181,11 +140,9 @@ export class EquipmentDetail {
   requestRental(): void {
     const equipment = this.equipment();
 
-    const period =
-      this.selectedPeriod();
+    const period = this.selectedPeriod();
 
-    const constructionUserId =
-      this.#iamStore.currentUserId();
+    const constructionUserId = this.#iamStore.currentUserId();
 
     if (
       !equipment ||
@@ -196,25 +153,19 @@ export class EquipmentDetail {
       return;
     }
 
-    const rentalRequest =
-      new RentalRequest({
-        id: 0,
+    const rentalRequest = new RentalRequest({
+      id: 0,
 
-        equipmentId:
-        equipment.id,
+      equipmentId: equipment.id,
 
-        constructionUserId,
+      constructionUserId,
 
-        rentalCompanyUserId:
-        equipment.userId,
+      rentalCompanyUserId: equipment.userId,
 
-        period,
-      });
+      period,
+    });
 
-    this.rentalsStore
-      .createRentalRequest(
-        rentalRequest,
-      );
+    this.rentalsStore.createRentalRequest(rentalRequest);
   }
 
   resetAvailabilityResult(): void {
@@ -224,15 +175,10 @@ export class EquipmentDetail {
 
     this.selectedPeriod.set(null);
 
-    this.rentalsStore
-      .clearCreationState();
+    this.rentalsStore.clearCreationState();
   }
 
   backToSearch(): void {
-    this.#router
-      .navigate([
-        '/inventory/search',
-      ])
-      .then();
+    this.#router.navigate(['/inventory/search']).then();
   }
 }

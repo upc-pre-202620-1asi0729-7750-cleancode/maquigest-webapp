@@ -1,8 +1,17 @@
-﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+﻿import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { IamStore } from '../../../../iam/application/iam.store';
 
 import { SubscriptionsStore } from '../../../application/subscriptions.store';
 
@@ -18,23 +27,79 @@ import { SubscriptionPlan } from '../../../domain/model/subscription-plan.entity
 export class Plans {
   readonly store = inject(SubscriptionsStore);
 
+  readonly #iamStore = inject(IamStore);
+
+  protected readonly selectedPlan = signal<SubscriptionPlan | null>(null);
+
+  protected readonly currentPlan = computed(() => {
+    const currentSubscription = this.store.currentSubscription();
+
+    if (!currentSubscription) {
+      return undefined;
+    }
+
+    return this.store.plans().find((plan) => plan.id === currentSubscription.planId);
+  });
+
   constructor() {
     this.store.loadPlans();
+
+    effect(() => {
+      const userId = this.#iamStore.currentUserId();
+
+      if (userId === null) {
+        return;
+      }
+
+      this.store.loadCurrentSubscription(userId);
+    });
   }
 
-  isRecommended(plan: SubscriptionPlan): boolean {
+  protected isRecommended(plan: SubscriptionPlan): boolean {
     return this.#normalizedName(plan) === 'professional';
   }
 
-  planNameKey(plan: SubscriptionPlan): string {
+  protected isCurrentPlan(plan: SubscriptionPlan): boolean {
+    return this.store.currentSubscription()?.planId === plan.id;
+  }
+
+  protected selectPlan(plan: SubscriptionPlan): void {
+    if (this.store.currentSubscription()) {
+      return;
+    }
+
+    this.selectedPlan.set(plan);
+  }
+
+  protected cancelSelection(): void {
+    if (this.store.subscriptionLoading()) {
+      return;
+    }
+
+    this.selectedPlan.set(null);
+  }
+
+  protected confirmSubscription(): void {
+    const userId = this.#iamStore.currentUserId();
+
+    const plan = this.selectedPlan();
+
+    if (userId === null || plan === null) {
+      return;
+    }
+
+    this.store.subscribeToPlan(userId, plan.id);
+  }
+
+  protected planNameKey(plan: SubscriptionPlan): string {
     return 'subscriptions.plans.plan-names.' + this.#normalizedName(plan);
   }
 
-  descriptionKey(plan: SubscriptionPlan): string {
+  protected descriptionKey(plan: SubscriptionPlan): string {
     return 'subscriptions.plans.descriptions.' + this.#normalizedName(plan);
   }
 
-  featureKeys(plan: SubscriptionPlan): string[] {
+  protected featureKeys(plan: SubscriptionPlan): string[] {
     const planName = this.#normalizedName(plan);
 
     if (planName === 'essential') {
@@ -64,6 +129,20 @@ export class Plans {
     }
 
     return [];
+  }
+
+  protected subscriptionStatusKey(): string {
+    const status = this.store.currentSubscription()?.status;
+
+    if (!status) {
+      return '';
+    }
+
+    return 'subscriptions.plans.subscription-status.' + status.toLowerCase();
+  }
+
+  protected formatDate(date: Date): string {
+    return date.toISOString().slice(0, 10);
   }
 
   #normalizedName(plan: SubscriptionPlan): string {

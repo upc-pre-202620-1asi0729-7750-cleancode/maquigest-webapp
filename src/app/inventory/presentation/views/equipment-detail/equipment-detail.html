@@ -6,15 +6,20 @@
     class="back-button"
     (click)="backToSearch()">
 
-    {{ 'equipment.detail.back' | translate }}
+    {{
+      'equipment.detail.back'
+        | translate
+    }}
 
   </button>
 
   @if (store.loading()) {
 
     <div class="loading-state">
+
       <mat-spinner diameter="40">
       </mat-spinner>
+
     </div>
 
   }
@@ -44,12 +49,14 @@
         </mat-card-title>
 
         <mat-card-subtitle>
+
           {{ equipment.code }}
           ·
           {{
             equipment.category?.name
             ?? '-'
           }}
+
         </mat-card-subtitle>
 
       </mat-card-header>
@@ -131,7 +138,9 @@
               <span>
                 S/
                 {{
-                  equipment.rentalRate.dailyRate
+                  equipment
+                    .rentalRate
+                    .dailyRate
                     | number:'1.2-2'
                 }}
               </span>
@@ -150,7 +159,9 @@
               <span>
                 S/
                 {{
-                  equipment.rentalRate.weeklyRate
+                  equipment
+                    .rentalRate
+                    .weeklyRate
                     | number:'1.2-2'
                 }}
               </span>
@@ -185,7 +196,8 @@
                 {{
                   (
                     'equipment.status-values.' +
-                    equipment.status.toLowerCase()
+                    equipment.status
+                      .toLowerCase()
                   ) | translate
                 }}
               </span>
@@ -232,7 +244,8 @@
             [formGroup]="availabilityForm"
             (ngSubmit)="checkAvailability()">
 
-            <mat-form-field appearance="outline">
+            <mat-form-field
+              appearance="outline">
 
               <mat-label>
                 {{
@@ -248,8 +261,14 @@
                 (input)="resetAvailabilityResult()">
 
               @if (
-                availabilityForm.controls.startDate.touched &&
-                availabilityForm.controls.startDate.hasError('required')
+                availabilityForm
+                  .controls
+                  .startDate
+                  .touched &&
+                availabilityForm
+                  .controls
+                  .startDate
+                  .hasError('required')
                 ) {
 
                 <mat-error>
@@ -263,7 +282,8 @@
 
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field
+              appearance="outline">
 
               <mat-label>
                 {{
@@ -279,8 +299,14 @@
                 (input)="resetAvailabilityResult()">
 
               @if (
-                availabilityForm.controls.endDate.touched &&
-                availabilityForm.controls.endDate.hasError('required')
+                availabilityForm
+                  .controls
+                  .endDate
+                  .touched &&
+                availabilityForm
+                  .controls
+                  .endDate
+                  .hasError('required')
                 ) {
 
                 <mat-error>
@@ -308,9 +334,12 @@
 
           </form>
 
-          @if (invalidPeriod()) {
+          @if (
+            invalidPeriod()
+            ) {
 
-            <div class="availability-result unavailable">
+            <div
+              class="availability-result unavailable">
 
               {{
                 'equipment.detail.invalid-period'
@@ -321,9 +350,12 @@
 
           }
 
-          @if (availabilityResult() === true) {
+          @if (
+            availabilityResult() === true
+            ) {
 
-            <div class="availability-result available">
+            <div
+              class="availability-result available">
 
               {{
                 'equipment.detail.available-for-period'
@@ -332,7 +364,10 @@
 
             </div>
 
-            @if (!rentalsStore.latestCreatedRequest()) {
+            @if (
+              !rentalsStore
+                .latestCreatedRequest()
+              ) {
 
               <div class="rental-request-action">
 
@@ -340,10 +375,15 @@
                   mat-flat-button
                   color="primary"
                   type="button"
-                  [disabled]="rentalsStore.loading()"
+                  [disabled]="
+                    rentalsStore.loading() ||
+                    rentalsStore.subscriptionRequired()
+                  "
                   (click)="requestRental()">
 
-                  @if (rentalsStore.loading()) {
+                  @if (
+                    rentalsStore.loading()
+                    ) {
 
                     {{
                       'equipment.detail.requesting-rental'
@@ -367,9 +407,12 @@
 
           }
 
-          @if (availabilityResult() === false) {
+          @if (
+            availabilityResult() === false
+            ) {
 
-            <div class="availability-result unavailable">
+            <div
+              class="availability-result unavailable">
 
               {{
                 'equipment.detail.not-available-for-period'
@@ -380,9 +423,12 @@
 
           }
 
-          @if (rentalsStore.error()) {
+          @if (
+            rentalsStore.error()
+            ) {
 
-            <mat-error class="rental-request-message">
+            <mat-error
+              class="rental-request-message">
 
               {{
                 rentalsStore.error()
@@ -393,7 +439,8 @@
           }
 
           @if (
-            rentalsStore.latestCreatedRequest();
+            rentalsStore
+              .latestCreatedRequest();
             as rentalRequest
             ) {
 
@@ -407,16 +454,20 @@
               </strong>
 
               <span>
+
                 {{
                   'equipment.detail.request-status'
                     | translate
                 }}:
+
                 {{
                   (
                     'equipment.detail.request-status-values.' +
-                    rentalRequest.status.toLowerCase()
+                    rentalRequest.status
+                      .toLowerCase()
                   ) | translate
                 }}
+
               </span>
 
             </div>
@@ -435,10 +486,12 @@
     ) {
 
     <p class="empty-state">
+
       {{
         'equipment.detail.not-found'
           | translate
       }}
+
     </p>
 
   }

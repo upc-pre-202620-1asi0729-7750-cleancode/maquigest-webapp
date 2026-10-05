@@ -99,5 +99,6 @@
       "billingCycle": "MONTHLY",
       "status": "ACTIVE"
     }
-  ]
+  ],
+  "user-subscriptions": []
 }
