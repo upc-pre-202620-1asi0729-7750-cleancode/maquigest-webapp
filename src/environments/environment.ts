@@ -3,4 +3,5 @@ export const environment = {
   platformProviderApiBaseUrl: '',
   platformProviderSignInEndpointPath: '/authentication/sign-in',
   platformProviderSignUpEndpointPath: '/authentication/sign-up',
+  platformProviderProfilesEndpointPath: '/profiles',
 };
