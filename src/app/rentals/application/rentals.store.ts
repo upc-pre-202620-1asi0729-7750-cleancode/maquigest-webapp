@@ -2,15 +2,21 @@
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { EMPTY, switchMap } from 'rxjs';
+
 import { RentalRequest } from '../domain/model/rental-request.entity';
 
 import { RentalsApi } from '../infrastructure/rentals-api';
+
+import { SUBSCRIPTION_ACCESS_PORT } from '../infrastructure/subscription-access.port';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RentalsStore {
   readonly #rentalsApi = inject(RentalsApi);
+
+  readonly #subscriptionAccess = inject(SUBSCRIPTION_ACCESS_PORT);
 
   readonly #destroyRef = inject(DestroyRef);
 
@@ -26,17 +32,41 @@ export class RentalsStore {
 
   readonly error = this.#errorSignal.asReadonly();
 
+  readonly #subscriptionRequiredSignal = signal<boolean>(false);
+
+  readonly subscriptionRequired = this.#subscriptionRequiredSignal.asReadonly();
+
   createRentalRequest(rentalRequest: RentalRequest): void {
     this.#loadingSignal.set(true);
+
     this.#errorSignal.set(null);
+
+    this.#subscriptionRequiredSignal.set(false);
+
     this.#latestCreatedRequestSignal.set(null);
 
-    this.#rentalsApi
-      .createRentalRequest(rentalRequest)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
+    this.#subscriptionAccess
+      .hasActiveSubscription(rentalRequest.rentalCompanyUserId)
+      .pipe(
+        switchMap((hasActiveSubscription) => {
+          if (!hasActiveSubscription) {
+            this.#subscriptionRequiredSignal.set(true);
+
+            this.#loadingSignal.set(false);
+
+            return EMPTY;
+          }
+
+          return this.#rentalsApi.createRentalRequest(rentalRequest);
+        }),
+
+        takeUntilDestroyed(this.#destroyRef),
+      )
       .subscribe({
         next: (createdRequest) => {
           this.#latestCreatedRequestSignal.set(createdRequest);
+
+          this.#subscriptionRequiredSignal.set(false);
 
           this.#loadingSignal.set(false);
 
@@ -45,6 +75,8 @@ export class RentalsStore {
 
         error: (err) => {
           this.#errorSignal.set(this.#formatError(err, 'Failed to create rental request'));
+
+          this.#subscriptionRequiredSignal.set(false);
 
           this.#loadingSignal.set(false);
         },
@@ -55,6 +87,8 @@ export class RentalsStore {
     this.#latestCreatedRequestSignal.set(null);
 
     this.#errorSignal.set(null);
+
+    this.#subscriptionRequiredSignal.set(false);
   }
 
   #formatError(error: unknown, fallbackMessage: string): string {

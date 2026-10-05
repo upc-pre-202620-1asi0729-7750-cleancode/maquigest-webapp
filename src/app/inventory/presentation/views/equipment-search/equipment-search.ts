@@ -3,8 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
+
 import { MatCardModule } from '@angular/material/card';
+
 import { MatError } from '@angular/material/form-field';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 import { TranslatePipe } from '@ngx-translate/core';
@@ -12,6 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { InventoryStore } from '../../../application/inventory.store';
 
 import { Equipment } from '../../../domain/model/equipment.entity';
+
 import { EquipmentStatus } from '../../../domain/model/equipment-status.enum';
 
 import {
@@ -23,6 +27,7 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
 
 @Component({
   selector: 'app-equipment-search',
+
   imports: [
     MatButtonModule,
     MatCardModule,
@@ -32,12 +37,16 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
     EquipmentFilter,
     AvailabilityBadge,
   ],
+
   templateUrl: './equipment-search.html',
+
   styleUrl: './equipment-search.css',
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EquipmentSearch {
   readonly store = inject(InventoryStore);
+
   readonly #router = inject(Router);
 
   readonly #filters = signal<EquipmentFilterCriteria>({
@@ -49,6 +58,7 @@ export class EquipmentSearch {
 
   readonly filteredEquipment = computed(() => {
     const filters = this.#filters();
+
     const now = new Date();
 
     return this.store
@@ -60,7 +70,7 @@ export class EquipmentSearch {
   });
 
   constructor() {
-    this.store.loadEquipment();
+    this.store.loadMarketplaceEquipment();
   }
 
   applyFilters(filters: EquipmentFilterCriteria): void {

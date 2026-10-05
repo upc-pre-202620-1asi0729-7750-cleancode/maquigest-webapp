@@ -3,33 +3,49 @@
   <header class="page-header">
 
     <h1>
-      {{ 'equipment.search.title' | translate }}
+      {{
+        'equipment.search.title'
+          | translate
+      }}
     </h1>
 
     <p>
-      {{ 'equipment.search.subtitle' | translate }}
+      {{
+        'equipment.search.subtitle'
+          | translate
+      }}
     </p>
 
   </header>
 
   <app-equipment-filter
     [categories]="store.categories()"
-    (filtersChanged)="applyFilters($event)">
+    (filtersChanged)="
+      applyFilters($event)
+    ">
   </app-equipment-filter>
 
-  @if (store.loading()) {
+  @if (
+    store.loading()
+    ) {
 
     <div class="loading-state">
+
       <mat-spinner diameter="40">
       </mat-spinner>
+
     </div>
 
   }
 
-  @if (store.error()) {
+  @if (
+    store.error()
+    ) {
 
     <mat-error>
-      {{ store.error() }}
+      {{
+        store.error()
+      }}
     </mat-error>
 
   }
@@ -51,7 +67,8 @@
     <section class="equipment-grid">
 
       @for (
-        equipment of filteredEquipment();
+        equipment of
+          filteredEquipment();
         track equipment.id
         ) {
 
@@ -62,16 +79,24 @@
           <mat-card-header>
 
             <mat-card-title>
-              {{ equipment.name }}
+              {{
+                equipment.name
+              }}
             </mat-card-title>
 
             <mat-card-subtitle>
-              {{ equipment.code }}
+
+              {{
+                equipment.code
+              }}
+
               ·
+
               {{
                 equipment.category?.name
                 ?? '-'
               }}
+
             </mat-card-subtitle>
 
           </mat-card-header>
@@ -79,13 +104,18 @@
           <mat-card-content>
 
             <p class="description">
-              {{ equipment.description }}
+              {{
+                equipment.description
+              }}
             </p>
 
-            <div class="equipment-information">
+            <div
+              class="equipment-information">
 
               <div>
-                <span class="information-label">
+
+                <span
+                  class="information-label">
                   {{
                     'equipment.location'
                       | translate
@@ -93,12 +123,17 @@
                 </span>
 
                 <span>
-                  {{ equipment.location }}
+                  {{
+                    equipment.location
+                  }}
                 </span>
+
               </div>
 
               <div>
-                <span class="information-label">
+
+                <span
+                  class="information-label">
                   {{
                     'equipment.status'
                       | translate
@@ -109,14 +144,18 @@
                   {{
                     (
                       'equipment.status-values.' +
-                      equipment.status.toLowerCase()
+                      equipment.status
+                        .toLowerCase()
                     ) | translate
                   }}
                 </span>
+
               </div>
 
               <div>
-                <span class="information-label">
+
+                <span
+                  class="information-label">
                   {{
                     'equipment.availability'
                       | translate
@@ -126,18 +165,24 @@
                 <app-availability-badge
                   [equipment]="equipment">
                 </app-availability-badge>
+
               </div>
 
             </div>
 
           </mat-card-content>
 
-          <mat-card-actions align="end">
+          <mat-card-actions
+            align="end">
 
             <button
               mat-button
               type="button"
-              (click)="viewDetails(equipment.id)">
+              (click)="
+                viewDetails(
+                  equipment.id
+                )
+              ">
 
               {{
                 'equipment.detail.view'
