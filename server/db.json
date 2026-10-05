@@ -70,5 +70,34 @@
     }
   ],
   "equipment": [],
-  "rental-requests": []
+  "rental-requests": [],
+  "subscription-plans": [
+    {
+      "id": 1,
+      "name": "Essential",
+      "description": "Start organizing your equipment and reservation requests.",
+      "priceAmount": 79,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "name": "Professional",
+      "description": "Centralize your company's day-to-day rental operations.",
+      "priceAmount": 149,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "name": "Growth",
+      "description": "Expand your operational oversight and manage equipment maintenance.",
+      "priceAmount": 249,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    }
+  ]
 }

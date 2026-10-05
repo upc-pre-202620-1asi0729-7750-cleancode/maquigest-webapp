@@ -7,4 +7,5 @@ export const environment = {
   platformProviderEquipmentEndpointPath: '/equipment',
   platformProviderRentalRequestsEndpointPath: '/rental-requests',
   platformProviderEquipmentCategoriesEndpointPath: '/equipment-categories',
+  platformProviderSubscriptionPlansEndpointPath: '/subscription-plans',
 };
