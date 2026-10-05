@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+import { CompanyProfile } from '../../../domain/model/company-profile.entity';
 
 @Component({
-  imports: [],
   selector: 'app-company-profile',
-  styleUrl: './company-profile.css',
+  imports: [],
   templateUrl: './company-profile.html',
+  styleUrl: './company-profile.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CompanyProfile {}
+export class CompanyProfileComponent {
+  readonly profile = input.required<CompanyProfile>();
+}
