@@ -32,7 +32,7 @@
     <form
       [formGroup]="form"
       class="sign-in-form"
-    >
+      (ngSubmit)="performSignIn()">
 
       <mat-form-field appearance="outline">
 

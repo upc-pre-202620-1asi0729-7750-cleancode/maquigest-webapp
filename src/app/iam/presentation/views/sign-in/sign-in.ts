@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { IamStore } from '../../../application/iam.store';
+import { SignInCommand } from '../../../domain/model/sign-in.command';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
 
 @Component({
@@ -27,6 +29,8 @@ import { LanguageSwitcher } from '../../../../shared/presentation/components/lan
   styleUrl: './sign-in.css',
 })
 export class SignIn {
+  readonly #store = inject(IamStore);
+
   protected readonly hidePassword = signal(true);
 
   protected readonly form = new FormGroup({
@@ -42,5 +46,20 @@ export class SignIn {
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update((value) => !value);
+  }
+
+  protected performSignIn(): void {
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { email, password } = this.form.getRawValue();
+
+    const signInCommand = new SignInCommand({
+      email,
+      password,
+    });
+
+    this.#store.signIn(signInCommand);
   }
 }
