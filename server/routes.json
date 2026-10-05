@@ -1,3 +1,4 @@
 {
+  "/api/1/authentication/sign-up": "/users",
   "/api/v1/*": "/$1"
 }
