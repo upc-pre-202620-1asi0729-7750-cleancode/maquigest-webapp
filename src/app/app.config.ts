@@ -4,8 +4,10 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
+
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withXhr } from '@angular/common/http';
+
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -17,11 +19,13 @@ import { SIGN_IN_PORT } from './iam/infrastructure/sign-in.port';
 import { SignInApiEndpoint } from './iam/infrastructure/sign-in-api-endpoint';
 import { FakeSignInApiEndpoint } from './iam/infrastructure/fake-sign-in-api-endpoint';
 
+import { iamInterceptor } from './iam/infrastructure/iam.interceptor';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
 
-    provideHttpClient(withXhr()),
+    provideHttpClient(withXhr(), withInterceptors([iamInterceptor])),
 
     provideTranslateService({
       loader: provideTranslateHttpLoader({
