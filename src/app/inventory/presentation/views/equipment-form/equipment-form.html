@@ -1,0 +1,162 @@
+<div class="container-with-spacing">
+
+  <h1 class="title">
+    {{ 'equipment.new-title' | translate }}
+  </h1>
+
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()">
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.code' | translate }}
+      </mat-label>
+
+      <input
+        matInput
+        formControlName="code"
+        required>
+
+      @if (isInvalidControl(form, 'code')) {
+        <mat-error>
+          {{ 'equipment.error.code-required' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.name' | translate }}
+      </mat-label>
+
+      <input
+        matInput
+        formControlName="name"
+        required>
+
+      @if (isInvalidControl(form, 'name')) {
+        <mat-error>
+          {{ 'equipment.error.name-required' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.description' | translate }}
+      </mat-label>
+
+      <textarea
+        matInput
+        formControlName="description"
+        required>
+      </textarea>
+
+      @if (isInvalidControl(form, 'description')) {
+        <mat-error>
+          {{ 'equipment.error.description-required' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.category' | translate }}
+      </mat-label>
+
+      <mat-select
+        formControlName="categoryId"
+        required>
+
+        @for (category of categories(); track category.id) {
+          <mat-option [value]="category.id">
+            {{ category.name }}
+          </mat-option>
+        }
+
+      </mat-select>
+
+      @if (isInvalidControl(form, 'categoryId')) {
+        <mat-error>
+          {{ 'equipment.error.category-required' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.location' | translate }}
+      </mat-label>
+
+      <input
+        matInput
+        formControlName="location"
+        required>
+
+      @if (isInvalidControl(form, 'location')) {
+        <mat-error>
+          {{ 'equipment.error.location-required' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.daily-rate' | translate }}
+      </mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="0.01"
+        step="0.01"
+        formControlName="dailyRate"
+        required>
+
+      @if (isInvalidControl(form, 'dailyRate')) {
+        <mat-error>
+          {{ 'equipment.error.daily-rate-invalid' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>
+        {{ 'equipment.weekly-rate' | translate }}
+      </mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="0.01"
+        step="0.01"
+        formControlName="weeklyRate"
+        required>
+
+      @if (isInvalidControl(form, 'weeklyRate')) {
+        <mat-error>
+          {{ 'equipment.error.weekly-rate-invalid' | translate }}
+        </mat-error>
+      }
+    </mat-form-field>
+
+    @if (error()) {
+      <mat-error class="form-error">
+        {{ error() }}
+      </mat-error>
+    }
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || loading()">
+
+      {{ 'equipment.create' | translate }}
+
+    </button>
+
+  </form>
+
+</div>

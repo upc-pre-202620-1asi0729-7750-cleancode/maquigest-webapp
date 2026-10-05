@@ -5,6 +5,9 @@ const iamRoutes = () => import('./iam/presentation/iam.routes').then((m) => m.ia
 const profilesRoutes = () =>
   import('./profiles/presentation/profiles.routes').then((m) => m.profilesRoutes);
 
+const inventoryRoutes = () =>
+  import('./inventory/presentation/inventory.routes').then((m) => m.inventoryRoutes);
+
 const dashboard = () =>
   import('./shared/presentation/views/dashboard/dashboard').then((m) => m.Dashboard);
 
@@ -24,6 +27,11 @@ export const routes: Routes = [
   {
     path: 'profiles',
     loadChildren: profilesRoutes,
+    canActivate: [iamGuard],
+  },
+  {
+    path: 'inventory',
+    loadChildren: inventoryRoutes,
     canActivate: [iamGuard],
   },
   {
