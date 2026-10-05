@@ -1,15 +1,15 @@
 ﻿import { computed, inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { SignInCommand } from '../domain/model/sign-in.command';
 import { IamApi } from '../infrastructure/iam-api';
-
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IamStore {
   readonly #iamApi = inject(IamApi);
+  readonly #router = inject(Router);
 
   readonly #isSignedInSignal = signal<boolean>(false);
   readonly #currentUserIdSignal = signal<number | null>(null);
@@ -30,8 +30,6 @@ export class IamStore {
   readonly currentToken = computed(() =>
     this.isSignedIn() ? localStorage.getItem('token') : null,
   );
-
-  readonly #router = inject(Router);
 
   constructor() {
     this.restoreSession();
