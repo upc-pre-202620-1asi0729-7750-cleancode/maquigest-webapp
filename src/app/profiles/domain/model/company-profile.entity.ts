@@ -1,7 +1,7 @@
 import { Address } from '../value-object/address.value-object';
 
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
-import { Address } from '../value-object/address.value-object';
+
 
 export class CompanyProfile implements BaseEntity {
   #id: number;
