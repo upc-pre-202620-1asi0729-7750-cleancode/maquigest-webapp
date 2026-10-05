@@ -100,6 +100,65 @@ export class InventoryStore {
       });
   }
 
+  loadEquipmentById(id: number): void {
+    this.#loadingSignal.set(true);
+    this.#errorSignal.set(null);
+
+    this.#inventoryApi
+      .getEquipmentById(id)
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: (equipment) => {
+          equipment =
+            this.#assignCategoryToEquipment(
+              equipment,
+            );
+
+          this.#equipmentSignal.update(
+            (equipmentCollection) => {
+              const exists =
+                equipmentCollection.some(
+                  (currentEquipment) =>
+                    currentEquipment.id ===
+                    equipment.id,
+                );
+
+              if (exists) {
+                return equipmentCollection.map(
+                  (currentEquipment) =>
+                    currentEquipment.id ===
+                    equipment.id
+                      ? equipment
+                      : currentEquipment,
+                );
+              }
+
+              return [
+                ...equipmentCollection,
+                equipment,
+              ];
+            },
+          );
+
+          this.#loadingSignal.set(false);
+          this.#errorSignal.set(null);
+        },
+
+        error: (err) => {
+          this.#errorSignal.set(
+            this.#formatError(
+              err,
+              'Failed to load equipment',
+            ),
+          );
+
+          this.#loadingSignal.set(false);
+        },
+      });
+  }
+
   loadEquipmentByUserId(userId: number): void {
     this.#loadingSignal.set(true);
     this.#errorSignal.set(null);

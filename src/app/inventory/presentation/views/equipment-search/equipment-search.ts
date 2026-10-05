@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
+import { Router } from '@angular/router';
+
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatError } from '@angular/material/form-field';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -21,6 +24,7 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
 @Component({
   selector: 'app-equipment-search',
   imports: [
+    MatButtonModule,
     MatCardModule,
     MatError,
     MatProgressSpinner,
@@ -34,6 +38,7 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
 })
 export class EquipmentSearch {
   readonly store = inject(InventoryStore);
+  readonly #router = inject(Router);
 
   readonly #filters = signal<EquipmentFilterCriteria>({
     query: '',
@@ -60,6 +65,10 @@ export class EquipmentSearch {
 
   applyFilters(filters: EquipmentFilterCriteria): void {
     this.#filters.set(filters);
+  }
+
+  viewDetails(id: number): void {
+    this.#router.navigate(['/inventory/equipment', id]).then();
   }
 
   #matchesQuery(equipment: Equipment, query: string): boolean {

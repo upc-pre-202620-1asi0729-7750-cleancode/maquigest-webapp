@@ -9,6 +9,9 @@ const equipmentForm = () =>
 const equipmentSearch = () =>
   import('./views/equipment-search/equipment-search').then((m) => m.EquipmentSearch);
 
+const equipmentDetail = () =>
+  import('./views/equipment-detail/equipment-detail').then((m) => m.EquipmentDetail);
+
 export const inventoryRoutes: Routes = [
   {
     path: 'equipment',
@@ -21,6 +24,10 @@ export const inventoryRoutes: Routes = [
   {
     path: 'equipment/:id/edit',
     loadComponent: equipmentForm,
+  },
+  {
+    path: 'equipment/:id',
+    loadComponent: equipmentDetail,
   },
   {
     path: 'search',

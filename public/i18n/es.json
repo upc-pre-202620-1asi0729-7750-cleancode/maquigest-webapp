@@ -133,6 +133,14 @@
       "apply": "Buscar",
       "clear": "Limpiar filtros",
       "no-results": "No se encontró maquinaria que coincida con los filtros seleccionados."
+    },
+    "detail": {
+      "view": "Ver detalles",
+      "back": "Volver a búsqueda",
+      "information": "Información del equipo",
+      "rental-conditions": "Condiciones de alquiler",
+      "condition": "Estado y disponibilidad",
+      "not-found": "No se encontró la maquinaria solicitada."
     }
   }
 }
