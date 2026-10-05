@@ -17,5 +17,12 @@
       "no-account": "¿No tienes una cuenta?",
       "create-account": "Crear cuenta"
     }
+  },
+  "dashboard": {
+    "rental-title": "Panel de empresa de alquiler",
+    "construction-title": "Panel de empresa constructora",
+    "rental-company": "Empresa de alquiler",
+    "construction-company": "Empresa constructora",
+    "welcome": "Bienvenido,"
   }
 }

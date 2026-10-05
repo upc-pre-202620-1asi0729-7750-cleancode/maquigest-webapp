@@ -17,5 +17,12 @@
       "no-account": "Don't have an account?",
       "create-account": "Create account"
     }
+  },
+  "dashboard": {
+    "rental-title": "Rental company dashboard",
+    "construction-title": "Construction company dashboard",
+    "rental-company": "Rental Company",
+    "construction-company": "Construction Company",
+    "welcome": "Welcome,"
   }
 }

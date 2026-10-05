@@ -1,0 +1,18 @@
+<main class="dashboard-page">
+  <section class="dashboard-header">
+    <div>
+      <span class="company-type">
+        {{ companyType | translate }}
+      </span>
+
+      <h1>
+        {{ dashboardTitle | translate }}
+      </h1>
+
+      <p>
+        {{ 'dashboard.welcome' | translate }}
+        {{ store.currentEmail() }}
+      </p>
+    </div>
+  </section>
+</main>
