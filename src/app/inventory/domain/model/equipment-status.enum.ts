@@ -1,0 +1,5 @@
+export enum EquipmentStatus {
+  AVAILABLE = 'AVAILABLE',
+  RENTED = 'RENTED',
+  MAINTENANCE = 'MAINTENANCE',
+}

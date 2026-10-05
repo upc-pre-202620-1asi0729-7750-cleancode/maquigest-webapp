@@ -50,5 +50,24 @@
         "longitude": 0
       }
     }
-  ]
+  ],
+  "equipment-categories": [
+    {
+      "id": 1,
+      "name": "Excavators"
+    },
+    {
+      "id": 2,
+      "name": "Loaders"
+    },
+    {
+      "id": 3,
+      "name": "Compactors"
+    },
+    {
+      "id": 4,
+      "name": "Generators"
+    }
+  ],
+  "equipment": []
 }

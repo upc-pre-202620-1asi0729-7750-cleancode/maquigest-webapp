@@ -4,6 +4,7 @@
   },
   "navigation": {
     "dashboard": "Panel principal",
+    "equipment": "Maquinaria",
     "profile": "Perfil"
   },
   "footer": {
@@ -59,29 +60,55 @@
     "personal-information": "Información personal",
     "contact-information": "Información de contacto",
     "organization-information": "Información de la organización",
-
     "first-name": "Nombres",
     "last-name": "Apellidos",
     "email": "Correo electrónico",
     "phone-number": "Número de teléfono",
-
     "company-name": "Nombre de la empresa",
     "street": "Dirección",
     "district": "Distrito",
     "city": "Ciudad",
     "country": "País",
-
     "edit": "Editar perfil",
     "save": "Guardar cambios",
     "cancel": "Cancelar",
     "not-found": "No se encontró información del perfil.",
-
     "error": {
       "first-name-required": "Los nombres son obligatorios.",
       "last-name-required": "Los apellidos son obligatorios.",
       "email-required": "El correo electrónico es obligatorio.",
       "email-invalid": "Ingresa un correo electrónico válido.",
       "company-name-required": "El nombre de la empresa es obligatorio."
+    }
+  },
+  "equipment": {
+    "list-title": "Maquinaria",
+    "new-title": "Registrar maquinaria",
+    "new": "Registrar maquinaria",
+    "id": "ID",
+    "code": "Código",
+    "name": "Nombre",
+    "description": "Descripción",
+    "category": "Categoría",
+    "location": "Ubicación",
+    "daily-rate": "Tarifa diaria",
+    "weekly-rate": "Tarifa semanal",
+    "status": "Estado",
+    "create": "Registrar maquinaria",
+    "empty": "Todavía no se ha registrado maquinaria.",
+    "status-values": {
+      "available": "Disponible",
+      "rented": "Alquilada",
+      "maintenance": "En mantenimiento"
+    },
+    "error": {
+      "code-required": "El código es obligatorio.",
+      "name-required": "El nombre es obligatorio.",
+      "description-required": "La descripción es obligatoria.",
+      "category-required": "La categoría es obligatoria.",
+      "location-required": "La ubicación es obligatoria.",
+      "daily-rate-invalid": "Ingresa una tarifa diaria mayor que cero.",
+      "weekly-rate-invalid": "Ingresa una tarifa semanal mayor que cero."
     }
   }
 }

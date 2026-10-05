@@ -4,6 +4,7 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
+    "equipment": "Equipment",
     "profile": "Profile"
   },
   "footer": {
@@ -59,29 +60,55 @@
     "personal-information": "Personal information",
     "contact-information": "Contact information",
     "organization-information": "Organization information",
-
     "first-name": "First name",
     "last-name": "Last name",
     "email": "Email",
     "phone-number": "Phone number",
-
     "company-name": "Company name",
     "street": "Street",
     "district": "District",
     "city": "City",
     "country": "Country",
-
     "edit": "Edit profile",
     "save": "Save changes",
     "cancel": "Cancel",
     "not-found": "No profile information was found.",
-
     "error": {
       "first-name-required": "First name is required.",
       "last-name-required": "Last name is required.",
       "email-required": "Email is required.",
       "email-invalid": "Enter a valid email address.",
       "company-name-required": "Company name is required."
+    }
+  },
+  "equipment": {
+    "list-title": "Equipment",
+    "new-title": "Register equipment",
+    "new": "Register equipment",
+    "id": "ID",
+    "code": "Code",
+    "name": "Name",
+    "description": "Description",
+    "category": "Category",
+    "location": "Location",
+    "daily-rate": "Daily rate",
+    "weekly-rate": "Weekly rate",
+    "status": "Status",
+    "create": "Register equipment",
+    "empty": "No equipment has been registered yet.",
+    "status-values": {
+      "available": "Available",
+      "rented": "On rent",
+      "maintenance": "Maintenance"
+    },
+    "error": {
+      "code-required": "Code is required.",
+      "name-required": "Name is required.",
+      "description-required": "Description is required.",
+      "category-required": "Category is required.",
+      "location-required": "Location is required.",
+      "daily-rate-invalid": "Enter a daily rate greater than zero.",
+      "weekly-rate-invalid": "Enter a weekly rate greater than zero."
     }
   }
 }

@@ -4,4 +4,6 @@ export const environment = {
   platformProviderSignInEndpointPath: '/authentication/sign-in',
   platformProviderSignUpEndpointPath: '/authentication/sign-up',
   platformProviderProfilesEndpointPath: '/profiles',
+  platformProviderEquipmentEndpointPath: '/equipment',
+  platformProviderEquipmentCategoriesEndpointPath: '/equipment-categories',
 };
