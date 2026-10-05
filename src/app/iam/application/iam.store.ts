@@ -76,7 +76,13 @@ export class IamStore {
   signUp(signUpCommand: SignUpCommand): void {
     this.#iamApi.signUp(signUpCommand).subscribe({
       next: () => {
-        this.#router.navigate(['/iam/sign-in']).then();
+        this.#router
+          .navigate(['/iam/sign-in'], {
+            state: {
+              registrationSuccess: true,
+            },
+          })
+          .then();
       },
 
       error: (err) => {
@@ -95,7 +101,7 @@ export class IamStore {
         this.#currentStatusSignal.set(null);
 
         this.#router.navigate(['/iam/sign-up']).then();
-      }
+      },
     });
   }
 

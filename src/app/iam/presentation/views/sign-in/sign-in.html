@@ -25,6 +25,16 @@
 
     </header>
 
+    @if (registrationSuccess) {
+      <div
+        class="registration-success"
+        role="status">
+
+        {{ 'iam.sign-in.registration-success' | translate }}
+
+      </div>
+    }
+
     <form
       [formGroup]="form"
       class="sign-in-form"

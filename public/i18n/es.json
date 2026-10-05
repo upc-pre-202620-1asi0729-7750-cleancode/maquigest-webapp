@@ -15,7 +15,8 @@
       "forgot-password": "¿Olvidaste tu contraseña?",
       "submit": "Iniciar sesión",
       "no-account": "¿No tienes una cuenta?",
-      "create-account": "Crear cuenta"
+      "create-account": "Crear cuenta",
+      "registration-success": "Tu cuenta fue creada correctamente. Ya puedes iniciar sesión."
     }
   },
   "dashboard": {
