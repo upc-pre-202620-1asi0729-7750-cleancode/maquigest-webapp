@@ -11,6 +11,11 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { environment } from '../environments/environment';
+
+import { SIGN_IN_PORT } from './iam/infrastructure/sign-in.port';
+import { SignInApiEndpoint } from './iam/infrastructure/sign-in-api-endpoint';
+import { FakeSignInApiEndpoint } from './iam/infrastructure/fake-sign-in-api-endpoint';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,12 +33,15 @@ export const appConfig: ApplicationConfig = {
 
     provideAppInitializer(() => {
       const translate = inject(TranslateService);
-
       translate.addLangs(['en', 'es']);
-
       return translate.use('en');
     }),
 
     provideRouter(routes),
+
+    {
+      provide: SIGN_IN_PORT,
+      useClass: environment.production ? SignInApiEndpoint : FakeSignInApiEndpoint,
+    },
   ],
 };
