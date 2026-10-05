@@ -27,6 +27,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { InventoryStore } from '../../../application/inventory.store';
 
+import { AvailabilityBadge } from '../../components/availability-badge/availability-badge';
+
 @Component({
   selector: 'app-equipment-list',
   imports: [
@@ -49,6 +51,7 @@ import { InventoryStore } from '../../../application/inventory.store';
     MatSort,
     MatSortHeader,
     TranslatePipe,
+    AvailabilityBadge,
   ],
   templateUrl: './equipment-list.html',
   styleUrl: './equipment-list.css',
@@ -63,6 +66,7 @@ export class EquipmentList {
     'name',
     'category',
     'location',
+    'availability',
     'status',
     'actions',
   ];

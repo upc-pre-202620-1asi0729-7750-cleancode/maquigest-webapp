@@ -1,0 +1,28 @@
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.available {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.reserved {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.rented {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.maintenance {
+  background-color: #ffebee;
+  color: #c62828;
+}

@@ -6,6 +6,12 @@ export interface EquipmentsResponse extends BaseResponse {
   equipments: EquipmentResource[];
 }
 
+export interface AvailabilityBlockResource extends BaseResource {
+  id: number;
+  startDate: string;
+  endDate: string;
+}
+
 export interface EquipmentResource extends BaseResource {
   id: number;
   userId: number;
@@ -17,4 +23,5 @@ export interface EquipmentResource extends BaseResource {
   dailyRate: number;
   weeklyRate: number;
   status: EquipmentStatus;
+  availabilityBlocks?: AvailabilityBlockResource[];
 }

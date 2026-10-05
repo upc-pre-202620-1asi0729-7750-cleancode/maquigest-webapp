@@ -95,6 +95,7 @@
     "daily-rate": "Tarifa diaria",
     "weekly-rate": "Tarifa semanal",
     "status": "Estado",
+    "availability": "Disponibilidad",
     "actions": "Acciones",
     "edit": "Editar maquinaria",
     "create": "Registrar maquinaria",
@@ -102,6 +103,12 @@
     "empty": "Todavía no se ha registrado maquinaria.",
     "status-values": {
       "available": "Disponible",
+      "rented": "Alquilada",
+      "maintenance": "En mantenimiento"
+    },
+    "availability-values": {
+      "available": "Disponible",
+      "reserved": "Reservada",
       "rented": "Alquilada",
       "maintenance": "En mantenimiento"
     },

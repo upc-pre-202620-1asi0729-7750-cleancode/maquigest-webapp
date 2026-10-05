@@ -95,6 +95,7 @@
     "daily-rate": "Daily rate",
     "weekly-rate": "Weekly rate",
     "status": "Status",
+    "availability": "Availability",
     "actions": "Actions",
     "edit": "Edit equipment",
     "create": "Register equipment",
@@ -102,6 +103,12 @@
     "empty": "No equipment has been registered yet.",
     "status-values": {
       "available": "Available",
+      "rented": "On rent",
+      "maintenance": "Maintenance"
+    },
+    "availability-values": {
+      "available": "Available",
+      "reserved": "Reserved",
       "rented": "On rent",
       "maintenance": "Maintenance"
     },
