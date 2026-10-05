@@ -1,0 +1,78 @@
+.equipment-search-page {
+  padding: 24px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+}
+
+.page-header p {
+  margin: 0;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+}
+
+.empty-state {
+  padding: 32px 0;
+  text-align: center;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(280px, 1fr)
+    );
+  gap: 20px;
+}
+
+.equipment-card {
+  height: 100%;
+}
+
+.description {
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.equipment-information {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.equipment-information > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.information-label {
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .equipment-search-page {
+    padding: 16px;
+  }
+
+  .equipment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .equipment-information > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}

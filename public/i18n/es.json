@@ -5,6 +5,7 @@
   "navigation": {
     "dashboard": "Panel principal",
     "equipment": "Maquinaria",
+    "search-equipment": "Buscar maquinaria",
     "profile": "Perfil"
   },
   "footer": {
@@ -94,7 +95,7 @@
     "location": "Ubicación",
     "daily-rate": "Tarifa diaria",
     "weekly-rate": "Tarifa semanal",
-    "status": "Estado",
+    "status": "Estado operativo",
     "availability": "Disponibilidad",
     "actions": "Acciones",
     "edit": "Editar maquinaria",
@@ -102,7 +103,7 @@
     "update": "Actualizar maquinaria",
     "empty": "Todavía no se ha registrado maquinaria.",
     "status-values": {
-      "available": "Disponible",
+      "available": "Operativa",
       "rented": "Alquilada",
       "maintenance": "En mantenimiento"
     },
@@ -120,6 +121,18 @@
       "location-required": "La ubicación es obligatoria.",
       "daily-rate-invalid": "Ingresa una tarifa diaria mayor que cero.",
       "weekly-rate-invalid": "Ingresa una tarifa semanal mayor que cero."
+    },
+    "search": {
+      "title": "Buscar maquinaria",
+      "subtitle": "Encuentra maquinaria que se adapte a las necesidades de tu proyecto.",
+      "query": "Buscar",
+      "query-placeholder": "Nombre, código o características",
+      "all-categories": "Todas las categorías",
+      "location-placeholder": "Buscar por ubicación",
+      "all-availability": "Todas las disponibilidades",
+      "apply": "Buscar",
+      "clear": "Limpiar filtros",
+      "no-results": "No se encontró maquinaria que coincida con los filtros seleccionados."
     }
   }
 }

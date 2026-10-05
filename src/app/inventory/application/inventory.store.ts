@@ -70,6 +70,36 @@ export class InventoryStore {
     );
   }
 
+  loadEquipment(): void {
+    this.#loadingSignal.set(true);
+    this.#errorSignal.set(null);
+
+    this.#inventoryApi
+      .getEquipment()
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: (equipment) => {
+          this.#equipmentSignal.set(equipment);
+          this.#loadingSignal.set(false);
+          this.#errorSignal.set(null);
+
+          this.#assignCategoriesToEquipment();
+        },
+        error: (err) => {
+          this.#errorSignal.set(
+            this.#formatError(
+              err,
+              'Failed to load equipment',
+            ),
+          );
+
+          this.#loadingSignal.set(false);
+        },
+      });
+  }
+
   loadEquipmentByUserId(userId: number): void {
     this.#loadingSignal.set(true);
     this.#errorSignal.set(null);
