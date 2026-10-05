@@ -6,6 +6,7 @@
     "dashboard": "Dashboard",
     "equipment": "Equipment",
     "search-equipment": "Search equipment",
+    "plan-subscription": "Plan & Subscription",
     "profile": "Profile"
   },
   "footer": {
@@ -14,19 +15,31 @@
     "and": "and"
   },
   "iam": {
+    "auth": {
+      "hero-badge": "Equipment rental management",
+      "hero-title-line-1": "Organize your equipment.",
+      "hero-title-line-2": "Stay on top of every rental.",
+      "hero-description": "Manage equipment, requests, rentals and maintenance in one place."
+    },
     "sign-in": {
       "title": "Sign in",
       "subtitle": "Access your MaquiGest account",
-      "email": "Email",
+      "welcome-back": "Welcome back",
+      "card-title": "Sign in to MaquiGest",
+      "card-subtitle": "Access your company workspace.",
+      "email": "Email address",
+      "email-placeholder": "name@company.com",
       "email-required": "Email is required",
       "email-invalid": "Enter a valid email address",
       "password": "Password",
       "password-required": "Password is required",
       "toggle-password": "Show or hide password",
-      "forgot-password": "Forgot your password?",
+      "remember-me": "Remember me",
+      "forgot-password": "Forgot password?",
       "submit": "Sign in",
       "no-account": "Don't have an account?",
-      "create-account": "Create account",
+      "new-to-maquigest": "New to MaquiGest?",
+      "create-account": "Create an account",
       "registration-success": "Your account was created successfully. You can now sign in."
     }
   },
@@ -39,16 +52,24 @@
     "sign-out": "Sign out"
   },
   "sign-up": {
-    "title": "Create your account",
-    "subtitle": "Register your company in MaquiGest",
+    "workspace-badge": "Create your workspace",
+    "title": "Register your company",
+    "subtitle": "Set up your account to start managing rentals.",
+    "full-name": "Full name",
+    "full-name-placeholder": "Your name",
+    "full-name-invalid": "Enter your first and last name.",
     "first-name": "First name",
     "last-name": "Last name",
-    "email": "Email",
+    "email": "Email address",
+    "email-placeholder": "name@company.com",
     "password": "Password",
+    "confirm-password": "Confirm password",
+    "passwords-do-not-match": "Passwords do not match.",
     "company-name": "Company name",
+    "company-placeholder": "Company",
     "organization-type": "Organization type",
-    "rental-company": "Rental Company",
-    "construction-company": "Construction Company",
+    "rental-company": "Rental company",
+    "construction-company": "Construction company",
     "create-account": "Create account",
     "already-account": "Already have an account?",
     "sign-in": "Sign in",
@@ -158,6 +179,50 @@
         "pending": "Pending",
         "approved": "Approved",
         "rejected": "Rejected"
+      }
+    }
+  },
+  "subscriptions": {
+    "plans": {
+      "workspace": "Workspace",
+      "breadcrumb": "Plan & Subscription",
+      "billing": "Billing",
+      "title": "Plan & Subscription",
+      "subtitle": "Compare the available plans and review the features included in each option.",
+      "recommended": "Recommended",
+      "per-month": "/ month",
+      "includes": "Includes",
+      "empty": "There are no plans available at this time.",
+      "load-error": "The available plans could not be loaded.",
+      "note": "Plans and prices are reference values in Peruvian soles (PEN) and are subject to confirmation.",
+      "plan-names": {
+        "essential": "Essential",
+        "professional": "Professional",
+        "growth": "Growth"
+      },
+      "descriptions": {
+        "essential": "Start organizing your equipment and reservation requests.",
+        "professional": "Centralize your company's day-to-day rental operations.",
+        "growth": "Expand your operational oversight and manage equipment maintenance."
+      },
+      "features": {
+        "essential": {
+          "inventory": "Equipment inventory registration and management.",
+          "availability": "Equipment condition and availability tracking.",
+          "requests": "Reservation request management."
+        },
+        "professional": {
+          "essential": "Everything included in Essential.",
+          "rentals": "Rental and contract management.",
+          "payments": "Rental payment records.",
+          "delivery-return": "Delivery and return records."
+        },
+        "growth": {
+          "professional": "Everything included in Professional.",
+          "incidents": "Incident and inspection records.",
+          "scheduling": "Equipment maintenance scheduling.",
+          "history": "Maintenance history for each piece of equipment."
+        }
       }
     }
   }
