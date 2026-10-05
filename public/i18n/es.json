@@ -2,6 +2,15 @@
   "app": {
     "name": "MaquiGest"
   },
+  "navigation": {
+    "dashboard": "Panel principal",
+    "profile": "Perfil"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "powered-by": "Desarrollado con",
+    "and": "y"
+  },
   "iam": {
     "sign-in": {
       "title": "Iniciar sesión",

@@ -1,0 +1,23 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.brand-logo {
+  display: block;
+  max-height: 42px;
+  width: auto;
+}
+
+.app-content {
+  flex: 1;
+}
