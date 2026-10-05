@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { SignInCommand } from '../domain/model/sign-in.command';
 import { IamApi } from '../infrastructure/iam-api';
 
+import { SignUpCommand } from '../domain/model/sign-up.command';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -67,6 +69,38 @@ export class IamStore {
         this.#currentEmailSignal.set(null);
         this.#currentRoleSignal.set(null);
         this.#currentStatusSignal.set(null);
+      },
+    });
+  }
+
+  signUp(signUpCommand: SignUpCommand): void {
+    this.#iamApi.signUp(signUpCommand).subscribe({
+      next: () => {
+        this.#router
+          .navigate(['/iam/sign-in'], {
+            state: {
+              registrationSuccess: true,
+            },
+          })
+          .then();
+      },
+
+      error: (err) => {
+        console.error('Sign-up failed:', err);
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('email');
+        localStorage.removeItem('role');
+        localStorage.removeItem('status');
+
+        this.#isSignedInSignal.set(false);
+        this.#currentUserIdSignal.set(null);
+        this.#currentEmailSignal.set(null);
+        this.#currentRoleSignal.set(null);
+        this.#currentStatusSignal.set(null);
+
+        this.#router.navigate(['/iam/sign-up']).then();
       },
     });
   }

@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,7 +11,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { IamStore } from '../../../application/iam.store';
 import { SignInCommand } from '../../../domain/model/sign-in.command';
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-sign-in',
   imports: [
@@ -24,6 +23,7 @@ import { LanguageSwitcher } from '../../../../shared/presentation/components/lan
     MatInputModule,
     TranslatePipe,
     LanguageSwitcher,
+    RouterLink,
   ],
   templateUrl: './sign-in.html',
   styleUrl: './sign-in.css',
@@ -32,6 +32,8 @@ export class SignIn {
   readonly #store = inject(IamStore);
 
   protected readonly hidePassword = signal(true);
+
+  protected readonly registrationSuccess = history.state?.['registrationSuccess'] === true;
 
   protected readonly form = new FormGroup({
     email: new FormControl('', {
