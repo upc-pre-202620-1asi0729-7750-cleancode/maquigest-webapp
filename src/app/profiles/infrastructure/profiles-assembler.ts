@@ -1,57 +1,58 @@
-﻿import { Profile } from '../domain/model/profile.entity';
+﻿import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
+
 import { CompanyProfile } from '../domain/model/company-profile.entity';
-import { UpdateProfileCommand } from '../domain/model/update-profile.command';
 import { Address } from '../domain/value-object/address.value-object';
 
-import { UpdateProfileRequest } from './update-profile.request';
-import { ProfileResource } from './profile-response';
+import { ProfileResource, ProfilesResponse } from './profile-response';
 
-export class ProfilesAssembler {
-  toRequestFromCommand(command: UpdateProfileCommand): UpdateProfileRequest {
-    return {
-      firstName: command.firstName,
-      lastName: command.lastName,
-      contactEmail: command.contactEmail,
-      phoneNumber: command.phoneNumber,
-      companyName: command.companyName,
-
-      address: {
-        street: command.address.street,
-        district: command.address.district,
-        city: command.address.city,
-        country: command.address.country,
-        latitude: command.address.latitude,
-        longitude: command.address.longitude,
-      },
-    };
+export class ProfilesAssembler implements BaseAssembler<
+  CompanyProfile,
+  ProfileResource,
+  ProfilesResponse
+> {
+  toEntitiesFromResponse(response: ProfilesResponse): CompanyProfile[] {
+    return response.profiles.map((resource) => this.toEntityFromResource(resource));
   }
 
-  toProfileFromResource(resource: ProfileResource): Profile {
-    return new Profile({
+  toEntityFromResource(resource: ProfileResource): CompanyProfile {
+    return new CompanyProfile({
       id: resource.id,
       userId: resource.userId,
       firstName: resource.firstName,
       lastName: resource.lastName,
       contactEmail: resource.contactEmail,
       phoneNumber: resource.phoneNumber,
+      companyName: resource.companyName,
+
+      address: new Address({
+        street: resource.address.street,
+        district: resource.address.district,
+        city: resource.address.city,
+        country: resource.address.country,
+        latitude: resource.address.latitude,
+        longitude: resource.address.longitude,
+      }),
     });
   }
 
-  toCompanyProfileFromResource(resource: ProfileResource): CompanyProfile {
-    const address = new Address({
-      street: resource.address.street,
-      district: resource.address.district,
-      city: resource.address.city,
-      country: resource.address.country,
-      latitude: resource.address.latitude,
-      longitude: resource.address.longitude,
-    });
+  toResourceFromEntity(entity: CompanyProfile): ProfileResource {
+    return {
+      id: entity.id,
+      userId: entity.userId,
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      contactEmail: entity.contactEmail,
+      phoneNumber: entity.phoneNumber,
+      companyName: entity.companyName,
 
-    return new CompanyProfile({
-      id: resource.id,
-      userId: resource.userId,
-      companyName: resource.companyName,
-      address,
-    });
+      address: {
+        street: entity.address.street,
+        district: entity.address.district,
+        city: entity.address.city,
+        country: entity.address.country,
+        latitude: entity.address.latitude,
+        longitude: entity.address.longitude,
+      },
+    } as ProfileResource;
   }
 }
