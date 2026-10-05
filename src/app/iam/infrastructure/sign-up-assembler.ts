@@ -11,6 +11,7 @@ export class SignUpAssembler {
       password: command.password,
       companyName: command.companyName,
       role: command.role,
+      status: 'active',
     };
   }
 

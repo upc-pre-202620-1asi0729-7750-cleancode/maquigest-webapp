@@ -5,4 +5,5 @@
   password: string;
   companyName: string;
   role: string;
+  status: string;
 }
