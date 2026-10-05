@@ -1,0 +1,9 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active {
+  font-weight: 600;
+}
