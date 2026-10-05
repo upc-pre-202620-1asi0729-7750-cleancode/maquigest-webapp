@@ -133,6 +133,14 @@
       "apply": "Search",
       "clear": "Clear filters",
       "no-results": "No equipment matches the selected filters."
+    },
+    "detail": {
+      "view": "View details",
+      "back": "Back to search",
+      "information": "Equipment information",
+      "rental-conditions": "Rental conditions",
+      "condition": "Status and availability",
+      "not-found": "The requested equipment could not be found."
     }
   }
 }

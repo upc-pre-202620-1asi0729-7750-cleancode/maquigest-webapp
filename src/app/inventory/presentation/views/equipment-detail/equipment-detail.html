@@ -1,0 +1,214 @@
+<div class="equipment-detail-page">
+
+  <button
+    mat-button
+    type="button"
+    class="back-button"
+    (click)="backToSearch()">
+
+    {{ 'equipment.detail.back' | translate }}
+
+  </button>
+
+  @if (store.loading()) {
+
+    <div class="loading-state">
+      <mat-spinner diameter="40">
+      </mat-spinner>
+    </div>
+
+  }
+
+  @if (store.error()) {
+
+    <mat-error>
+      {{ store.error() }}
+    </mat-error>
+
+  }
+
+  @if (
+    !store.loading() &&
+    equipment();
+    as equipment
+    ) {
+
+    <mat-card
+      class="detail-card"
+      appearance="outlined">
+
+      <mat-card-header>
+
+        <mat-card-title>
+          {{ equipment.name }}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+          {{ equipment.code }}
+          ·
+          {{
+            equipment.category?.name
+            ?? '-'
+          }}
+        </mat-card-subtitle>
+
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.information'
+                | translate
+            }}
+          </h2>
+
+          <p>
+            {{ equipment.description }}
+          </p>
+
+          <div class="detail-grid">
+
+            <div class="detail-item">
+              <span class="label">
+                {{ 'equipment.location' | translate }}
+              </span>
+
+              <span>
+                {{ equipment.location }}
+              </span>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">
+                {{ 'equipment.category' | translate }}
+              </span>
+
+              <span>
+                {{
+                  equipment.category?.name
+                  ?? '-'
+                }}
+              </span>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.rental-conditions'
+                | translate
+            }}
+          </h2>
+
+          <div class="detail-grid">
+
+            <div class="detail-item">
+              <span class="label">
+                {{
+                  'equipment.daily-rate'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                S/
+                {{
+                  equipment.rentalRate.dailyRate
+                    | number:'1.2-2'
+                }}
+              </span>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">
+                {{
+                  'equipment.weekly-rate'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                S/
+                {{
+                  equipment.rentalRate.weeklyRate
+                    | number:'1.2-2'
+                }}
+              </span>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.condition'
+                | translate
+            }}
+          </h2>
+
+          <div class="detail-grid">
+
+            <div class="detail-item">
+              <span class="label">
+                {{
+                  'equipment.status'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                {{
+                  (
+                    'equipment.status-values.' +
+                    equipment.status.toLowerCase()
+                  ) | translate
+                }}
+              </span>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">
+                {{
+                  'equipment.availability'
+                    | translate
+                }}
+              </span>
+
+              <app-availability-badge
+                [equipment]="equipment">
+              </app-availability-badge>
+            </div>
+
+          </div>
+
+        </section>
+
+      </mat-card-content>
+
+    </mat-card>
+
+  } @else if (
+    !store.loading() &&
+    !store.error()
+    ) {
+
+    <p class="empty-state">
+      {{
+        'equipment.detail.not-found'
+          | translate
+      }}
+    </p>
+
+  }
+
+</div>

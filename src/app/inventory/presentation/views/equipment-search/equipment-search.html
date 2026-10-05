@@ -132,6 +132,22 @@
 
           </mat-card-content>
 
+          <mat-card-actions align="end">
+
+            <button
+              mat-button
+              type="button"
+              (click)="viewDetails(equipment.id)">
+
+              {{
+                'equipment.detail.view'
+                  | translate
+              }}
+
+            </button>
+
+          </mat-card-actions>
+
         </mat-card>
 
       }
