@@ -44,5 +44,35 @@
     "required": "This field is required.",
     "invalid-email": "Enter a valid email address.",
     "password-length": "Password must contain at least 8 characters."
+  },
+  "profile": {
+    "title": "Profile",
+    "personal-information": "Personal information",
+    "contact-information": "Contact information",
+    "organization-information": "Organization information",
+
+    "first-name": "First name",
+    "last-name": "Last name",
+    "email": "Email",
+    "phone-number": "Phone number",
+
+    "company-name": "Company name",
+    "street": "Street",
+    "district": "District",
+    "city": "City",
+    "country": "Country",
+
+    "edit": "Edit profile",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "not-found": "No profile information was found.",
+
+    "error": {
+      "first-name-required": "First name is required.",
+      "last-name-required": "Last name is required.",
+      "email-required": "Email is required.",
+      "email-invalid": "Enter a valid email address.",
+      "company-name-required": "Company name is required."
+    }
   }
 }
