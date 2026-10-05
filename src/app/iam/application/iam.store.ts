@@ -33,10 +33,18 @@ export class IamStore {
 
   readonly #router = inject(Router);
 
+  constructor() {
+    this.restoreSession();
+  }
+
   signIn(signInCommand: SignInCommand): void {
     this.#iamApi.signIn(signInCommand).subscribe({
       next: (signInResource) => {
         localStorage.setItem('token', signInResource.token);
+        localStorage.setItem('userId', String(signInResource.id));
+        localStorage.setItem('email', signInResource.email);
+        localStorage.setItem('role', signInResource.role);
+        localStorage.setItem('status', signInResource.status);
 
         this.#isSignedInSignal.set(true);
         this.#currentUserIdSignal.set(signInResource.id);
@@ -51,6 +59,10 @@ export class IamStore {
         console.error('Sign-in failed:', err);
 
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('email');
+        localStorage.removeItem('role');
+        localStorage.removeItem('status');
 
         this.#isSignedInSignal.set(false);
         this.#currentUserIdSignal.set(null);
@@ -59,5 +71,23 @@ export class IamStore {
         this.#currentStatusSignal.set(null);
       },
     });
+  }
+
+  private restoreSession(): void {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const email = localStorage.getItem('email');
+    const role = localStorage.getItem('role');
+    const status = localStorage.getItem('status');
+
+    if (!token || !userId || !email || !role || !status) {
+      return;
+    }
+
+    this.#isSignedInSignal.set(true);
+    this.#currentUserIdSignal.set(Number(userId));
+    this.#currentEmailSignal.set(email);
+    this.#currentRoleSignal.set(role);
+    this.#currentStatusSignal.set(status);
   }
 }
