@@ -44,5 +44,35 @@
     "required": "Este campo es obligatorio.",
     "invalid-email": "Ingresa un correo electrónico válido.",
     "password-length": "La contraseña debe tener al menos 8 caracteres."
+  },
+  "profile": {
+    "title": "Perfil",
+    "personal-information": "Información personal",
+    "contact-information": "Información de contacto",
+    "organization-information": "Información de la organización",
+
+    "first-name": "Nombres",
+    "last-name": "Apellidos",
+    "email": "Correo electrónico",
+    "phone-number": "Número de teléfono",
+
+    "company-name": "Nombre de la empresa",
+    "street": "Dirección",
+    "district": "Distrito",
+    "city": "Ciudad",
+    "country": "País",
+
+    "edit": "Editar perfil",
+    "save": "Guardar cambios",
+    "cancel": "Cancelar",
+    "not-found": "No se encontró información del perfil.",
+
+    "error": {
+      "first-name-required": "Los nombres son obligatorios.",
+      "last-name-required": "Los apellidos son obligatorios.",
+      "email-required": "El correo electrónico es obligatorio.",
+      "email-invalid": "Ingresa un correo electrónico válido.",
+      "company-name-required": "El nombre de la empresa es obligatorio."
+    }
   }
 }
