@@ -149,7 +149,16 @@
       "check-availability": "Check availability",
       "available-for-period": "The equipment is available during the selected period.",
       "not-available-for-period": "The equipment is not available during the selected period.",
-      "invalid-period": "The start date must be before or equal to the end date."
+      "invalid-period": "The start date must be before or equal to the end date.",
+      "request-rental": "Request rental",
+      "requesting-rental": "Submitting request...",
+      "request-created": "Rental request created successfully.",
+      "request-status": "Status",
+      "request-status-values": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
     }
   }
 }
