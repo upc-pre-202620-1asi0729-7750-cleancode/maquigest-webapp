@@ -15,4 +15,8 @@ export const inventoryRoutes: Routes = [
     path: 'equipment/new',
     loadComponent: equipmentForm,
   },
+  {
+    path: 'equipment/:id/edit',
+    loadComponent: equipmentForm,
+  },
 ];

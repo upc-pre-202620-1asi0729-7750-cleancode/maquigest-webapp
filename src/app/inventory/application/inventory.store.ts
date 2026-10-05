@@ -1,4 +1,11 @@
-import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angular/core';
+import {
+  computed,
+  DestroyRef,
+  inject,
+  Injectable,
+  Signal,
+  signal,
+} from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
@@ -11,6 +18,7 @@ import { InventoryApi } from '../infrastructure/inventory-api';
   providedIn: 'root',
 })
 export class InventoryStore {
+
   readonly #inventoryApi = inject(InventoryApi);
   readonly #destroyRef = inject(DestroyRef);
 
@@ -20,9 +28,13 @@ export class InventoryStore {
   readonly #categoriesSignal = signal<EquipmentCategory[]>([]);
   readonly categories = this.#categoriesSignal.asReadonly();
 
-  readonly equipmentCount = computed(() => this.equipment().length);
+  readonly equipmentCount = computed(
+    () => this.equipment().length,
+  );
 
-  readonly categoryCount = computed(() => this.categories().length);
+  readonly categoryCount = computed(
+    () => this.categories().length,
+  );
 
   readonly #loadingSignal = signal<boolean>(false);
   readonly loading = this.#loadingSignal.asReadonly();
@@ -34,15 +46,27 @@ export class InventoryStore {
     this.#loadCategories();
   }
 
-  getCategoryById(id: number): Signal<EquipmentCategory | undefined> {
+  getCategoryById(
+    id: number,
+  ): Signal<EquipmentCategory | undefined> {
     return computed(() =>
-      id ? this.categories().find((category) => category.id === id) : undefined,
+      id
+        ? this.categories().find(
+          (category) => category.id === id,
+        )
+        : undefined,
     );
   }
 
-  getEquipmentById(id: number): Signal<Equipment | undefined> {
+  getEquipmentById(
+    id: number,
+  ): Signal<Equipment | undefined> {
     return computed(() =>
-      id ? this.equipment().find((equipment) => equipment.id === id) : undefined,
+      id
+        ? this.equipment().find(
+          (equipment) => equipment.id === id,
+        )
+        : undefined,
     );
   }
 
@@ -52,7 +76,9 @@ export class InventoryStore {
 
     this.#inventoryApi
       .getEquipmentByUserId(userId)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+      )
       .subscribe({
         next: (equipment) => {
           this.#equipmentSignal.set(equipment);
@@ -62,7 +88,12 @@ export class InventoryStore {
           this.#assignCategoriesToEquipment();
         },
         error: (err) => {
-          this.#errorSignal.set(this.#formatError(err, 'Failed to load equipment'));
+          this.#errorSignal.set(
+            this.#formatError(
+              err,
+              'Failed to load equipment',
+            ),
+          );
           this.#loadingSignal.set(false);
         },
       });
@@ -74,20 +105,75 @@ export class InventoryStore {
 
     this.#inventoryApi
       .createEquipment(equipment)
-      .pipe(retry(2), takeUntilDestroyed(this.#destroyRef))
+      .pipe(
+        retry(2),
+        takeUntilDestroyed(this.#destroyRef),
+      )
       .subscribe({
         next: (createdEquipment) => {
-          createdEquipment = this.#assignCategoryToEquipment(createdEquipment);
+          createdEquipment =
+            this.#assignCategoryToEquipment(
+              createdEquipment,
+            );
 
-          this.#equipmentSignal.update((equipmentCollection) => [
-            ...equipmentCollection,
-            createdEquipment,
-          ]);
+          this.#equipmentSignal.update(
+            (equipmentCollection) => [
+              ...equipmentCollection,
+              createdEquipment,
+            ],
+          );
 
           this.#loadingSignal.set(false);
         },
         error: (err) => {
-          this.#errorSignal.set(this.#formatError(err, 'Failed to create equipment'));
+          this.#errorSignal.set(
+            this.#formatError(
+              err,
+              'Failed to create equipment',
+            ),
+          );
+          this.#loadingSignal.set(false);
+        },
+      });
+  }
+
+  updateEquipment(equipment: Equipment): void {
+    this.#loadingSignal.set(true);
+    this.#errorSignal.set(null);
+
+    this.#inventoryApi
+      .updateEquipment(equipment)
+      .pipe(
+        retry(2),
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: (updatedEquipment) => {
+          updatedEquipment =
+            this.#assignCategoryToEquipment(
+              updatedEquipment,
+            );
+
+          this.#equipmentSignal.update(
+            (equipmentCollection) =>
+              equipmentCollection.map(
+                (currentEquipment) =>
+                  currentEquipment.id === updatedEquipment.id
+                    ? updatedEquipment
+                    : currentEquipment,
+              ),
+          );
+
+          this.#loadingSignal.set(false);
+          this.#errorSignal.set(null);
+        },
+        error: (err) => {
+          this.#errorSignal.set(
+            this.#formatError(
+              err,
+              'Failed to update equipment',
+            ),
+          );
           this.#loadingSignal.set(false);
         },
       });
@@ -105,7 +191,9 @@ export class InventoryStore {
 
     this.#inventoryApi
       .getCategories()
-      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+      )
       .subscribe({
         next: (categories) => {
           this.#categoriesSignal.set(categories);
@@ -115,27 +203,43 @@ export class InventoryStore {
           this.#assignCategoriesToEquipment();
         },
         error: (err) => {
-          this.#errorSignal.set(this.#formatError(err, 'Failed to load equipment categories'));
+          this.#errorSignal.set(
+            this.#formatError(
+              err,
+              'Failed to load equipment categories',
+            ),
+          );
           this.#loadingSignal.set(false);
         },
       });
   }
 
   #assignCategoriesToEquipment(): void {
-    this.#equipmentSignal.update((equipmentCollection) =>
-      equipmentCollection.map((equipment) => this.#assignCategoryToEquipment(equipment)),
+    this.#equipmentSignal.update(
+      (equipmentCollection) =>
+        equipmentCollection.map(
+          (equipment) =>
+            this.#assignCategoryToEquipment(equipment),
+        ),
     );
   }
 
-  #assignCategoryToEquipment(equipment: Equipment): Equipment {
+  #assignCategoryToEquipment(
+    equipment: Equipment,
+  ): Equipment {
     const categoryId = equipment.categoryId ?? 0;
 
-    equipment.category = categoryId ? (this.getCategoryById(categoryId)() ?? null) : null;
+    equipment.category = categoryId
+      ? this.getCategoryById(categoryId)() ?? null
+      : null;
 
     return equipment;
   }
 
-  #formatError(error: unknown, fallback: string): string {
+  #formatError(
+    error: unknown,
+    fallback: string,
+  ): string {
     if (error instanceof Error) {
       return error.message.includes('Resource not found')
         ? `${fallback}: Not found`

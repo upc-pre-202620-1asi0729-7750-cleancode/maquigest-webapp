@@ -84,6 +84,7 @@
   "equipment": {
     "list-title": "Equipment",
     "new-title": "Register equipment",
+    "edit-title": "Edit equipment",
     "new": "Register equipment",
     "id": "ID",
     "code": "Code",
@@ -94,7 +95,10 @@
     "daily-rate": "Daily rate",
     "weekly-rate": "Weekly rate",
     "status": "Status",
+    "actions": "Actions",
+    "edit": "Edit equipment",
     "create": "Register equipment",
+    "update": "Update equipment",
     "empty": "No equipment has been registered yet.",
     "status-values": {
       "available": "Available",

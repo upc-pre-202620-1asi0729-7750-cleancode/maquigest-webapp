@@ -2,8 +2,9 @@ import { Component, computed, effect, inject, viewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
@@ -30,6 +31,8 @@ import { InventoryStore } from '../../../application/inventory.store';
   selector: 'app-equipment-list',
   imports: [
     MatButton,
+    MatIconButton,
+    MatIcon,
     MatError,
     MatPaginator,
     MatProgressSpinner,
@@ -55,7 +58,14 @@ export class EquipmentList {
   readonly store = inject(InventoryStore);
   readonly #router = inject(Router);
 
-  readonly displayedColumns: string[] = ['code', 'name', 'category', 'location', 'status'];
+  readonly displayedColumns: string[] = [
+    'code',
+    'name',
+    'category',
+    'location',
+    'status',
+    'actions',
+  ];
 
   readonly sort = viewChild(MatSort);
   readonly paginator = viewChild(MatPaginator);
@@ -89,6 +99,10 @@ export class EquipmentList {
 
       this.store.loadEquipmentByUserId(userId);
     });
+  }
+
+  editEquipment(id: number): void {
+    this.#router.navigate(['/inventory/equipment', id, 'edit']).then();
   }
 
   navigateToNew(): void {

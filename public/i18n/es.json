@@ -84,6 +84,7 @@
   "equipment": {
     "list-title": "Maquinaria",
     "new-title": "Registrar maquinaria",
+    "edit-title": "Editar maquinaria",
     "new": "Registrar maquinaria",
     "id": "ID",
     "code": "Código",
@@ -94,7 +95,10 @@
     "daily-rate": "Tarifa diaria",
     "weekly-rate": "Tarifa semanal",
     "status": "Estado",
+    "actions": "Acciones",
+    "edit": "Editar maquinaria",
     "create": "Registrar maquinaria",
+    "update": "Actualizar maquinaria",
     "empty": "Todavía no se ha registrado maquinaria.",
     "status-values": {
       "available": "Disponible",
