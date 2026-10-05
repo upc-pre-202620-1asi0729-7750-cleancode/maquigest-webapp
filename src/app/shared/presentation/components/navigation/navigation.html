@@ -2,16 +2,69 @@
 
   <nav class="navigation">
 
-    @for (option of options(); track option.link) {
+    <div class="navigation-primary">
 
-      <a
-        mat-button
-        [routerLink]="option.link"
-        routerLinkActive="active">
-        {{ option.label | translate }}
-      </a>
+      @for (
+        option of primaryOptions();
+        track option.link
+        ) {
 
-    }
+        <a
+          class="navigation-link"
+          [routerLink]="option.link"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          (click)="selectOption()">
+
+          <span
+            class="navigation-marker"
+            aria-hidden="true">
+          </span>
+
+          <span>
+            {{
+              option.label
+                | translate
+            }}
+          </span>
+
+        </a>
+
+      }
+
+    </div>
+
+    <div class="navigation-utility">
+
+      @for (
+        option of utilityOptions();
+        track option.link
+        ) {
+
+        <a
+          class="navigation-link"
+          [routerLink]="option.link"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          (click)="selectOption()">
+
+          <span
+            class="navigation-marker"
+            aria-hidden="true">
+          </span>
+
+          <span>
+            {{
+              option.label
+                | translate
+            }}
+          </span>
+
+        </a>
+
+      }
+
+    </div>
 
   </nav>
 

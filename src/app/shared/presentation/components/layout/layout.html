@@ -1,22 +1,191 @@
-<div class="app-layout">
+@if (store.isSignedIn()) {
 
-  <header class="app-header">
-    <div class="brand">
+  <div class="workspace-shell">
+
+    <aside
+      class="workspace-sidebar"
+      [class.mobile-open]="mobileMenuOpen()">
+
+      <div class="sidebar-header">
+
+        <img
+          src="/maquigest-logo.png"
+          alt="MaquiGest"
+          class="sidebar-logo">
+
+        <button
+          type="button"
+          class="sidebar-close"
+          aria-label="Close navigation"
+          (click)="closeMobileMenu()">
+          ×
+        </button>
+
+      </div>
+
+      <div class="company-card">
+
+        <div class="company-avatar">
+          {{ companyInitials() }}
+        </div>
+
+        <div class="company-information">
+
+          <strong>
+            {{
+              companyLabelKey()
+                | translate
+            }}
+          </strong>
+
+          <span>
+            {{
+              'subscriptions.plans.workspace'
+                | translate
+            }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="sidebar-section-label">
+        {{
+          'subscriptions.plans.workspace'
+            | translate
+        }}
+      </div>
+
+      <app-navigation
+        (optionSelected)="closeMobileMenu()" />
+
+      <div class="sidebar-credit">
+        MaquiGest by CleanCode
+      </div>
+
+    </aside>
+
+    @if (mobileMenuOpen()) {
+
+      <button
+        type="button"
+        class="sidebar-overlay"
+        aria-label="Close navigation"
+        (click)="closeMobileMenu()">
+      </button>
+
+    }
+
+    <div class="workspace-main">
+
+      <header class="workspace-topbar">
+
+        <div class="mobile-topbar-start">
+
+          <button
+            type="button"
+            class="mobile-menu-button"
+            aria-label="Open navigation"
+            (click)="toggleMobileMenu()">
+            ☰
+          </button>
+
+          <img
+            src="/maquigest-logo.png"
+            alt="MaquiGest"
+            class="mobile-brand-logo">
+
+        </div>
+
+        <div class="topbar-breadcrumb">
+
+          <span>
+            {{
+              'subscriptions.plans.workspace'
+                | translate
+            }}
+          </span>
+
+          <span class="breadcrumb-separator">
+            /
+          </span>
+
+          <strong>
+            {{
+              breadcrumbLabelKey()
+                | translate
+            }}
+          </strong>
+
+        </div>
+
+        <div class="topbar-actions">
+
+          <app-language-switcher />
+
+          <div class="topbar-user">
+
+            <div class="topbar-avatar">
+              {{ companyInitials() }}
+            </div>
+
+            <div class="topbar-user-information">
+
+              <strong>
+                {{
+                  companyLabelKey()
+                    | translate
+                }}
+              </strong>
+
+              <span>
+                {{
+                  'subscriptions.plans.workspace'
+                    | translate
+                }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </header>
+
+      <main class="workspace-content">
+        <router-outlet />
+      </main>
+
+    </div>
+
+  </div>
+
+} @else if (isAuthenticationPage()) {
+
+  <router-outlet />
+
+} @else {
+
+  <div class="public-layout">
+
+    <header class="public-header">
+
       <img
         src="/maquigest-logo.png"
         alt="MaquiGest"
-        class="brand-logo">
-    </div>
+        class="public-logo">
 
-    <app-navigation />
+      <app-language-switcher />
 
-    <app-language-switcher />
-  </header>
+    </header>
 
-  <main class="app-content">
-    <router-outlet />
-  </main>
+    <main class="public-content">
+      <router-outlet />
+    </main>
 
-  <app-footer />
+    <app-footer />
 
-</div>
+  </div>
+
+}
