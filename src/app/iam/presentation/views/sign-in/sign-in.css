@@ -1,0 +1,128 @@
+:host {
+  display: block;
+}
+
+.sign-in-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: #f8fafc;
+  font-family: Inter, sans-serif;
+}
+
+.sign-in-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 8%);
+}
+
+.sign-in-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.brand-logo {
+  width: 160px;
+  max-width: 55%;
+  height: auto;
+}
+
+.brand-logo {
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+}
+
+.heading {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.heading h1 {
+  margin: 0 0 8px;
+  color: #1e3a5f;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.heading p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.forgot-password {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -4px;
+  margin-bottom: 16px;
+}
+
+.forgot-password a,
+.register-text a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forgot-password a:hover,
+.register-text a:hover {
+  text-decoration: underline;
+}
+
+.sign-in-button {
+  min-height: 48px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.register-text {
+  margin: 24px 0 0;
+  color: #64748b;
+  text-align: center;
+}
+
+.sign-in-button {
+  min-height: 48px;
+  border-radius: 10px;
+  font-weight: 600;
+  background-color: #f59e0b;
+  color: #1e293b;
+}
+
+@media (max-width: 600px) {
+  .sign-in-page {
+    align-items: flex-start;
+    padding: 24px 16px;
+  }
+
+  .sign-in-card {
+    padding: 32px 24px;
+  }
+
+  .heading h1 {
+    font-size: 28px;
+  }
+
+
+}
+

@@ -1,5 +1,21 @@
 ﻿{
   "app": {
     "name": "MaquiGest"
+  },
+  "iam": {
+    "sign-in": {
+      "title": "Iniciar sesión",
+      "subtitle": "Accede a tu cuenta de MaquiGest",
+      "email": "Correo electrónico",
+      "email-required": "El correo electrónico es obligatorio",
+      "email-invalid": "Ingresa un correo electrónico válido",
+      "password": "Contraseña",
+      "password-required": "La contraseña es obligatoria",
+      "toggle-password": "Mostrar u ocultar contraseña",
+      "forgot-password": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "no-account": "¿No tienes una cuenta?",
+      "create-account": "Crear cuenta"
+    }
   }
 }
