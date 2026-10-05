@@ -1,1 +1,90 @@
-<p>company-profile works!</p>
+<section class="profile-grid">
+
+  <mat-card appearance="outlined" class="profile-card">
+    <mat-card-header>
+      <mat-card-title>Personal information</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="information-row">
+        <span class="label">First name</span>
+        <span class="value">
+          {{ profile().firstName || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">Last name</span>
+        <span class="value">
+          {{ profile().lastName || '—' }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="profile-card">
+    <mat-card-header>
+      <mat-card-title>Contact information</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="information-row">
+        <span class="label">Email</span>
+        <span class="value">
+          {{ profile().contactEmail || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">Phone number</span>
+        <span class="value">
+          {{ profile().phoneNumber || '—' }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="profile-card organization-card">
+    <mat-card-header>
+      <mat-card-title>Organization information</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="information-row">
+        <span class="label">Company name</span>
+        <span class="value">
+          {{ profile().companyName || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">Street</span>
+        <span class="value">
+          {{ profile().address.street || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">District</span>
+        <span class="value">
+          {{ profile().address.district || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">City</span>
+        <span class="value">
+          {{ profile().address.city || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">Country</span>
+        <span class="value">
+          {{ profile().address.country || '—' }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</section>
