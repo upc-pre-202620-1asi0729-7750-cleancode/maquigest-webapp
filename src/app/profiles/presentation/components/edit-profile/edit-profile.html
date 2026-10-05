@@ -1,1 +1,186 @@
-<p>edit-profile works!</p>
+<form
+  class="profile-form"
+  [formGroup]="form"
+  (ngSubmit)="submit()">
+
+  <section class="form-section">
+
+    <h2>
+      {{ 'profile.personal-information' | translate }}
+    </h2>
+
+    <div class="form-grid">
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.first-name' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="firstName"
+          required>
+
+        @if (isInvalidControl(form, 'firstName')) {
+          <mat-error>
+            {{ 'profile.error.first-name-required' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.last-name' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="lastName"
+          required>
+
+        @if (isInvalidControl(form, 'lastName')) {
+          <mat-error>
+            {{ 'profile.error.last-name-required' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+    </div>
+
+  </section>
+
+  <section class="form-section">
+
+    <h2>
+      {{ 'profile.contact-information' | translate }}
+    </h2>
+
+    <div class="form-grid">
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.email' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          type="email"
+          formControlName="contactEmail"
+          required>
+
+        @if (
+          isInvalidControl(form, 'contactEmail') &&
+          form.controls.contactEmail.hasError('required')
+          ) {
+          <mat-error>
+            {{ 'profile.error.email-required' | translate }}
+          </mat-error>
+        }
+
+        @if (
+          isInvalidControl(form, 'contactEmail') &&
+          form.controls.contactEmail.hasError('email')
+          ) {
+          <mat-error>
+            {{ 'profile.error.email-invalid' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.phone-number' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          type="tel"
+          formControlName="phoneNumber">
+      </mat-form-field>
+
+    </div>
+
+  </section>
+
+  <section class="form-section">
+
+    <h2>
+      {{ 'profile.organization-information' | translate }}
+    </h2>
+
+    <div class="form-grid">
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.company-name' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="companyName"
+          required>
+
+        @if (isInvalidControl(form, 'companyName')) {
+          <mat-error>
+            {{ 'profile.error.company-name-required' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.street' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="street">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.district' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="district">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.city' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="city">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'profile.country' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="country">
+      </mat-form-field>
+
+    </div>
+
+  </section>
+
+  <div class="form-actions">
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid">
+      {{ 'profile.save' | translate }}
+    </button>
+
+  </div>
+
+</form>

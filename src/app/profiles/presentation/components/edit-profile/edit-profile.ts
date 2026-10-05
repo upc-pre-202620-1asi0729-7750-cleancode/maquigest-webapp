@@ -6,9 +6,20 @@ import { BaseForm } from '../../../../shared/presentation/components/base-form/b
 import { CompanyProfile } from '../../../domain/model/company-profile.entity';
 import { Address } from '../../../domain/value-object/address.value-object';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-edit-profile',
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    TranslatePipe,
+  ],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
