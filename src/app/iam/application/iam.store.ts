@@ -3,6 +3,8 @@
 import { SignInCommand } from '../domain/model/sign-in.command';
 import { IamApi } from '../infrastructure/iam-api';
 
+import { Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,6 +31,8 @@ export class IamStore {
     this.isSignedIn() ? localStorage.getItem('token') : null,
   );
 
+  readonly #router = inject(Router);
+
   signIn(signInCommand: SignInCommand): void {
     this.#iamApi.signIn(signInCommand).subscribe({
       next: (signInResource) => {
@@ -39,6 +43,8 @@ export class IamStore {
         this.#currentEmailSignal.set(signInResource.email);
         this.#currentRoleSignal.set(signInResource.role);
         this.#currentStatusSignal.set(signInResource.status);
+
+        this.#router.navigate(['/dashboard']).then();
       },
 
       error: (err) => {
