@@ -149,7 +149,16 @@
       "check-availability": "Consultar disponibilidad",
       "available-for-period": "La maquinaria está disponible durante el periodo seleccionado.",
       "not-available-for-period": "La maquinaria no está disponible durante el periodo seleccionado.",
-      "invalid-period": "La fecha de inicio debe ser anterior o igual a la fecha de fin."
+      "invalid-period": "La fecha de inicio debe ser anterior o igual a la fecha de fin.",
+      "request-rental": "Solicitar alquiler",
+      "requesting-rental": "Registrando solicitud...",
+      "request-created": "Solicitud de alquiler registrada correctamente.",
+      "request-status": "Estado",
+      "request-status-values": {
+        "pending": "Pendiente",
+        "approved": "Aprobada",
+        "rejected": "Rechazada"
+      }
     }
   }
 }

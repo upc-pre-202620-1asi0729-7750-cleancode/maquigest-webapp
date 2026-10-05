@@ -72,6 +72,27 @@
   border: 1px solid currentColor;
 }
 
+.rental-request-action {
+  margin-top: 16px;
+}
+
+.rental-request-message {
+  display: block;
+  margin-top: 16px;
+}
+
+.rental-request-success {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  margin-top: 16px;
+  padding: 16px;
+
+  border: 1px solid currentColor;
+  border-radius: 8px;
+}
+
 .empty-state {
   padding: 32px;
   text-align: center;
@@ -92,6 +113,10 @@
   }
 
   .availability-form button {
+    width: 100%;
+  }
+
+  .rental-request-action button {
     width: 100%;
   }
 }

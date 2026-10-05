@@ -332,6 +332,39 @@
 
             </div>
 
+            @if (!rentalsStore.latestCreatedRequest()) {
+
+              <div class="rental-request-action">
+
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="button"
+                  [disabled]="rentalsStore.loading()"
+                  (click)="requestRental()">
+
+                  @if (rentalsStore.loading()) {
+
+                    {{
+                      'equipment.detail.requesting-rental'
+                        | translate
+                    }}
+
+                  } @else {
+
+                    {{
+                      'equipment.detail.request-rental'
+                        | translate
+                    }}
+
+                  }
+
+                </button>
+
+              </div>
+
+            }
+
           }
 
           @if (availabilityResult() === false) {
@@ -342,6 +375,49 @@
                 'equipment.detail.not-available-for-period'
                   | translate
               }}
+
+            </div>
+
+          }
+
+          @if (rentalsStore.error()) {
+
+            <mat-error class="rental-request-message">
+
+              {{
+                rentalsStore.error()
+              }}
+
+            </mat-error>
+
+          }
+
+          @if (
+            rentalsStore.latestCreatedRequest();
+            as rentalRequest
+            ) {
+
+            <div class="rental-request-success">
+
+              <strong>
+                {{
+                  'equipment.detail.request-created'
+                    | translate
+                }}
+              </strong>
+
+              <span>
+                {{
+                  'equipment.detail.request-status'
+                    | translate
+                }}:
+                {{
+                  (
+                    'equipment.detail.request-status-values.' +
+                    rentalRequest.status.toLowerCase()
+                  ) | translate
+                }}
+              </span>
 
             </div>
 

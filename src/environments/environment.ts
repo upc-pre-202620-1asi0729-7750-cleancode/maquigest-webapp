@@ -5,5 +5,6 @@ export const environment = {
   platformProviderSignUpEndpointPath: '/authentication/sign-up',
   platformProviderProfilesEndpointPath: '/profiles',
   platformProviderEquipmentEndpointPath: '/equipment',
+  platformProviderRentalRequestsEndpointPath: '/rental-requests',
   platformProviderEquipmentCategoriesEndpointPath: '/equipment-categories',
 };
