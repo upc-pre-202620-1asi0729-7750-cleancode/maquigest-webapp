@@ -1,0 +1,172 @@
+﻿<div class="plans-page">
+
+  <header class="plans-header">
+
+    <span class="section-label">
+      {{
+        'subscriptions.plans.billing'
+          | translate
+      }}
+    </span>
+
+    <h1>
+      {{
+        'subscriptions.plans.title'
+          | translate
+      }}
+    </h1>
+
+    <p>
+      {{
+        'subscriptions.plans.subtitle'
+          | translate
+      }}
+    </p>
+
+  </header>
+
+  @if (store.loading()) {
+
+    <div class="loading-state">
+
+      <mat-spinner diameter="42">
+      </mat-spinner>
+
+    </div>
+
+  } @else if (store.error()) {
+
+    <div class="error-state">
+      {{
+        'subscriptions.plans.load-error'
+          | translate
+      }}
+    </div>
+
+  } @else if (
+    store.plans().length === 0
+    ) {
+
+    <div class="empty-state">
+      {{
+        'subscriptions.plans.empty'
+          | translate
+      }}
+    </div>
+
+  } @else {
+
+    <section class="plans-grid">
+
+      @for (
+        plan of store.plans();
+        track plan.id
+        ) {
+
+        <article
+          class="plan-card"
+          [class.recommended]="
+            isRecommended(plan)
+          ">
+
+          @if (
+            isRecommended(plan)
+            ) {
+
+            <span
+              class="recommended-badge">
+
+              {{
+                'subscriptions.plans.recommended'
+                  | translate
+              }}
+
+            </span>
+
+          }
+
+          <h2>
+            {{
+              planNameKey(plan)
+                | translate
+            }}
+          </h2>
+
+          <div class="plan-price">
+
+            <span class="currency">
+              S/
+            </span>
+
+            <strong>
+              {{ plan.price.amount }}
+            </strong>
+
+            <span class="period">
+              {{
+                'subscriptions.plans.per-month'
+                  | translate
+              }}
+            </span>
+
+          </div>
+
+          <p class="plan-description">
+            {{
+              descriptionKey(plan)
+                | translate
+            }}
+          </p>
+
+          <div class="features-title">
+            {{
+              'subscriptions.plans.includes'
+                | translate
+            }}
+          </div>
+
+          <ul class="plan-features">
+
+            @for (
+              featureKey of
+                featureKeys(plan);
+              track featureKey
+              ) {
+
+              <li>
+
+                <span
+                  class="feature-check"
+                  aria-hidden="true">
+                  ✓
+                </span>
+
+                <span>
+                  {{
+                    featureKey
+                      | translate
+                  }}
+                </span>
+
+              </li>
+
+            }
+
+          </ul>
+
+        </article>
+
+      }
+
+    </section>
+
+    <p class="plans-note">
+      {{
+        'subscriptions.plans.note'
+          | translate
+      }}
+    </p>
+
+  }
+
+</div>

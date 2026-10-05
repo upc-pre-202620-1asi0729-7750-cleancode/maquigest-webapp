@@ -1,0 +1,39 @@
+:host {
+  display: inline-flex;
+}
+
+mat-button-toggle-group {
+  overflow: hidden;
+
+  height: 38px;
+
+  border: 1px solid #d8e0eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+mat-button-toggle {
+  min-width: 42px;
+
+  color: #43516a;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+mat-button-toggle.mat-button-toggle-checked {
+  background: #173b6c;
+  color: #ffffff;
+}
+
+@media (max-width: 520px) {
+
+  mat-button-toggle-group {
+    height: 36px;
+  }
+
+  mat-button-toggle {
+    min-width: 38px;
+  }
+}

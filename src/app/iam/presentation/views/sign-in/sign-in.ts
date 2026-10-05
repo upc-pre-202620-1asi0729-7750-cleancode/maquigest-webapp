@@ -1,17 +1,23 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { Router, RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IamStore } from '../../../application/iam.store';
+
 import { SignInCommand } from '../../../domain/model/sign-in.command';
+
+import { BaseForm } from '../../../../shared/presentation/components/base-form/base-form';
+
 import { LanguageSwitcher } from '../../../../shared/presentation/components/language-switcher/language-switcher';
-import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-sign-in',
   imports: [
@@ -19,19 +25,18 @@ import { RouterLink } from '@angular/router';
     RouterLink,
     MatButtonModule,
     MatFormFieldModule,
-    MatIconModule,
     MatInputModule,
     TranslatePipe,
     LanguageSwitcher,
-    RouterLink,
   ],
   templateUrl: './sign-in.html',
   styleUrl: './sign-in.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SignIn {
-  readonly #store = inject(IamStore);
+export class SignIn extends BaseForm {
+  readonly #router = inject(Router);
 
-  protected readonly hidePassword = signal(true);
+  readonly #store = inject(IamStore);
 
   protected readonly registrationSuccess = history.state?.['registrationSuccess'] === true;
 
@@ -40,18 +45,16 @@ export class SignIn {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
     }),
+
     password: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
   });
 
-  protected togglePasswordVisibility(): void {
-    this.hidePassword.update((value) => !value);
-  }
-
   protected performSignIn(): void {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
@@ -62,6 +65,6 @@ export class SignIn {
       password,
     });
 
-    this.#store.signIn(signInCommand);
+    this.#store.signIn(signInCommand, this.#router);
   }
 }

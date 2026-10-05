@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { iamGuard } from './iam/infrastructure/iam.guard';
+
 const iamRoutes = () => import('./iam/presentation/iam.routes').then((m) => m.iamRoutes);
 
 const profilesRoutes = () =>
@@ -8,10 +10,11 @@ const profilesRoutes = () =>
 const inventoryRoutes = () =>
   import('./inventory/presentation/inventory.routes').then((m) => m.inventoryRoutes);
 
+const subscriptionsRoutes = () =>
+  import('./subscriptions/presentation/subscriptions.routes').then((m) => m.subscriptionsRoutes);
+
 const dashboard = () =>
   import('./shared/presentation/views/dashboard/dashboard').then((m) => m.Dashboard);
-
-import { iamGuard } from './iam/infrastructure/iam.guard';
 
 export const routes: Routes = [
   {
@@ -32,6 +35,11 @@ export const routes: Routes = [
   {
     path: 'inventory',
     loadChildren: inventoryRoutes,
+    canActivate: [iamGuard],
+  },
+  {
+    path: 'subscriptions',
+    loadChildren: subscriptionsRoutes,
     canActivate: [iamGuard],
   },
   {

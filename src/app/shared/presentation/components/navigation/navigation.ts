@@ -1,33 +1,33 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
-import { MatButtonModule } from '@angular/material/button';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IamStore } from '../../../../iam/application/iam.store';
 
+interface NavigationOption {
+  link: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-navigation',
-  imports: [RouterLink, RouterLinkActive, MatButtonModule, TranslatePipe],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './navigation.html',
   styleUrl: './navigation.css',
 })
 export class Navigation {
   protected readonly store = inject(IamStore);
 
-  protected readonly options = computed(() => {
+  readonly optionSelected = output<void>();
+
+  protected readonly primaryOptions = computed<NavigationOption[]>(() => {
     const role = this.store.currentRole();
 
     const dashboard = {
       link: '/dashboard',
       label: 'navigation.dashboard',
-    };
-
-    const profile = {
-      link: '/profiles/profile',
-      label: 'navigation.profile',
     };
 
     if (role === 'rental_company') {
@@ -37,7 +37,6 @@ export class Navigation {
           link: '/inventory/equipment',
           label: 'navigation.equipment',
         },
-        profile,
       ];
     }
 
@@ -48,10 +47,34 @@ export class Navigation {
           link: '/inventory/search',
           label: 'navigation.search-equipment',
         },
+      ];
+    }
+
+    return [dashboard];
+  });
+
+  protected readonly utilityOptions = computed<NavigationOption[]>(() => {
+    const role = this.store.currentRole();
+
+    const profile = {
+      link: '/profiles/profile',
+      label: 'navigation.profile',
+    };
+
+    if (role === 'rental_company') {
+      return [
+        {
+          link: '/subscriptions/plans',
+          label: 'navigation.plan-subscription',
+        },
         profile,
       ];
     }
 
-    return [dashboard, profile];
+    return [profile];
   });
+
+  protected selectOption(): void {
+    this.optionSelected.emit();
+  }
 }

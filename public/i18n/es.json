@@ -6,6 +6,7 @@
     "dashboard": "Panel principal",
     "equipment": "Maquinaria",
     "search-equipment": "Buscar maquinaria",
+    "plan-subscription": "Plan y suscripción",
     "profile": "Perfil"
   },
   "footer": {
@@ -14,19 +15,31 @@
     "and": "y"
   },
   "iam": {
+    "auth": {
+      "hero-badge": "Gestión de alquiler de maquinaria",
+      "hero-title-line-1": "Organiza tus equipos.",
+      "hero-title-line-2": "Mantén cada alquiler bajo control.",
+      "hero-description": "Gestiona equipos, solicitudes, alquileres y mantenimiento en un solo lugar."
+    },
     "sign-in": {
       "title": "Iniciar sesión",
       "subtitle": "Accede a tu cuenta de MaquiGest",
+      "welcome-back": "Bienvenido de nuevo",
+      "card-title": "Inicia sesión en MaquiGest",
+      "card-subtitle": "Accede al espacio de trabajo de tu empresa.",
       "email": "Correo electrónico",
+      "email-placeholder": "nombre@empresa.com",
       "email-required": "El correo electrónico es obligatorio",
       "email-invalid": "Ingresa un correo electrónico válido",
       "password": "Contraseña",
       "password-required": "La contraseña es obligatoria",
       "toggle-password": "Mostrar u ocultar contraseña",
+      "remember-me": "Recordarme",
       "forgot-password": "¿Olvidaste tu contraseña?",
       "submit": "Iniciar sesión",
       "no-account": "¿No tienes una cuenta?",
-      "create-account": "Crear cuenta",
+      "new-to-maquigest": "¿Nuevo en MaquiGest?",
+      "create-account": "Crear una cuenta",
       "registration-success": "Tu cuenta fue creada correctamente. Ya puedes iniciar sesión."
     }
   },
@@ -39,13 +52,21 @@
     "sign-out": "Cerrar sesión"
   },
   "sign-up": {
-    "title": "Crea tu cuenta",
-    "subtitle": "Registra tu empresa en MaquiGest",
+    "workspace-badge": "Crea tu espacio de trabajo",
+    "title": "Registra tu empresa",
+    "subtitle": "Configura tu cuenta para comenzar a gestionar alquileres.",
+    "full-name": "Nombre completo",
+    "full-name-placeholder": "Tu nombre",
+    "full-name-invalid": "Ingresa tus nombres y apellidos.",
     "first-name": "Nombres",
     "last-name": "Apellidos",
     "email": "Correo electrónico",
+    "email-placeholder": "nombre@empresa.com",
     "password": "Contraseña",
+    "confirm-password": "Confirmar contraseña",
+    "passwords-do-not-match": "Las contraseñas no coinciden.",
     "company-name": "Nombre de la empresa",
+    "company-placeholder": "Empresa",
     "organization-type": "Tipo de organización",
     "rental-company": "Empresa de alquiler",
     "construction-company": "Empresa constructora",
@@ -158,6 +179,50 @@
         "pending": "Pendiente",
         "approved": "Aprobada",
         "rejected": "Rechazada"
+      }
+    }
+  },
+  "subscriptions": {
+    "plans": {
+      "workspace": "Espacio de trabajo",
+      "breadcrumb": "Plan y suscripción",
+      "billing": "Facturación",
+      "title": "Plan y suscripción",
+      "subtitle": "Compara los planes disponibles y conoce las funcionalidades incluidas en cada alternativa.",
+      "recommended": "Recomendado",
+      "per-month": "/ mes",
+      "includes": "Incluye",
+      "empty": "No hay planes disponibles en este momento.",
+      "load-error": "No fue posible cargar los planes disponibles.",
+      "note": "Planes y precios referenciales en soles (PEN), sujetos a confirmación.",
+      "plan-names": {
+        "essential": "Esencial",
+        "professional": "Profesional",
+        "growth": "Crecimiento"
+      },
+      "descriptions": {
+        "essential": "Para comenzar a organizar tus equipos y solicitudes de reserva.",
+        "professional": "Para centralizar las operaciones diarias de alquiler de tu empresa.",
+        "growth": "Para ampliar el control operativo y gestionar el mantenimiento de tus equipos."
+      },
+      "features": {
+        "essential": {
+          "inventory": "Registro y gestión del inventario de equipos.",
+          "availability": "Consulta del estado y la disponibilidad de equipos.",
+          "requests": "Gestión de solicitudes de reserva."
+        },
+        "professional": {
+          "essential": "Todo lo incluido en Esencial.",
+          "rentals": "Gestión de alquileres y contratos.",
+          "payments": "Registro de pagos de los alquileres.",
+          "delivery-return": "Registro de entregas y devoluciones."
+        },
+        "growth": {
+          "professional": "Todo lo incluido en Profesional.",
+          "incidents": "Registro de incidencias e inspecciones.",
+          "scheduling": "Programación del mantenimiento de equipos.",
+          "history": "Historial de mantenimiento por equipo."
+        }
       }
     }
   }
