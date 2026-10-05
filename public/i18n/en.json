@@ -140,7 +140,16 @@
       "information": "Equipment information",
       "rental-conditions": "Rental conditions",
       "condition": "Status and availability",
-      "not-found": "The requested equipment could not be found."
+      "not-found": "The requested equipment could not be found.",
+      "period-availability": "Availability for a period",
+      "period-description": "Select the dates when you need the equipment to check its availability.",
+      "start-date": "Start date",
+      "end-date": "End date",
+      "date-required": "The date is required.",
+      "check-availability": "Check availability",
+      "available-for-period": "The equipment is available during the selected period.",
+      "not-available-for-period": "The equipment is not available during the selected period.",
+      "invalid-period": "The start date must be before or equal to the end date."
     }
   }
 }

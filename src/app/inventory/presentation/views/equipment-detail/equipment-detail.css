@@ -43,17 +43,55 @@
   font-weight: 600;
 }
 
+.availability-form {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.availability-form button {
+  justify-self: start;
+  grid-column: 1 / -1;
+}
+
+.availability-result {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.available {
+  border: 1px solid currentColor;
+}
+
+.unavailable {
+  border: 1px solid currentColor;
+}
+
 .empty-state {
   padding: 32px;
   text-align: center;
 }
 
 @media (max-width: 600px) {
+
   .equipment-detail-page {
     padding: 16px;
   }
 
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .availability-form {
+    grid-template-columns: 1fr;
+  }
+
+  .availability-form button {
+    width: 100%;
   }
 }
