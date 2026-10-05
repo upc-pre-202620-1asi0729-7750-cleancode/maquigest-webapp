@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "rental@maquigest.com",
+      "password": "MaquiGest123!",
+      "role": "rental_company",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "email": "construction@maquigest.com",
+      "password": "MaquiGest123!",
+      "role": "construction_company",
+      "status": "active"
+    }
+  ]
+}

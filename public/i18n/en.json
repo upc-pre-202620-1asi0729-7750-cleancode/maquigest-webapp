@@ -1,5 +1,29 @@
 ﻿{
   "app": {
     "name": "MaquiGest"
+  },
+  "iam": {
+    "sign-in": {
+      "title": "Sign in",
+      "subtitle": "Access your MaquiGest account",
+      "email": "Email",
+      "email-required": "Email is required",
+      "email-invalid": "Enter a valid email address",
+      "password": "Password",
+      "password-required": "Password is required",
+      "toggle-password": "Show or hide password",
+      "forgot-password": "Forgot your password?",
+      "submit": "Sign in",
+      "no-account": "Don't have an account?",
+      "create-account": "Create account"
+    }
+  },
+  "dashboard": {
+    "rental-title": "Rental company dashboard",
+    "construction-title": "Construction company dashboard",
+    "rental-company": "Rental Company",
+    "construction-company": "Construction Company",
+    "welcome": "Welcome,",
+    "sign-out": "Sign out"
   }
 }
