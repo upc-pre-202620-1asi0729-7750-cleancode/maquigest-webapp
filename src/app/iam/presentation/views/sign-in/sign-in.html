@@ -1,33 +1,29 @@
 <main class="sign-in-page">
 
-  <section
-    class="sign-in-card"
-    aria-labelledby="sign-in-title"
-  >
+  <section class="sign-in-card">
 
-    <div class="sign-in-header">
+    <header class="sign-in-header">
 
-      <img
-        src="/maquigest-logo.png"
-        alt="MaquiGest"
-        class="brand-logo"
-      >
+      <div class="top-bar">
+        <img
+          src="/maquigest-logo.png"
+          alt="MaquiGest"
+          class="brand-logo">
 
-      <app-language-switcher />
+        <app-language-switcher />
+      </div>
 
-    </div>
+      <div class="heading">
+        <h1>
+          {{ 'iam.sign-in.title' | translate }}
+        </h1>
 
-    <div class="heading">
+        <p>
+          {{ 'iam.sign-in.subtitle' | translate }}
+        </p>
+      </div>
 
-      <h1 id="sign-in-title">
-        {{ 'iam.sign-in.title' | translate }}
-      </h1>
-
-      <p>
-        {{ 'iam.sign-in.subtitle' | translate }}
-      </p>
-
-    </div>
+    </header>
 
     <form
       [formGroup]="form"
@@ -44,16 +40,21 @@
           matInput
           type="email"
           formControlName="email"
-          autocomplete="email"
-        >
+          autocomplete="email">
 
-        @if (form.controls.email.hasError('required')) {
+        @if (
+          form.controls.email.touched &&
+          form.controls.email.hasError('required')
+          ) {
           <mat-error>
             {{ 'iam.sign-in.email-required' | translate }}
           </mat-error>
         }
 
-        @if (form.controls.email.hasError('email')) {
+        @if (
+          form.controls.email.touched &&
+          form.controls.email.hasError('email')
+          ) {
           <mat-error>
             {{ 'iam.sign-in.email-invalid' | translate }}
           </mat-error>
@@ -71,22 +72,25 @@
           matInput
           [type]="hidePassword() ? 'password' : 'text'"
           formControlName="password"
-          autocomplete="current-password"
-        >
+          autocomplete="current-password">
 
         <button
           mat-icon-button
           matSuffix
           type="button"
           [attr.aria-label]="'iam.sign-in.toggle-password' | translate"
-          (click)="togglePasswordVisibility()"
-        >
+          (click)="togglePasswordVisibility()">
+
           <mat-icon>
-            {{ hidePassword() ? 'visibility' : 'visibility_off' }}
+            {{ hidePassword() ? 'visibility_off' : 'visibility' }}
           </mat-icon>
+
         </button>
 
-        @if (form.controls.password.hasError('required')) {
+        @if (
+          form.controls.password.touched &&
+          form.controls.password.hasError('required')
+          ) {
           <mat-error>
             {{ 'iam.sign-in.password-required' | translate }}
           </mat-error>
@@ -95,25 +99,24 @@
       </mat-form-field>
 
       <div class="forgot-password">
-
         <a routerLink="/iam/recover-password">
           {{ 'iam.sign-in.forgot-password' | translate }}
         </a>
-
       </div>
 
       <button
         mat-flat-button
         type="submit"
         class="sign-in-button"
-        [disabled]="form.invalid"
-      >
+        [disabled]="form.invalid">
+
         {{ 'iam.sign-in.submit' | translate }}
+
       </button>
 
     </form>
 
-    <p class="register-text">
+    <p class="create-account">
 
       {{ 'iam.sign-in.no-account' | translate }}
 
