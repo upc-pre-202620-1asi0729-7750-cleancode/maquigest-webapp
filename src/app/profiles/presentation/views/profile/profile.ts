@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatError } from '@angular/material/form-field';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+
 import { IamStore } from '../../../../iam/application/iam.store';
 import { ProfilesStore } from '../../../application/profiles.store';
 import { CompanyProfile } from '../../../domain/model/company-profile.entity';
@@ -8,9 +12,7 @@ import { CompanyProfileComponent } from '../../components/company-profile/compan
 
 import { EditProfileComponent } from '../../components/edit-profile/edit-profile';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatError } from '@angular/material/form-field';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatButtonModule,
     MatError,
     MatProgressSpinner,
+    TranslatePipe,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',

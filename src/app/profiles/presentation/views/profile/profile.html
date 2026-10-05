@@ -1,5 +1,9 @@
 <div class="profile-page">
 
+  <h1>
+    {{ 'profile.title' | translate }}
+  </h1>
+
   @if (loading()) {
     <mat-spinner diameter="40"></mat-spinner>
   }
@@ -23,7 +27,7 @@
           mat-button
           type="button"
           (click)="cancelEditing()">
-          Cancel
+          {{ 'profile.cancel' | translate }}
         </button>
 
       } @else {
@@ -37,14 +41,16 @@
           color="primary"
           type="button"
           (click)="startEditing()">
-          Edit profile
+          {{ 'profile.edit' | translate }}
         </button>
 
       }
 
     } @else {
 
-      <p>No profile information was found.</p>
+      <p>
+        {{ 'profile.not-found' | translate }}
+      </p>
 
     }
 
