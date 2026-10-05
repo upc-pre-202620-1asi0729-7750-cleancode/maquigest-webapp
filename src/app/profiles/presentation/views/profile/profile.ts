@@ -8,9 +8,19 @@ import { CompanyProfileComponent } from '../../components/company-profile/compan
 
 import { EditProfileComponent } from '../../components/edit-profile/edit-profile';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatError } from '@angular/material/form-field';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+
 @Component({
   selector: 'app-profile',
-  imports: [CompanyProfileComponent, EditProfileComponent],
+  imports: [
+    CompanyProfileComponent,
+    EditProfileComponent,
+    MatButtonModule,
+    MatError,
+    MatProgressSpinner,
+  ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

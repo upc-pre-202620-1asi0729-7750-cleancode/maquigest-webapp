@@ -1,1 +1,53 @@
-<p>profile works!</p>
+<div class="profile-page">
+
+  @if (loading()) {
+    <mat-spinner diameter="40"></mat-spinner>
+  }
+
+  @if (error()) {
+    <mat-error>{{ error() }}</mat-error>
+  }
+
+  @if (!loading() && !error()) {
+
+    @if (profile(); as currentProfile) {
+
+      @if (isEditing()) {
+
+        <app-edit-profile
+          [profile]="currentProfile"
+          (profileUpdated)="updateProfile($event)"
+        />
+
+        <button
+          mat-button
+          type="button"
+          (click)="cancelEditing()">
+          Cancel
+        </button>
+
+      } @else {
+
+        <app-company-profile
+          [profile]="currentProfile"
+        />
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="startEditing()">
+          Edit profile
+        </button>
+
+      }
+
+    } @else {
+
+      <p>No profile information was found.</p>
+
+    }
+
+  }
+
+</div>
