@@ -1,7 +1,13 @@
 <div class="container-with-spacing">
 
   <h1 class="title">
-    {{ 'equipment.new-title' | translate }}
+    {{
+      (
+        isEdit
+          ? 'equipment.edit-title'
+          : 'equipment.new-title'
+      ) | translate
+    }}
   </h1>
 
   <form
@@ -20,7 +26,10 @@
 
       @if (isInvalidControl(form, 'code')) {
         <mat-error>
-          {{ 'equipment.error.code-required' | translate }}
+          {{
+            'equipment.error.code-required'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -37,7 +46,10 @@
 
       @if (isInvalidControl(form, 'name')) {
         <mat-error>
-          {{ 'equipment.error.name-required' | translate }}
+          {{
+            'equipment.error.name-required'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -55,7 +67,10 @@
 
       @if (isInvalidControl(form, 'description')) {
         <mat-error>
-          {{ 'equipment.error.description-required' | translate }}
+          {{
+            'equipment.error.description-required'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -69,7 +84,10 @@
         formControlName="categoryId"
         required>
 
-        @for (category of categories(); track category.id) {
+        @for (
+          category of categories();
+          track category.id
+          ) {
           <mat-option [value]="category.id">
             {{ category.name }}
           </mat-option>
@@ -79,7 +97,10 @@
 
       @if (isInvalidControl(form, 'categoryId')) {
         <mat-error>
-          {{ 'equipment.error.category-required' | translate }}
+          {{
+            'equipment.error.category-required'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -96,7 +117,10 @@
 
       @if (isInvalidControl(form, 'location')) {
         <mat-error>
-          {{ 'equipment.error.location-required' | translate }}
+          {{
+            'equipment.error.location-required'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -116,7 +140,10 @@
 
       @if (isInvalidControl(form, 'dailyRate')) {
         <mat-error>
-          {{ 'equipment.error.daily-rate-invalid' | translate }}
+          {{
+            'equipment.error.daily-rate-invalid'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -136,7 +163,10 @@
 
       @if (isInvalidControl(form, 'weeklyRate')) {
         <mat-error>
-          {{ 'equipment.error.weekly-rate-invalid' | translate }}
+          {{
+            'equipment.error.weekly-rate-invalid'
+              | translate
+          }}
         </mat-error>
       }
     </mat-form-field>
@@ -153,10 +183,15 @@
       type="submit"
       [disabled]="form.invalid || loading()">
 
-      {{ 'equipment.create' | translate }}
+      {{
+        (
+          isEdit
+            ? 'equipment.update'
+            : 'equipment.create'
+        ) | translate
+      }}
 
     </button>
 
   </form>
-
 </div>

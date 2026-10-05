@@ -1,6 +1,7 @@
 <div class="container-with-spacing">
 
   <div class="header">
+
     <h1 class="title">
       {{ 'equipment.list-title' | translate }}
     </h1>
@@ -10,12 +11,16 @@
       color="primary"
       type="button"
       (click)="navigateToNew()">
+
       {{ 'equipment.new' | translate }}
+
     </button>
+
   </div>
 
   @if (store.loading()) {
-    <mat-spinner diameter="40"></mat-spinner>
+    <mat-spinner diameter="40">
+    </mat-spinner>
   }
 
   @if (store.error()) {
@@ -24,7 +29,10 @@
     </mat-error>
   }
 
-  @if (!store.loading() && store.equipment().length === 0) {
+  @if (
+    !store.loading() &&
+    store.equipment().length === 0
+    ) {
 
     <p class="empty-state">
       {{ 'equipment.empty' | translate }}
@@ -48,11 +56,17 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header>
+
             {{ 'equipment.code' | translate }}
+
           </th>
 
-          <td mat-cell *matCellDef="let equipment">
+          <td
+            mat-cell
+            *matCellDef="let equipment">
+
             {{ equipment.code }}
+
           </td>
         </ng-container>
 
@@ -61,11 +75,17 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header>
+
             {{ 'equipment.name' | translate }}
+
           </th>
 
-          <td mat-cell *matCellDef="let equipment">
+          <td
+            mat-cell
+            *matCellDef="let equipment">
+
             {{ equipment.name }}
+
           </td>
         </ng-container>
 
@@ -74,11 +94,19 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header>
+
             {{ 'equipment.category' | translate }}
+
           </th>
 
-          <td mat-cell *matCellDef="let equipment">
-            {{ equipment.category?.name ?? '-' }}
+          <td
+            mat-cell
+            *matCellDef="let equipment">
+
+            {{
+              equipment.category?.name ?? '-'
+            }}
+
           </td>
         </ng-container>
 
@@ -87,11 +115,17 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header>
+
             {{ 'equipment.location' | translate }}
+
           </th>
 
-          <td mat-cell *matCellDef="let equipment">
+          <td
+            mat-cell
+            *matCellDef="let equipment">
+
             {{ equipment.location }}
+
           </td>
         </ng-container>
 
@@ -100,17 +134,57 @@
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header>
+
             {{ 'equipment.status' | translate }}
+
           </th>
 
-          <td mat-cell *matCellDef="let equipment">
+          <td
+            mat-cell
+            *matCellDef="let equipment">
+
             {{
               (
                 'equipment.status-values.' +
                 equipment.status.toLowerCase()
               ) | translate
             }}
+
           </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+
+          <th
+            mat-header-cell
+            *matHeaderCellDef>
+
+            {{ 'equipment.actions' | translate }}
+
+          </th>
+
+          <td
+            mat-cell
+            *matCellDef="let equipment">
+
+            <button
+              mat-icon-button
+              type="button"
+              [attr.aria-label]="
+                'equipment.edit' | translate
+              "
+              (click)="
+                editEquipment(equipment.id)
+              ">
+
+              <mat-icon>
+                edit
+              </mat-icon>
+
+            </button>
+
+          </td>
+
         </ng-container>
 
         <tr

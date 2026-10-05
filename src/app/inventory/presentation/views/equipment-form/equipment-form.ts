@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,6 +32,7 @@ import { RentalRate } from '../../../domain/value-object/rental-rate.value-objec
 })
 export class EquipmentForm extends BaseForm {
   readonly #fb = inject(FormBuilder);
+  readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
   readonly #inventoryStore = inject(InventoryStore);
   readonly #iamStore = inject(IamStore);
@@ -40,39 +41,62 @@ export class EquipmentForm extends BaseForm {
   readonly loading = this.#inventoryStore.loading;
   readonly error = this.#inventoryStore.error;
 
+  isEdit = false;
+  equipmentId: number | null = null;
+
   form = this.#fb.group({
     code: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-
     description: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-
     categoryId: new FormControl<number | null>(null, {
       validators: [Validators.required],
     }),
-
     location: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-
     dailyRate: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0.01)],
     }),
-
     weeklyRate: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0.01)],
     }),
   });
+
+  constructor() {
+    super();
+
+    this.#route.params.subscribe((params) => {
+      this.equipmentId = params['id'] ? +params['id'] : null;
+
+      this.isEdit = !!this.equipmentId;
+
+      if (this.isEdit && this.equipmentId) {
+        const equipment = this.#inventoryStore.getEquipmentById(this.equipmentId)();
+
+        if (equipment) {
+          this.form.patchValue({
+            code: equipment.code,
+            name: equipment.name,
+            description: equipment.description,
+            categoryId: equipment.categoryId,
+            location: equipment.location,
+            dailyRate: equipment.rentalRate.dailyRate,
+            weeklyRate: equipment.rentalRate.weeklyRate,
+          });
+        }
+      }
+    });
+  }
 
   submit(): void {
     if (this.form.invalid) {
@@ -80,15 +104,19 @@ export class EquipmentForm extends BaseForm {
       return;
     }
 
-    const userId = this.#iamStore.currentUserId();
+    const currentUserId = this.#iamStore.currentUserId();
 
-    if (userId === null) {
+    if (currentUserId === null) {
       return;
     }
 
+    const currentEquipment = this.equipmentId
+      ? this.#inventoryStore.getEquipmentById(this.equipmentId)()
+      : undefined;
+
     const equipment = new Equipment({
-      id: 0,
-      userId,
+      id: this.equipmentId ?? 0,
+      userId: currentEquipment?.userId ?? currentUserId,
       code: this.form.controls.code.value,
       name: this.form.controls.name.value,
       description: this.form.controls.description.value,
@@ -98,9 +126,14 @@ export class EquipmentForm extends BaseForm {
         dailyRate: this.form.controls.dailyRate.value ?? 0,
         weeklyRate: this.form.controls.weeklyRate.value ?? 0,
       }),
+      status: currentEquipment?.status,
     });
 
-    this.#inventoryStore.addEquipment(equipment);
+    if (this.isEdit) {
+      this.#inventoryStore.updateEquipment(equipment);
+    } else {
+      this.#inventoryStore.addEquipment(equipment);
+    }
 
     this.#router.navigate(['/inventory/equipment']).then();
   }
