@@ -1,4 +1,6 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -11,6 +13,8 @@ import { IamStore } from '../../../../iam/application/iam.store';
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  readonly #router = inject(Router);
+
   protected readonly store = inject(IamStore);
 
   protected get dashboardTitle(): string {
@@ -26,6 +30,6 @@ export class Dashboard {
   }
 
   protected performSignOut(): void {
-    this.store.signOut();
+    this.store.signOut(this.#router);
   }
 }
