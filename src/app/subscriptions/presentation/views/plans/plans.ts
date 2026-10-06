@@ -17,11 +17,17 @@ import { SubscriptionsStore } from '../../../application/subscriptions.store';
 
 import { SubscriptionPlan } from '../../../domain/model/subscription-plan.entity';
 
+import { ChangePlan } from '../../components/change-plan/change-plan';
+
 @Component({
   selector: 'app-plans',
-  imports: [MatProgressSpinnerModule, TranslatePipe],
+
+  imports: [MatProgressSpinnerModule, TranslatePipe, ChangePlan],
+
   templateUrl: './plans.html',
+
   styleUrl: './plans.css',
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Plans {
@@ -53,6 +59,24 @@ export class Plans {
 
       this.store.loadCurrentSubscription(userId);
     });
+
+    effect(() => {
+      const selectedPlan = this.selectedPlan();
+
+      const currentSubscription = this.store.currentSubscription();
+
+      const loading = this.store.subscriptionLoading();
+
+      const error = this.store.subscriptionError();
+
+      if (!selectedPlan || !currentSubscription || loading || error) {
+        return;
+      }
+
+      if (currentSubscription.planId === selectedPlan.id) {
+        this.selectedPlan.set(null);
+      }
+    });
   }
 
   protected isRecommended(plan: SubscriptionPlan): boolean {
@@ -64,7 +88,7 @@ export class Plans {
   }
 
   protected selectPlan(plan: SubscriptionPlan): void {
-    if (this.store.currentSubscription()) {
+    if (this.isCurrentPlan(plan) || this.store.subscriptionLoading()) {
       return;
     }
 
@@ -79,12 +103,24 @@ export class Plans {
     this.selectedPlan.set(null);
   }
 
-  protected confirmSubscription(): void {
-    const userId = this.#iamStore.currentUserId();
-
+  protected confirmPlanAction(): void {
     const plan = this.selectedPlan();
 
-    if (userId === null || plan === null) {
+    if (!plan) {
+      return;
+    }
+
+    const currentSubscription = this.store.currentSubscription();
+
+    if (currentSubscription) {
+      this.store.changePlan(plan.id);
+
+      return;
+    }
+
+    const userId = this.#iamStore.currentUserId();
+
+    if (userId === null) {
       return;
     }
 

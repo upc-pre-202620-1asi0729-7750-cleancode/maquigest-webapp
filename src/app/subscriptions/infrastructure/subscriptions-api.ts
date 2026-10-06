@@ -31,4 +31,8 @@ export class SubscriptionsApi extends BaseApi {
   createUserSubscription(subscription: UserSubscription): Observable<UserSubscription> {
     return this.#userSubscriptionEndpoint.create(subscription);
   }
+
+  updateUserSubscription(subscription: UserSubscription): Observable<UserSubscription> {
+    return this.#userSubscriptionEndpoint.update(subscription, subscription.id);
+  }
 }
