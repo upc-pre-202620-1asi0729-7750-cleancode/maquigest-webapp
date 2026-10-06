@@ -14,6 +14,10 @@ import { RentalRequestApiEndpoint } from './rental-request-api-endpoint';
 export class RentalsApi extends BaseApi {
   readonly #rentalRequestEndpoint = new RentalRequestApiEndpoint(this.http);
 
+  getRentalRequests(): Observable<RentalRequest[]> {
+    return this.#rentalRequestEndpoint.getAll();
+  }
+
   createRentalRequest(rentalRequest: RentalRequest): Observable<RentalRequest> {
     return this.#rentalRequestEndpoint.create(rentalRequest);
   }

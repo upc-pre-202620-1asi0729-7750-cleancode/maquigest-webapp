@@ -13,8 +13,11 @@ interface NavigationOption {
 
 @Component({
   selector: 'app-navigation',
+
   imports: [RouterLink, RouterLinkActive, TranslatePipe],
+
   templateUrl: './navigation.html',
+
   styleUrl: './navigation.css',
 })
 export class Navigation {
@@ -27,6 +30,7 @@ export class Navigation {
 
     const dashboard = {
       link: '/dashboard',
+
       label: 'navigation.dashboard',
     };
 
@@ -35,7 +39,13 @@ export class Navigation {
         dashboard,
         {
           link: '/inventory/equipment',
+
           label: 'navigation.equipment',
+        },
+        {
+          link: '/rentals/requests',
+
+          label: 'navigation.rental-requests',
         },
       ];
     }
@@ -45,6 +55,7 @@ export class Navigation {
         dashboard,
         {
           link: '/inventory/search',
+
           label: 'navigation.search-equipment',
         },
       ];
@@ -58,6 +69,7 @@ export class Navigation {
 
     const profile = {
       link: '/profiles/profile',
+
       label: 'navigation.profile',
     };
 
@@ -65,8 +77,10 @@ export class Navigation {
       return [
         {
           link: '/subscriptions/plans',
+
           label: 'navigation.plan-subscription',
         },
+
         profile,
       ];
     }

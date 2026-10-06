@@ -7,7 +7,8 @@
     "equipment": "Equipment",
     "search-equipment": "Search equipment",
     "plan-subscription": "Plan & Subscription",
-    "profile": "Profile"
+    "profile": "Profile",
+    "rental-requests": "Rental Requests"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -180,6 +181,41 @@
         "approved": "Approved",
         "rejected": "Rejected"
       }
+    }
+  },
+  "rentals": {
+    "requests": {
+      "section": "Rental operations",
+      "title": "Rental Requests",
+      "subtitle": "Review the rental requests received by your company and track their current status.",
+      "summary": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "list-label": "Requests",
+      "list-title": "Received requests",
+      "filters": {
+        "status": "Status",
+        "all-statuses": "All statuses",
+        "date": "Request date",
+        "clear": "Clear filters"
+      },
+      "requester": "Requester",
+      "equipment": "Equipment",
+      "period": "Rental period",
+      "requested-at": "Requested on",
+      "status-label": "Status",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "load-error": "The rental requests could not be loaded.",
+      "empty-title": "No rental requests yet",
+      "empty-description": "Your company has not received any rental requests yet.",
+      "no-filter-results": "No matching requests",
+      "no-filter-results-description": "No rental requests match the selected filters."
     }
   },
   "subscriptions": {

@@ -1,0 +1,500 @@
+﻿<div class="requests-page">
+
+  <header class="requests-header">
+
+    <span class="section-label">
+      {{
+        'rentals.requests.section'
+          | translate
+      }}
+    </span>
+
+    <h1>
+      {{
+        'rentals.requests.title'
+          | translate
+      }}
+    </h1>
+
+    <p>
+      {{
+        'rentals.requests.subtitle'
+          | translate
+      }}
+    </p>
+
+  </header>
+
+  <section class="summary-grid">
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.requests.summary.pending'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.pendingRequestCount()
+        }}
+      </strong>
+
+    </article>
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.requests.summary.approved'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.approvedRequestCount()
+        }}
+      </strong>
+
+    </article>
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.requests.summary.rejected'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.rejectedRequestCount()
+        }}
+      </strong>
+
+    </article>
+
+  </section>
+
+  <section class="requests-content">
+
+    <div class="content-heading">
+
+      <div>
+
+        <span class="section-label">
+          {{
+            'rentals.requests.list-label'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'rentals.requests.list-title'
+              | translate
+          }}
+        </h2>
+
+      </div>
+
+    </div>
+
+    <div class="filters">
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          {{
+            'rentals.requests.filters.status'
+              | translate
+          }}
+        </mat-label>
+
+        <mat-select
+          [value]="statusFilter()"
+          (selectionChange)="
+            setStatusFilter(
+              $event.value
+            )
+          ">
+
+          <mat-option
+            value="ALL">
+
+            {{
+              'rentals.requests.filters.all-statuses'
+                | translate
+            }}
+
+          </mat-option>
+
+          @for (
+            status of statusOptions;
+            track status
+            ) {
+
+            <mat-option
+              [value]="status">
+
+              {{
+                statusKey(status)
+                  | translate
+              }}
+
+            </mat-option>
+
+          }
+
+        </mat-select>
+
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          {{
+            'rentals.requests.filters.date'
+              | translate
+          }}
+        </mat-label>
+
+        <input
+          matInput
+          type="date"
+          [value]="dateFilter()"
+          (input)="
+            setDateFilter($event)
+          ">
+
+      </mat-form-field>
+
+      <button
+        type="button"
+        class="clear-filter-button"
+        (click)="clearFilters()">
+
+        {{
+          'rentals.requests.filters.clear'
+            | translate
+        }}
+
+      </button>
+
+    </div>
+
+    @if (
+      store.loading()
+      ) {
+
+      <div class="loading-state">
+
+        <mat-spinner
+          diameter="42">
+        </mat-spinner>
+
+      </div>
+
+    } @else if (
+      store.error()
+      ) {
+
+      <div class="error-state">
+
+        {{
+          'rentals.requests.load-error'
+            | translate
+        }}
+
+      </div>
+
+    } @else if (
+      store.rentalRequests()
+        .length === 0
+      ) {
+
+      <div class="empty-state">
+
+        <h3>
+          {{
+            'rentals.requests.empty-title'
+              | translate
+          }}
+        </h3>
+
+        <p>
+          {{
+            'rentals.requests.empty-description'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+    } @else if (
+      filteredRequests()
+        .length === 0
+      ) {
+
+      <div class="empty-state">
+
+        <h3>
+          {{
+            'rentals.requests.no-filter-results'
+              | translate
+          }}
+        </h3>
+
+        <p>
+          {{
+            'rentals.requests.no-filter-results-description'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table
+          mat-table
+          [dataSource]="dataSource()">
+
+          <ng-container
+            matColumnDef="requester">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+
+              {{
+                'rentals.requests.requester'
+                  | translate
+              }}
+
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let request">
+
+              <div class="primary-cell">
+
+                <strong>
+                  {{
+                    requesterName(
+                      request
+                        .constructionUserId
+                    )
+                  }}
+                </strong>
+
+                <span>
+                  {{
+                    requesterContact(
+                      request
+                        .constructionUserId
+                    )
+                  }}
+                </span>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="equipment">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+
+              {{
+                'rentals.requests.equipment'
+                  | translate
+              }}
+
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let request">
+
+              <div class="primary-cell">
+
+                <strong>
+                  {{
+                    equipmentName(
+                      request.equipmentId
+                    )
+                  }}
+                </strong>
+
+                <span>
+                  {{
+                    equipmentCode(
+                      request.equipmentId
+                    )
+                  }}
+                </span>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="period">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+
+              {{
+                'rentals.requests.period'
+                  | translate
+              }}
+
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let request">
+
+              {{
+                formatDate(
+                  request
+                    .period
+                    .startDate
+                )
+              }}
+
+              <span class="date-separator">
+                —
+              </span>
+
+              {{
+                formatDate(
+                  request
+                    .period
+                    .endDate
+                )
+              }}
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="requestedAt">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+
+              {{
+                'rentals.requests.requested-at'
+                  | translate
+              }}
+
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let request">
+
+              {{
+                formatDate(
+                  request.createdAt
+                )
+              }}
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="status">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+
+              {{
+                'rentals.requests.status-label'
+                  | translate
+              }}
+
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let request">
+
+              <span
+                class="status-badge"
+                [class.pending]="
+                  statusClass(
+                    request.status
+                  ) === 'pending'
+                "
+                [class.approved]="
+                  statusClass(
+                    request.status
+                  ) === 'approved'
+                "
+                [class.rejected]="
+                  statusClass(
+                    request.status
+                  ) === 'rejected'
+                ">
+
+                {{
+                  statusKey(
+                    request.status
+                  )
+                    | translate
+                }}
+
+              </span>
+
+            </td>
+
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="
+              displayedColumns
+            ">
+          </tr>
+
+          <tr
+            mat-row
+            *matRowDef="
+              let row;
+              columns:
+                displayedColumns
+            ">
+          </tr>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</div>

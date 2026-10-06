@@ -29,6 +29,14 @@ import { SUBSCRIPTION_ACCESS_PORT } from './rentals/infrastructure/subscription-
 
 import { SubscriptionAccessAclAdapter } from './rentals/infrastructure/subscription-access-acl-adapter';
 
+import { EQUIPMENT_INFORMATION_PORT } from './rentals/infrastructure/equipment-information.port';
+
+import { InventoryEquipmentInformationAclAdapter } from './rentals/infrastructure/inventory-equipment-information-acl-adapter';
+
+import { PARTICIPANT_INFORMATION_PORT } from './rentals/infrastructure/participant-information.port';
+
+import { ProfilesParticipantInformationAclAdapter } from './rentals/infrastructure/profiles-participant-information-acl-adapter';
+
 import { INVENTORY_ACCESS_PORT } from './inventory/infrastructure/inventory-access.port';
 
 import { SubscriptionInventoryAccessAclAdapter } from './inventory/infrastructure/subscription-inventory-access-acl-adapter';
@@ -37,11 +45,16 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
 
-    provideHttpClient(withXhr(), withInterceptors([iamInterceptor])),
+    provideHttpClient(
+      withXhr(),
+
+      withInterceptors([iamInterceptor]),
+    ),
 
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: './i18n/',
+
         suffix: '.json',
       }),
 
@@ -68,6 +81,18 @@ export const appConfig: ApplicationConfig = {
       provide: SUBSCRIPTION_ACCESS_PORT,
 
       useClass: SubscriptionAccessAclAdapter,
+    },
+
+    {
+      provide: EQUIPMENT_INFORMATION_PORT,
+
+      useClass: InventoryEquipmentInformationAclAdapter,
+    },
+
+    {
+      provide: PARTICIPANT_INFORMATION_PORT,
+
+      useClass: ProfilesParticipantInformationAclAdapter,
     },
 
     {
