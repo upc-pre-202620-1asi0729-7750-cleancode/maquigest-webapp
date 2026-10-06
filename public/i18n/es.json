@@ -7,7 +7,8 @@
     "equipment": "Maquinaria",
     "search-equipment": "Buscar maquinaria",
     "plan-subscription": "Plan y suscripción",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "rental-requests": "Solicitudes de alquiler"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -180,6 +181,41 @@
         "approved": "Aprobada",
         "rejected": "Rechazada"
       }
+    }
+  },
+  "rentals": {
+    "requests": {
+      "section": "Operaciones de alquiler",
+      "title": "Solicitudes de alquiler",
+      "subtitle": "Revisa las solicitudes de alquiler recibidas por tu empresa y consulta su estado actual.",
+      "summary": {
+        "pending": "Pendientes",
+        "approved": "Aprobadas",
+        "rejected": "Rechazadas"
+      },
+      "list-label": "Solicitudes",
+      "list-title": "Solicitudes recibidas",
+      "filters": {
+        "status": "Estado",
+        "all-statuses": "Todos los estados",
+        "date": "Fecha de solicitud",
+        "clear": "Limpiar filtros"
+      },
+      "requester": "Solicitante",
+      "equipment": "Maquinaria",
+      "period": "Periodo de alquiler",
+      "requested-at": "Solicitada el",
+      "status-label": "Estado",
+      "status": {
+        "pending": "Pendiente",
+        "approved": "Aprobada",
+        "rejected": "Rechazada"
+      },
+      "load-error": "No fue posible cargar las solicitudes de alquiler.",
+      "empty-title": "Aún no hay solicitudes de alquiler",
+      "empty-description": "Tu empresa todavía no ha recibido solicitudes de alquiler.",
+      "no-filter-results": "No hay solicitudes coincidentes",
+      "no-filter-results-description": "Ninguna solicitud de alquiler coincide con los filtros seleccionados."
     }
   },
   "subscriptions": {

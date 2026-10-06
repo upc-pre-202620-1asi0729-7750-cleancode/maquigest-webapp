@@ -10,6 +10,9 @@ const profilesRoutes = () =>
 const inventoryRoutes = () =>
   import('./inventory/presentation/inventory.routes').then((m) => m.inventoryRoutes);
 
+const rentalsRoutes = () =>
+  import('./rentals/presentation/rentals.routes').then((m) => m.rentalsRoutes);
+
 const subscriptionsRoutes = () =>
   import('./subscriptions/presentation/subscriptions.routes').then((m) => m.subscriptionsRoutes);
 
@@ -19,36 +22,56 @@ const dashboard = () =>
 export const routes: Routes = [
   {
     path: 'iam',
+
     loadChildren: iamRoutes,
   },
   {
     path: 'dashboard',
+
     loadComponent: dashboard,
+
     title: 'MaquiGest - Dashboard',
+
     canActivate: [iamGuard],
   },
   {
     path: 'profiles',
+
     loadChildren: profilesRoutes,
+
     canActivate: [iamGuard],
   },
   {
     path: 'inventory',
+
     loadChildren: inventoryRoutes,
+
+    canActivate: [iamGuard],
+  },
+  {
+    path: 'rentals',
+
+    loadChildren: rentalsRoutes,
+
     canActivate: [iamGuard],
   },
   {
     path: 'subscriptions',
+
     loadChildren: subscriptionsRoutes,
+
     canActivate: [iamGuard],
   },
   {
     path: '',
+
     redirectTo: '/iam/sign-in',
+
     pathMatch: 'full',
   },
   {
     path: '**',
+
     redirectTo: '/iam/sign-in',
   },
 ];
