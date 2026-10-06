@@ -27,9 +27,7 @@ export class RentalRequest implements BaseEntity {
     this.#constructionUserId = props.constructionUserId;
     this.#rentalCompanyUserId = props.rentalCompanyUserId;
     this.#period = props.period;
-
     this.#status = props.status ?? RentalRequestStatus.PENDING;
-
     this.#createdAt = props.createdAt ?? new Date();
   }
 
@@ -87,5 +85,27 @@ export class RentalRequest implements BaseEntity {
 
   set createdAt(value: Date) {
     this.#createdAt = value;
+  }
+
+  get isPending(): boolean {
+    return this.#status === RentalRequestStatus.PENDING;
+  }
+
+  approve(): void {
+    this.#ensurePending();
+
+    this.#status = RentalRequestStatus.APPROVED;
+  }
+
+  reject(): void {
+    this.#ensurePending();
+
+    this.#status = RentalRequestStatus.REJECTED;
+  }
+
+  #ensurePending(): void {
+    if (!this.isPending) {
+      throw new Error('Only pending rental requests can be updated');
+    }
   }
 }

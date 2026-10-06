@@ -120,6 +120,7 @@
 
 table {
   width: 100%;
+  min-width: 980px;
   background: #fff;
 }
 
@@ -176,6 +177,39 @@ td.mat-mdc-cell {
 .status-badge.rejected {
   background: #fff0ef;
   color: #b42318;
+}
+
+.request-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.request-actions button {
+  min-width: 74px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.approve-button {
+  background: #f28c28 !important;
+  color: #fff !important;
+}
+
+.reject-button {
+  border-color: #cbd5e1 !important;
+  color: #4c5d75 !important;
+}
+
+.request-actions button:disabled {
+  opacity: 0.55;
+}
+
+.resolved-label {
+  color: #71809b;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .loading-state,

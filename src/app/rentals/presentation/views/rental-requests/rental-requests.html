@@ -208,7 +208,7 @@
       <div class="error-state">
 
         {{
-          'rentals.requests.load-error'
+          'rentals.requests.operation-error'
             | translate
         }}
 
@@ -468,6 +468,108 @@
                 }}
 
               </span>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="actions">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+
+              {{
+                'rentals.requests.actions'
+                  | translate
+              }}
+
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let request">
+
+              @if (
+                request.isPending
+                ) {
+
+                <div class="request-actions">
+
+                  <button
+                    mat-flat-button
+                    type="button"
+                    class="approve-button"
+                    [disabled]="
+                      isUpdating(
+                        request.id
+                      )
+                    "
+                    (click)="
+                      approveRequest(
+                        request
+                      )
+                    ">
+
+                    @if (
+                      isUpdating(
+                        request.id
+                      )
+                      ) {
+
+                      {{
+                        'rentals.requests.updating'
+                          | translate
+                      }}
+
+                    } @else {
+
+                      {{
+                        'rentals.requests.approve'
+                          | translate
+                      }}
+
+                    }
+
+                  </button>
+
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="reject-button"
+                    [disabled]="
+                      isUpdating(
+                        request.id
+                      )
+                    "
+                    (click)="
+                      rejectRequest(
+                        request
+                      )
+                    ">
+
+                    {{
+                      'rentals.requests.reject'
+                        | translate
+                    }}
+
+                  </button>
+
+                </div>
+
+              } @else {
+
+                <span class="resolved-label">
+
+                  {{
+                    'rentals.requests.resolved'
+                      | translate
+                  }}
+
+                </span>
+
+              }
 
             </td>
 

@@ -7,6 +7,8 @@
   signal,
 } from '@angular/core';
 
+import { MatButtonModule } from '@angular/material/button';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
@@ -33,6 +35,7 @@ type RequestStatusFilter = 'ALL' | RentalRequestStatus;
   selector: 'app-rental-requests',
 
   imports: [
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
@@ -58,6 +61,7 @@ export class RentalRequests {
     'period',
     'requestedAt',
     'status',
+    'actions',
   ];
 
   protected readonly statusOptions = [
@@ -120,6 +124,26 @@ export class RentalRequests {
     this.statusFilter.set('ALL');
 
     this.dateFilter.set('');
+  }
+
+  protected approveRequest(request: RentalRequest): void {
+    if (!request.isPending || this.isUpdating(request.id)) {
+      return;
+    }
+
+    this.store.approveRentalRequest(request.id);
+  }
+
+  protected rejectRequest(request: RentalRequest): void {
+    if (!request.isPending || this.isUpdating(request.id)) {
+      return;
+    }
+
+    this.store.rejectRentalRequest(request.id);
+  }
+
+  protected isUpdating(requestId: number): boolean {
+    return this.store.updatingRequestId() === requestId;
   }
 
   protected equipmentName(equipmentId: number): string {
