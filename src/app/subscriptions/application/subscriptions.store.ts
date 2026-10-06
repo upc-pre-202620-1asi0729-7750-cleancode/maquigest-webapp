@@ -4,13 +4,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { DateRange } from '../../shared/domain/value-object/date-range.value-object';
 
-import { SubscriptionPlan } from '../domain/model/subscription-plan.entity';
-
 import { PlanStatus } from '../domain/model/plan-status.enum';
 
-import { UserSubscription } from '../domain/model/user-subscription.entity';
+import { SubscriptionPlan } from '../domain/model/subscription-plan.entity';
 
 import { SubscriptionStatus } from '../domain/model/subscription-status.enum';
+
+import { UserSubscription } from '../domain/model/user-subscription.entity';
 
 import { SubscriptionsApi } from '../infrastructure/subscriptions-api';
 
@@ -48,6 +48,7 @@ export class SubscriptionsStore {
 
   loadPlans(): void {
     this.#loadingSignal.set(true);
+
     this.#errorSignal.set(null);
 
     this.#subscriptionsApi
@@ -58,6 +59,7 @@ export class SubscriptionsStore {
           this.#plansSignal.set(plans.filter((plan) => plan.status === PlanStatus.ACTIVE));
 
           this.#loadingSignal.set(false);
+
           this.#errorSignal.set(null);
         },
 
@@ -113,6 +115,14 @@ export class SubscriptionsStore {
       return;
     }
 
+    const plan = this.#plansSignal().find((currentPlan) => currentPlan.id === planId);
+
+    if (!plan || plan.status !== PlanStatus.ACTIVE) {
+      this.#subscriptionErrorSignal.set('The selected plan is not available');
+
+      return;
+    }
+
     this.#subscriptionLoadingSignal.set(true);
 
     this.#subscriptionErrorSignal.set(null);
@@ -123,7 +133,9 @@ export class SubscriptionsStore {
 
     const subscription = new UserSubscription({
       id: 0,
+
       userId,
+
       planId,
 
       period: new DateRange({
@@ -151,6 +163,69 @@ export class SubscriptionsStore {
         error: (error) => {
           this.#subscriptionErrorSignal.set(
             this.#formatError(error, 'Failed to create subscription'),
+          );
+
+          this.#subscriptionLoadingSignal.set(false);
+        },
+      });
+  }
+
+  changePlan(planId: number): void {
+    const currentSubscription = this.#currentSubscriptionSignal();
+
+    if (!currentSubscription) {
+      this.#subscriptionErrorSignal.set('There is no active subscription to update');
+
+      return;
+    }
+
+    if (currentSubscription.planId === planId) {
+      this.#subscriptionErrorSignal.set('The selected plan is already the current plan');
+
+      return;
+    }
+
+    const selectedPlan = this.#plansSignal().find((plan) => plan.id === planId);
+
+    if (!selectedPlan || selectedPlan.status !== PlanStatus.ACTIVE) {
+      this.#subscriptionErrorSignal.set('The selected plan is not available');
+
+      return;
+    }
+
+    this.#subscriptionLoadingSignal.set(true);
+
+    this.#subscriptionErrorSignal.set(null);
+
+    const updatedSubscription = new UserSubscription({
+      id: currentSubscription.id,
+
+      userId: currentSubscription.userId,
+
+      planId,
+
+      period: currentSubscription.period,
+
+      status: currentSubscription.status,
+
+      autoRenew: currentSubscription.autoRenew,
+    });
+
+    this.#subscriptionsApi
+      .updateUserSubscription(updatedSubscription)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (subscription) => {
+          this.#currentSubscriptionSignal.set(subscription);
+
+          this.#subscriptionLoadingSignal.set(false);
+
+          this.#subscriptionErrorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.#subscriptionErrorSignal.set(
+            this.#formatError(error, 'Failed to update subscription'),
           );
 
           this.#subscriptionLoadingSignal.set(false);

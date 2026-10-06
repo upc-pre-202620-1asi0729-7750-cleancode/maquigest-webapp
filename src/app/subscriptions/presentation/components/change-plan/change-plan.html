@@ -1,0 +1,270 @@
+﻿<div class="confirmation-backdrop">
+
+  <section
+    class="confirmation-dialog"
+    role="dialog"
+    aria-modal="true">
+
+    <span class="confirmation-label">
+
+      @if (isChangingPlan()) {
+
+        {{
+          'subscriptions.plans.change-confirmation-label'
+            | translate
+        }}
+
+      } @else {
+
+        {{
+          'subscriptions.plans.confirmation-label'
+            | translate
+        }}
+
+      }
+
+    </span>
+
+    <h2>
+
+      @if (isChangingPlan()) {
+
+        {{
+          'subscriptions.plans.change-confirmation-title'
+            | translate
+        }}
+
+      } @else {
+
+        {{
+          'subscriptions.plans.confirmation-title'
+            | translate
+        }}
+
+      }
+
+    </h2>
+
+    <p class="confirmation-description">
+
+      @if (isChangingPlan()) {
+
+        {{
+          'subscriptions.plans.change-confirmation-description'
+            | translate
+        }}
+
+      } @else {
+
+        {{
+          'subscriptions.plans.confirmation-description'
+            | translate
+        }}
+
+      }
+
+    </p>
+
+    @if (
+      currentPlan();
+      as activePlan
+      ) {
+
+      <div class="selected-plan-summary">
+
+        <div>
+
+          <span class="summary-label">
+            {{
+              'subscriptions.plans.current-plan-title'
+                | translate
+            }}
+          </span>
+
+          <strong>
+            {{
+              planNameKey(activePlan)
+                | translate
+            }}
+          </strong>
+
+        </div>
+
+        <div class="summary-next-plan">
+
+          <span class="summary-label">
+            {{
+              'subscriptions.plans.new-plan'
+                | translate
+            }}
+          </span>
+
+          <strong>
+            {{
+              planNameKey(selectedPlan())
+                | translate
+            }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="selected-plan-summary">
+
+        <div>
+
+          <span class="summary-label">
+            {{
+              'subscriptions.plans.selected-plan'
+                | translate
+            }}
+          </span>
+
+          <strong>
+            {{
+              planNameKey(selectedPlan())
+                | translate
+            }}
+          </strong>
+
+        </div>
+
+        <div class="summary-price">
+
+          <span>
+            S/
+          </span>
+
+          <strong>
+            {{
+              selectedPlan().price.amount
+            }}
+          </strong>
+
+          <span>
+            {{
+              'subscriptions.plans.per-month'
+                | translate
+            }}
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+    <div class="features-title">
+      {{
+        'subscriptions.plans.includes'
+          | translate
+      }}
+    </div>
+
+    <ul class="plan-features">
+
+      @for (
+        featureKey of featureKeys(
+          selectedPlan()
+        );
+        track featureKey
+        ) {
+
+        <li>
+
+          <span
+            class="feature-check"
+            aria-hidden="true">
+            ✓
+          </span>
+
+          <span>
+            {{
+              featureKey
+                | translate
+            }}
+          </span>
+
+        </li>
+
+      }
+
+    </ul>
+
+    @if (error()) {
+
+      <div class="subscription-error">
+        {{ error() }}
+      </div>
+
+    }
+
+    <div class="confirmation-actions">
+
+      <button
+        type="button"
+        class="cancel-button"
+        [disabled]="loading()"
+        (click)="cancel()">
+
+        {{
+          'subscriptions.plans.cancel'
+            | translate
+        }}
+
+      </button>
+
+      <button
+        type="button"
+        class="confirm-button"
+        [disabled]="loading()"
+        (click)="confirm()">
+
+        @if (loading()) {
+
+          @if (isChangingPlan()) {
+
+            {{
+              'subscriptions.plans.changing-plan'
+                | translate
+            }}
+
+          } @else {
+
+            {{
+              'subscriptions.plans.subscribing'
+                | translate
+            }}
+
+          }
+
+        } @else {
+
+          @if (isChangingPlan()) {
+
+            {{
+              'subscriptions.plans.confirm-change'
+                | translate
+            }}
+
+          } @else {
+
+            {{
+              'subscriptions.plans.confirm-subscription'
+                | translate
+            }}
+
+          }
+
+        }
+
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
