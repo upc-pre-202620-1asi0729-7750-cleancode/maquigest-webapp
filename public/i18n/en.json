@@ -206,12 +206,18 @@
       "period": "Rental period",
       "requested-at": "Requested on",
       "status-label": "Status",
+      "actions": "Actions",
+      "approve": "Approve",
+      "reject": "Reject",
+      "updating": "Updating...",
+      "resolved": "Resolved",
       "status": {
         "pending": "Pending",
         "approved": "Approved",
         "rejected": "Rejected"
       },
       "load-error": "The rental requests could not be loaded.",
+      "operation-error": "The rental request operation could not be completed.",
       "empty-title": "No rental requests yet",
       "empty-description": "Your company has not received any rental requests yet.",
       "no-filter-results": "No matching requests",

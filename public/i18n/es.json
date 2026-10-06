@@ -206,12 +206,18 @@
       "period": "Periodo de alquiler",
       "requested-at": "Solicitada el",
       "status-label": "Estado",
+      "actions": "Acciones",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "updating": "Actualizando...",
+      "resolved": "Resuelta",
       "status": {
         "pending": "Pendiente",
         "approved": "Aprobada",
         "rejected": "Rechazada"
       },
       "load-error": "No fue posible cargar las solicitudes de alquiler.",
+      "operation-error": "No fue posible completar la operación de la solicitud.",
       "empty-title": "Aún no hay solicitudes de alquiler",
       "empty-description": "Tu empresa todavía no ha recibido solicitudes de alquiler.",
       "no-filter-results": "No hay solicitudes coincidentes",

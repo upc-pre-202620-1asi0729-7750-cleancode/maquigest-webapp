@@ -21,4 +21,8 @@ export class RentalsApi extends BaseApi {
   createRentalRequest(rentalRequest: RentalRequest): Observable<RentalRequest> {
     return this.#rentalRequestEndpoint.create(rentalRequest);
   }
+
+  updateRentalRequest(rentalRequest: RentalRequest): Observable<RentalRequest> {
+    return this.#rentalRequestEndpoint.update(rentalRequest, rentalRequest.id);
+  }
 }

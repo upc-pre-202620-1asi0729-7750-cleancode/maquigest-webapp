@@ -74,6 +74,10 @@ export class RentalsStore {
 
   readonly loading = this.#loadingSignal.asReadonly();
 
+  readonly #updatingRequestIdSignal = signal<number | null>(null);
+
+  readonly updatingRequestId = this.#updatingRequestIdSignal.asReadonly();
+
   readonly #errorSignal = signal<string | null>(null);
 
   readonly error = this.#errorSignal.asReadonly();
@@ -168,6 +172,14 @@ export class RentalsStore {
     return this.#participantInformationSignal().get(userId);
   }
 
+  approveRentalRequest(requestId: number): void {
+    this.#resolveRentalRequest(requestId, RentalRequestStatus.APPROVED);
+  }
+
+  rejectRentalRequest(requestId: number): void {
+    this.#resolveRentalRequest(requestId, RentalRequestStatus.REJECTED);
+  }
+
   createRentalRequest(rentalRequest: RentalRequest): void {
     this.#loadingSignal.set(true);
 
@@ -221,6 +233,8 @@ export class RentalsStore {
     this.#equipmentInformationSignal.set(new Map());
 
     this.#participantInformationSignal.set(new Map());
+
+    this.#updatingRequestIdSignal.set(null);
   }
 
   clearCreationState(): void {
@@ -229,6 +243,77 @@ export class RentalsStore {
     this.#errorSignal.set(null);
 
     this.#subscriptionRequiredSignal.set(false);
+  }
+
+  #resolveRentalRequest(requestId: number, targetStatus: RentalRequestStatus): void {
+    const currentRequest = this.rentalRequests().find((request) => request.id === requestId);
+
+    if (!currentRequest) {
+      this.#errorSignal.set('Rental request not found');
+
+      return;
+    }
+
+    if (!currentRequest.isPending) {
+      this.#errorSignal.set('Only pending rental requests can be updated');
+
+      return;
+    }
+
+    const updatedRequest = new RentalRequest({
+      id: currentRequest.id,
+
+      equipmentId: currentRequest.equipmentId,
+
+      constructionUserId: currentRequest.constructionUserId,
+
+      rentalCompanyUserId: currentRequest.rentalCompanyUserId,
+
+      period: currentRequest.period,
+
+      status: currentRequest.status,
+
+      createdAt: currentRequest.createdAt,
+    });
+
+    try {
+      if (targetStatus === RentalRequestStatus.APPROVED) {
+        updatedRequest.approve();
+      } else if (targetStatus === RentalRequestStatus.REJECTED) {
+        updatedRequest.reject();
+      } else {
+        return;
+      }
+    } catch (error) {
+      this.#errorSignal.set(this.#formatError(error, 'Failed to update rental request'));
+
+      return;
+    }
+
+    this.#updatingRequestIdSignal.set(requestId);
+
+    this.#errorSignal.set(null);
+
+    this.#rentalsApi
+      .updateRentalRequest(updatedRequest)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (savedRequest) => {
+          this.#rentalRequestsSignal.update((requests) =>
+            requests.map((request) => (request.id === savedRequest.id ? savedRequest : request)),
+          );
+
+          this.#updatingRequestIdSignal.set(null);
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.#updatingRequestIdSignal.set(null);
+
+          this.#errorSignal.set(this.#formatError(error, 'Failed to update rental request'));
+        },
+      });
   }
 
   #formatError(error: unknown, fallbackMessage: string): string {
