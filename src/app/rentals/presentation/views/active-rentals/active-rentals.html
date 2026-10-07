@@ -31,6 +31,23 @@
 
       <span class="summary-label">
         {{
+          'rentals.active.summary-confirmed'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.confirmedRentalCount()
+        }}
+      </strong>
+
+    </article>
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
           'rentals.active.summary'
             | translate
         }}
@@ -44,7 +61,72 @@
 
     </article>
 
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.active.summary-due-soon'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.upcomingReturnCount()
+        }}
+      </strong>
+
+      @if (
+        store.overdueRentalCount() > 0
+        ) {
+        <span class="overdue-summary">
+          {{
+            'rentals.active.overdue-summary'
+              | translate:
+              {
+                count:
+                  store.overdueRentalCount()
+              }
+          }}
+        </span>
+      }
+
+    </article>
+
   </section>
+
+  @if (
+    store.operationSuccess()
+    ) {
+
+    <div class="success-banner">
+
+      {{
+        operationSuccessKey(
+          store.operationSuccess()!
+        )
+          | translate
+      }}
+
+    </div>
+
+  }
+
+  @if (
+    store.error() &&
+    store.rentals().length > 0
+    ) {
+
+    <div class="operation-error">
+
+      {{
+        'rentals.active.operation-error'
+          | translate
+      }}
+
+    </div>
+
+  }
 
   <section class="rentals-content">
 
@@ -80,7 +162,10 @@
 
       </div>
 
-    } @else if (store.error()) {
+    } @else if (
+      store.error() &&
+      store.rentals().length === 0
+      ) {
 
       <div class="error-state">
 
@@ -195,13 +280,13 @@
           </ng-container>
 
           <ng-container
-            matColumnDef="period">
+            matColumnDef="startDate">
 
             <th
               mat-header-cell
               *matHeaderCellDef>
               {{
-                'rentals.active.period'
+                'rentals.active.start-date'
                   | translate
               }}
             </th>
@@ -210,26 +295,58 @@
               mat-cell
               *matCellDef="let rental">
 
-              <div class="period-cell">
+              {{
+                formatDate(
+                  rental.period.startDate
+                )
+              }}
 
-                <span>
-                  {{
-                    formatDate(
-                      rental.period.startDate
-                    )
-                  }}
-                </span>
+            </td>
 
-                <span class="date-separator">
-                  →
-                </span>
+          </ng-container>
 
-                <span>
+          <ng-container
+            matColumnDef="returnDate">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.return-date'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="return-cell">
+
+                <span class="return-date">
                   {{
                     formatDate(
                       rental.period.endDate
                     )
                   }}
+                </span>
+
+                <span
+                  class="return-indicator"
+                  [class]="
+                    'return-indicator ' +
+                    returnIndicatorClass(
+                      rental
+                    )
+                  ">
+
+                  {{
+                    returnIndicatorKey(
+                      rental
+                    )
+                      | translate
+                  }}
+
                 </span>
 
               </div>
@@ -276,6 +393,82 @@
 
           </ng-container>
 
+          <ng-container
+            matColumnDef="actions">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.actions'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              @if (
+                store.updatingRentalId() ===
+                rental.id
+                ) {
+
+                <span class="updating-label">
+                  {{
+                    'rentals.active.updating'
+                      | translate
+                  }}
+                </span>
+
+              } @else if (
+                rental.isConfirmed
+                ) {
+
+                <button
+                  mat-flat-button
+                  type="button"
+                  class="delivery-button"
+                  (click)="
+                    openDelivery(
+                      rental
+                    )
+                  ">
+
+                  {{
+                    'rentals.active.register-delivery'
+                      | translate
+                  }}
+
+                </button>
+
+              } @else if (
+                rental.isActive
+                ) {
+
+                <button
+                  mat-flat-button
+                  type="button"
+                  class="return-button"
+                  (click)="
+                    openReturn(
+                      rental
+                    )
+                  ">
+
+                  {{
+                    'rentals.active.register-return'
+                      | translate
+                  }}
+
+                </button>
+
+              }
+
+            </td>
+
+          </ng-container>
+
           <tr
             mat-header-row
             *matHeaderRowDef="
@@ -301,3 +494,57 @@
   </section>
 
 </div>
+
+@if (
+  deliveryRental();
+  as rental
+  ) {
+
+  <app-delivery-form
+    [rental]="rental"
+    [equipmentName]="
+      equipmentName(
+        rental.equipmentId
+      )
+    "
+    [customerName]="
+      customerName(
+        rental.constructionUserId
+      )
+    "
+    (submitted)="
+      submitDelivery($event)
+    "
+    (cancelled)="
+      closeDelivery()
+    ">
+  </app-delivery-form>
+
+}
+
+@if (
+  returnRental();
+  as rental
+  ) {
+
+  <app-return-form
+    [rental]="rental"
+    [equipmentName]="
+      equipmentName(
+        rental.equipmentId
+      )
+    "
+    [customerName]="
+      customerName(
+        rental.constructionUserId
+      )
+    "
+    (submitted)="
+      submitReturn($event)
+    "
+    (cancelled)="
+      closeReturn()
+    ">
+  </app-return-form>
+
+}

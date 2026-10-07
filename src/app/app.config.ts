@@ -37,6 +37,10 @@ import { PARTICIPANT_INFORMATION_PORT } from './rentals/infrastructure/participa
 
 import { ProfilesParticipantInformationAclAdapter } from './rentals/infrastructure/profiles-participant-information-acl-adapter';
 
+import { EQUIPMENT_OPERATION_PORT } from './rentals/infrastructure/equipment-operation.port';
+
+import { InventoryEquipmentOperationAclAdapter } from './rentals/infrastructure/inventory-equipment-operation-acl-adapter';
+
 import { INVENTORY_ACCESS_PORT } from './inventory/infrastructure/inventory-access.port';
 
 import { SubscriptionInventoryAccessAclAdapter } from './inventory/infrastructure/subscription-inventory-access-acl-adapter';
@@ -93,6 +97,12 @@ export const appConfig: ApplicationConfig = {
       provide: PARTICIPANT_INFORMATION_PORT,
 
       useClass: ProfilesParticipantInformationAclAdapter,
+    },
+
+    {
+      provide: EQUIPMENT_OPERATION_PORT,
+
+      useClass: InventoryEquipmentOperationAclAdapter,
     },
 
     {

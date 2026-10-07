@@ -1,0 +1,196 @@
+﻿<div
+  class="operation-backdrop"
+  (click)="cancel()">
+
+  <section
+    class="operation-dialog"
+    role="dialog"
+    aria-modal="true"
+    (click)="$event.stopPropagation()">
+
+    <header class="dialog-header">
+
+      <div>
+
+        <span class="section-label">
+          {{
+            'rentals.active.return.section'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'rentals.active.return.title'
+              | translate
+          }}
+        </h2>
+
+        <p>
+          {{
+            'rentals.active.return.subtitle'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="cancel()"
+        [attr.aria-label]="
+          'rentals.active.cancel'
+            | translate
+        ">
+        ×
+      </button>
+
+    </header>
+
+    <div class="rental-summary">
+
+      <div class="summary-item">
+
+        <span>
+          {{
+            'rentals.active.equipment'
+              | translate
+          }}
+        </span>
+
+        <strong>
+          {{ equipmentName() }}
+        </strong>
+
+      </div>
+
+      <div class="summary-item">
+
+        <span>
+          {{
+            'rentals.active.customer'
+              | translate
+          }}
+        </span>
+
+        <strong>
+          {{ customerName() }}
+        </strong>
+
+      </div>
+
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()">
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          {{
+            'rentals.active.return.date'
+              | translate
+          }}
+        </mat-label>
+
+        <input
+          matInput
+          type="date"
+          formControlName="returnedAt">
+
+        @if (
+          isInvalidControl(
+            form,
+            'returnedAt'
+          )
+          ) {
+          <mat-error>
+            {{
+              'rentals.active.date-required'
+                | translate
+            }}
+          </mat-error>
+        }
+
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline">
+
+        <mat-label>
+          {{
+            'rentals.active.notes'
+              | translate
+          }}
+        </mat-label>
+
+        <textarea
+          matInput
+          rows="4"
+          formControlName="notes"
+          [placeholder]="
+            'rentals.active.return.notes-placeholder'
+              | translate
+          ">
+        </textarea>
+
+      </mat-form-field>
+
+      <div class="maintenance-option">
+
+        <mat-checkbox
+          formControlName="maintenanceRequired">
+
+          {{
+            'rentals.active.return.maintenance-required'
+              | translate
+          }}
+
+        </mat-checkbox>
+
+        <p>
+          {{
+            'rentals.active.return.maintenance-help'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+      <div class="dialog-actions">
+
+        <button
+          mat-button
+          type="button"
+          class="secondary-button"
+          (click)="cancel()">
+
+          {{
+            'rentals.active.cancel'
+              | translate
+          }}
+
+        </button>
+
+        <button
+          mat-flat-button
+          type="submit"
+          class="primary-button">
+
+          {{
+            'rentals.active.return.confirm'
+              | translate
+          }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>

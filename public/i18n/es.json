@@ -228,20 +228,61 @@
     "active": {
       "section": "Operaciones de alquiler",
       "title": "Alquileres",
-      "subtitle": "Revisa la maquinaria que se encuentra actualmente alquilada por tu empresa y consulta el periodo de cada alquiler.",
+      "subtitle": "Supervisa los alquileres confirmados y activos, registra entregas y devoluciones de maquinaria y controla las próximas fechas de devolución.",
+      "summary-confirmed": "Pendientes de entrega",
       "summary": "Alquileres activos",
+      "summary-due-soon": "Devoluciones próximas",
+      "overdue-summary": "{{count}} vencidos",
       "list-label": "Alquileres",
-      "list-title": "Alquileres activos",
+      "list-title": "Operaciones de alquiler",
       "equipment": "Maquinaria",
       "customer": "Cliente",
+      "start-date": "Fecha de inicio",
+      "return-date": "Fecha de devolución",
       "period": "Periodo de alquiler",
       "status-label": "Estado",
+      "actions": "Acciones",
+      "register-delivery": "Registrar entrega",
+      "register-return": "Registrar devolución",
+      "updating": "Actualizando...",
+      "date-required": "La fecha es obligatoria.",
+      "notes": "Observaciones",
+      "cancel": "Cancelar",
       "status": {
-        "active": "Activo"
+        "confirmed": "Confirmado",
+        "active": "Activo",
+        "completed": "Completado"
       },
-      "load-error": "No fue posible cargar los alquileres activos.",
-      "empty-title": "No hay alquileres activos",
-      "empty-description": "Tu empresa no tiene alquileres activos en este momento."
+      "return-indicator": {
+        "awaiting-delivery": "Pendiente de entrega",
+        "scheduled": "Programada",
+        "due-soon": "Próxima",
+        "overdue": "Vencida"
+      },
+      "delivery": {
+        "section": "Entrega del alquiler",
+        "title": "Registrar entrega",
+        "subtitle": "Confirma que la maquinaria fue entregada al cliente e inicia el alquiler activo.",
+        "date": "Fecha de entrega",
+        "notes-placeholder": "Agrega observaciones relevantes de la entrega",
+        "confirm": "Confirmar entrega",
+        "success": "La entrega se registró correctamente y el alquiler ahora está activo."
+      },
+      "return": {
+        "section": "Devolución de maquinaria",
+        "title": "Registrar devolución",
+        "subtitle": "Registra la devolución de la maquinaria e indica si requiere mantenimiento.",
+        "date": "Fecha de devolución",
+        "notes-placeholder": "Agrega el estado de devolución u observaciones relevantes",
+        "maintenance-required": "La maquinaria requiere mantenimiento",
+        "maintenance-help": "Selecciona esta opción cuando la maquinaria devuelta deba permanecer no disponible para atención técnica.",
+        "confirm": "Confirmar devolución",
+        "success": "La devolución se registró correctamente y el alquiler fue completado."
+      },
+      "load-error": "No fue posible cargar los alquileres.",
+      "operation-error": "No fue posible completar la operación de entrega o devolución.",
+      "empty-title": "No hay operaciones de alquiler",
+      "empty-description": "Tu empresa no tiene alquileres confirmados o activos en este momento."
     },
     "my-requests": {
       "section": "Operaciones de alquiler",

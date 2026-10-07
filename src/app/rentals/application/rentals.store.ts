@@ -4,11 +4,17 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { EMPTY, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
+import { Delivery } from '../domain/model/delivery.entity';
+
+import { EquipmentReturn } from '../domain/model/equipment-return.entity';
+
 import { Rental } from '../domain/model/rental.entity';
 
 import { RentalRequest } from '../domain/model/rental-request.entity';
 
 import { RentalRequestStatus } from '../domain/model/rental-request-status.enum';
+
+import { RentalStatus } from '../domain/model/rental-status.enum';
 
 import { RentalsApi } from '../infrastructure/rentals-api';
 
@@ -17,12 +23,16 @@ import {
   RentalEquipmentInformation,
 } from '../infrastructure/equipment-information.port';
 
+import { EQUIPMENT_OPERATION_PORT } from '../infrastructure/equipment-operation.port';
+
 import {
   PARTICIPANT_INFORMATION_PORT,
   RentalParticipantInformation,
 } from '../infrastructure/participant-information.port';
 
 import { SUBSCRIPTION_ACCESS_PORT } from '../infrastructure/subscription-access.port';
+
+export type RentalOperationSuccess = 'DELIVERY' | 'RETURN';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +43,8 @@ export class RentalsStore {
   readonly #subscriptionAccess = inject(SUBSCRIPTION_ACCESS_PORT);
 
   readonly #equipmentInformation = inject(EQUIPMENT_INFORMATION_PORT);
+
+  readonly #equipmentOperation = inject(EQUIPMENT_OPERATION_PORT);
 
   readonly #participantInformation = inject(PARTICIPANT_INFORMATION_PORT);
 
@@ -80,9 +92,37 @@ export class RentalsStore {
         .length,
   );
 
+  readonly confirmedRentalCount = computed(
+    () => this.rentals().filter((rental) => rental.isConfirmed).length,
+  );
+
   readonly activeRentalCount = computed(
     () => this.rentals().filter((rental) => rental.isActive).length,
   );
+
+  readonly upcomingReturnCount = computed(() => {
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    const limit = new Date(today);
+
+    limit.setDate(limit.getDate() + 7);
+
+    return this.rentals().filter(
+      (rental) =>
+        rental.isActive && rental.period.endDate >= today && rental.period.endDate <= limit,
+    ).length;
+  });
+
+  readonly overdueRentalCount = computed(() => {
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    return this.rentals().filter((rental) => rental.isActive && rental.period.endDate < today)
+      .length;
+  });
 
   readonly #latestCreatedRequestSignal = signal<RentalRequest | null>(null);
 
@@ -95,6 +135,14 @@ export class RentalsStore {
   readonly #updatingRequestIdSignal = signal<number | null>(null);
 
   readonly updatingRequestId = this.#updatingRequestIdSignal.asReadonly();
+
+  readonly #updatingRentalIdSignal = signal<number | null>(null);
+
+  readonly updatingRentalId = this.#updatingRentalIdSignal.asReadonly();
+
+  readonly #operationSuccessSignal = signal<RentalOperationSuccess | null>(null);
+
+  readonly operationSuccess = this.#operationSuccessSignal.asReadonly();
 
   readonly #errorSignal = signal<string | null>(null);
 
@@ -151,7 +199,9 @@ export class RentalsStore {
           }).pipe(
             map(({ equipmentInformation, participantInformation }) => ({
               requests,
+
               equipmentInformation,
+
               participantInformation,
             })),
           );
@@ -217,6 +267,7 @@ export class RentalsStore {
           return this.#equipmentInformation.getEquipmentInformationByIds(equipmentIds).pipe(
             map((equipmentInformation) => ({
               requests,
+
               equipmentInformation,
             })),
           );
@@ -337,13 +388,17 @@ export class RentalsStore {
 
     this.#errorSignal.set(null);
 
+    this.#operationSuccessSignal.set(null);
+
     this.#rentalsApi
       .getRentals()
       .pipe(
         map((rentals) =>
           rentals
             .filter(
-              (rental) => rental.rentalCompanyUserId === rentalCompanyUserId && rental.isActive,
+              (rental) =>
+                rental.rentalCompanyUserId === rentalCompanyUserId &&
+                (rental.isConfirmed || rental.isActive),
             )
             .sort(
               (firstRental, secondRental) =>
@@ -377,7 +432,9 @@ export class RentalsStore {
           }).pipe(
             map(({ equipmentInformation, participantInformation }) => ({
               rentals,
+
               equipmentInformation,
+
               participantInformation,
             })),
           );
@@ -405,7 +462,7 @@ export class RentalsStore {
         error: (error) => {
           this.clearRentals();
 
-          this.#errorSignal.set(this.#formatError(error, 'Failed to load active rentals'));
+          this.#errorSignal.set(this.#formatError(error, 'Failed to load rentals'));
 
           this.#loadingSignal.set(false);
         },
@@ -475,6 +532,197 @@ export class RentalsStore {
       });
   }
 
+  registerDelivery(rentalId: number, deliveredAt: Date, notes: string): void {
+    const currentRental = this.rentals().find((rental) => rental.id === rentalId);
+
+    if (!currentRental) {
+      this.#errorSignal.set('Rental not found');
+
+      return;
+    }
+
+    const updatedRental = new Rental({
+      id: currentRental.id,
+
+      equipmentId: currentRental.equipmentId,
+
+      constructionUserId: currentRental.constructionUserId,
+
+      rentalCompanyUserId: currentRental.rentalCompanyUserId,
+
+      period: currentRental.period,
+
+      status: currentRental.status,
+    });
+
+    try {
+      updatedRental.registerDelivery();
+    } catch (error) {
+      this.#errorSignal.set(this.#formatError(error, 'Failed to register delivery'));
+
+      return;
+    }
+
+    let delivery: Delivery;
+
+    try {
+      delivery = new Delivery({
+        id: 0,
+
+        rentalId,
+
+        deliveredAt,
+
+        notes: notes.trim(),
+      });
+    } catch (error) {
+      this.#errorSignal.set(this.#formatError(error, 'Failed to register delivery'));
+
+      return;
+    }
+
+    this.#updatingRentalIdSignal.set(rentalId);
+
+    this.#operationSuccessSignal.set(null);
+
+    this.#errorSignal.set(null);
+
+    this.#rentalsApi
+      .createDelivery(delivery)
+      .pipe(
+        switchMap(() => this.#rentalsApi.updateRental(updatedRental)),
+
+        switchMap((savedRental) =>
+          this.#equipmentOperation
+            .markAsRented(savedRental.equipmentId)
+            .pipe(map(() => savedRental)),
+        ),
+
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: (savedRental) => {
+          this.#rentalsSignal.update((rentals) =>
+            rentals.map((rental) => (rental.id === savedRental.id ? savedRental : rental)),
+          );
+
+          this.#updatingRentalIdSignal.set(null);
+
+          this.#operationSuccessSignal.set('DELIVERY');
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.#updatingRentalIdSignal.set(null);
+
+          this.#operationSuccessSignal.set(null);
+
+          this.#errorSignal.set(this.#formatError(error, 'Failed to register delivery'));
+        },
+      });
+  }
+
+  registerReturn(
+    rentalId: number,
+    returnedAt: Date,
+    notes: string,
+    maintenanceRequired: boolean,
+  ): void {
+    const currentRental = this.rentals().find((rental) => rental.id === rentalId);
+
+    if (!currentRental) {
+      this.#errorSignal.set('Rental not found');
+
+      return;
+    }
+
+    const updatedRental = new Rental({
+      id: currentRental.id,
+
+      equipmentId: currentRental.equipmentId,
+
+      constructionUserId: currentRental.constructionUserId,
+
+      rentalCompanyUserId: currentRental.rentalCompanyUserId,
+
+      period: currentRental.period,
+
+      status: currentRental.status,
+    });
+
+    try {
+      updatedRental.registerReturn();
+    } catch (error) {
+      this.#errorSignal.set(this.#formatError(error, 'Failed to register return'));
+
+      return;
+    }
+
+    let equipmentReturn: EquipmentReturn;
+
+    try {
+      equipmentReturn = new EquipmentReturn({
+        id: 0,
+
+        rentalId,
+
+        returnedAt,
+
+        notes: notes.trim(),
+
+        maintenanceRequired,
+      });
+    } catch (error) {
+      this.#errorSignal.set(this.#formatError(error, 'Failed to register return'));
+
+      return;
+    }
+
+    this.#updatingRentalIdSignal.set(rentalId);
+
+    this.#operationSuccessSignal.set(null);
+
+    this.#errorSignal.set(null);
+
+    this.#rentalsApi
+      .createEquipmentReturn(equipmentReturn)
+      .pipe(
+        switchMap(() => this.#rentalsApi.updateRental(updatedRental)),
+
+        switchMap((savedRental) => {
+          const equipmentUpdate = equipmentReturn.requiresMaintenance()
+            ? this.#equipmentOperation.markAsMaintenance(savedRental.equipmentId)
+            : this.#equipmentOperation.markAsAvailable(savedRental.equipmentId);
+
+          return equipmentUpdate.pipe(map(() => savedRental));
+        }),
+
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: (savedRental) => {
+          this.#rentalsSignal.update((rentals) =>
+            rentals.filter((rental) => rental.id !== savedRental.id),
+          );
+
+          this.#updatingRentalIdSignal.set(null);
+
+          this.#operationSuccessSignal.set('RETURN');
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.#updatingRentalIdSignal.set(null);
+
+          this.#operationSuccessSignal.set(null);
+
+          this.#errorSignal.set(this.#formatError(error, 'Failed to register return'));
+        },
+      });
+  }
+
   clearRentalRequests(): void {
     this.#rentalRequestsSignal.set([]);
 
@@ -501,6 +749,10 @@ export class RentalsStore {
     this.#equipmentInformationSignal.set(new Map());
 
     this.#participantInformationSignal.set(new Map());
+
+    this.#updatingRentalIdSignal.set(null);
+
+    this.#operationSuccessSignal.set(null);
   }
 
   clearCreationState(): void {
@@ -509,6 +761,12 @@ export class RentalsStore {
     this.#errorSignal.set(null);
 
     this.#subscriptionRequiredSignal.set(false);
+  }
+
+  clearOperationFeedback(): void {
+    this.#errorSignal.set(null);
+
+    this.#operationSuccessSignal.set(null);
   }
 
   #resolveRentalRequest(requestId: number, targetStatus: RentalRequestStatus): void {
@@ -560,26 +818,57 @@ export class RentalsStore {
 
     this.#errorSignal.set(null);
 
-    this.#rentalsApi
-      .updateRentalRequest(updatedRequest)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: (savedRequest) => {
-          this.#rentalRequestsSignal.update((requests) =>
-            requests.map((request) => (request.id === savedRequest.id ? savedRequest : request)),
-          );
+    let operation: Observable<RentalRequest>;
 
-          this.#updatingRequestIdSignal.set(null);
+    if (targetStatus === RentalRequestStatus.APPROVED) {
+      const confirmedRental = new Rental({
+        id: 0,
 
-          this.#errorSignal.set(null);
-        },
+        equipmentId: currentRequest.equipmentId,
 
-        error: (error) => {
-          this.#updatingRequestIdSignal.set(null);
+        constructionUserId: currentRequest.constructionUserId,
 
-          this.#errorSignal.set(this.#formatError(error, 'Failed to update rental request'));
-        },
+        rentalCompanyUserId: currentRequest.rentalCompanyUserId,
+
+        period: currentRequest.period,
+
+        status: RentalStatus.CONFIRMED,
       });
+
+      operation = this.#equipmentOperation
+        .reservePeriod(
+          currentRequest.equipmentId,
+
+          currentRequest.period.startDate,
+
+          currentRequest.period.endDate,
+        )
+        .pipe(
+          switchMap(() => this.#rentalsApi.createRental(confirmedRental)),
+
+          switchMap(() => this.#rentalsApi.updateRentalRequest(updatedRequest)),
+        );
+    } else {
+      operation = this.#rentalsApi.updateRentalRequest(updatedRequest);
+    }
+
+    operation.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe({
+      next: (savedRequest) => {
+        this.#rentalRequestsSignal.update((requests) =>
+          requests.map((request) => (request.id === savedRequest.id ? savedRequest : request)),
+        );
+
+        this.#updatingRequestIdSignal.set(null);
+
+        this.#errorSignal.set(null);
+      },
+
+      error: (error) => {
+        this.#updatingRequestIdSignal.set(null);
+
+        this.#errorSignal.set(this.#formatError(error, 'Failed to update rental request'));
+      },
+    });
   }
 
   #formatError(error: unknown, fallbackMessage: string): string {
