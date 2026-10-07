@@ -8,7 +8,8 @@
     "search-equipment": "Buscar maquinaria",
     "plan-subscription": "Plan y suscripción",
     "profile": "Perfil",
-    "rental-requests": "Solicitudes de alquiler"
+    "rental-requests": "Solicitudes de alquiler",
+    "rentals": "Alquileres"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -222,6 +223,24 @@
       "empty-description": "Tu empresa todavía no ha recibido solicitudes de alquiler.",
       "no-filter-results": "No hay solicitudes coincidentes",
       "no-filter-results-description": "Ninguna solicitud de alquiler coincide con los filtros seleccionados."
+    },
+    "active": {
+      "section": "Operaciones de alquiler",
+      "title": "Alquileres",
+      "subtitle": "Revisa la maquinaria que se encuentra actualmente alquilada por tu empresa y consulta el periodo de cada alquiler.",
+      "summary": "Alquileres activos",
+      "list-label": "Alquileres",
+      "list-title": "Alquileres activos",
+      "equipment": "Maquinaria",
+      "customer": "Cliente",
+      "period": "Periodo de alquiler",
+      "status-label": "Estado",
+      "status": {
+        "active": "Activo"
+      },
+      "load-error": "No fue posible cargar los alquileres activos.",
+      "empty-title": "No hay alquileres activos",
+      "empty-description": "Tu empresa no tiene alquileres activos en este momento."
     }
   },
   "subscriptions": {
@@ -256,7 +275,7 @@
       "current-plan-button": "Plan actual",
       "confirmation-label": "Confirmación de suscripción",
       "confirmation-title": "Confirma tu suscripción",
-      "confirmation-description": "Revisa el plan seleccionado antes de activar tu suscripción.",
+      "confirmation-description": "Revisa el plan seleccionado antes de activar tu suscripción a MaquiGest.",
       "change-confirmation-label": "Cambio de plan",
       "change-confirmation-title": "Confirma el cambio de plan",
       "change-confirmation-description": "Revisa el plan seleccionado antes de actualizar tu suscripción.",
