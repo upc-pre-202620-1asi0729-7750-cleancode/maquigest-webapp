@@ -9,7 +9,8 @@
     "plan-subscription": "Plan y suscripción",
     "profile": "Perfil",
     "rental-requests": "Solicitudes de alquiler",
-    "rentals": "Alquileres"
+    "rentals": "Alquileres",
+    "my-requests": "Mis solicitudes"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -241,6 +242,41 @@
       "load-error": "No fue posible cargar los alquileres activos.",
       "empty-title": "No hay alquileres activos",
       "empty-description": "Tu empresa no tiene alquileres activos en este momento."
+    },
+    "my-requests": {
+      "section": "Operaciones de alquiler",
+      "title": "Mis solicitudes",
+      "subtitle": "Revisa las solicitudes de alquiler realizadas por tu empresa y consulta su estado actual.",
+      "summary": {
+        "pending": "Pendientes",
+        "approved": "Aprobadas",
+        "rejected": "Rechazadas"
+      },
+      "list-label": "Solicitudes",
+      "list-title": "Solicitudes realizadas",
+      "equipment": "Maquinaria",
+      "period": "Periodo solicitado",
+      "requested-at": "Solicitada el",
+      "status-label": "Estado",
+      "actions": "Acciones",
+      "view-detail": "Ver detalle",
+      "status": {
+        "pending": "Pendiente",
+        "approved": "Aprobada",
+        "rejected": "Rechazada"
+      },
+      "load-error": "No fue posible cargar tus solicitudes de alquiler.",
+      "empty-title": "Aún no tienes solicitudes de alquiler",
+      "empty-description": "Tu empresa todavía no ha realizado solicitudes de alquiler.",
+      "detail": {
+        "back": "Volver a Mis solicitudes",
+        "section": "Solicitud de alquiler",
+        "title": "Solicitud",
+        "subtitle": "Consulta el estado actual y la información de esta solicitud de alquiler.",
+        "not-found-title": "Solicitud de alquiler no encontrada",
+        "not-found-description": "La solicitud indicada no existe o no está disponible para tu empresa.",
+        "load-error": "No fue posible cargar la solicitud de alquiler."
+      }
     }
   },
   "subscriptions": {
