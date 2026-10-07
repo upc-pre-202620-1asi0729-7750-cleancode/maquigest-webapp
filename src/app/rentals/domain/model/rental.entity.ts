@@ -35,7 +35,7 @@ export class Rental implements BaseEntity {
 
     this.#period = props.period;
 
-    this.#status = props.status ?? RentalStatus.ACTIVE;
+    this.#status = props.status ?? RentalStatus.CONFIRMED;
   }
 
   get id(): number {
@@ -86,7 +86,31 @@ export class Rental implements BaseEntity {
     this.#status = value;
   }
 
+  get isConfirmed(): boolean {
+    return this.#status === RentalStatus.CONFIRMED;
+  }
+
   get isActive(): boolean {
     return this.#status === RentalStatus.ACTIVE;
+  }
+
+  get isCompleted(): boolean {
+    return this.#status === RentalStatus.COMPLETED;
+  }
+
+  registerDelivery(): void {
+    if (!this.isConfirmed) {
+      throw new Error('Only confirmed rentals can register a delivery');
+    }
+
+    this.#status = RentalStatus.ACTIVE;
+  }
+
+  registerReturn(): void {
+    if (!this.isActive) {
+      throw new Error('Only active rentals can register a return');
+    }
+
+    this.#status = RentalStatus.COMPLETED;
   }
 }

@@ -72,6 +72,8 @@
   "equipment": [],
   "rental-requests": [],
   "rentals": [],
+  "deliveries": [],
+  "equipment-returns": [],
   "subscription-plans": [
     {
       "id": 1,

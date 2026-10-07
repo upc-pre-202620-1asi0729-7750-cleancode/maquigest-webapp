@@ -228,20 +228,61 @@
     "active": {
       "section": "Rental operations",
       "title": "Rentals",
-      "subtitle": "Review the equipment that is currently rented by your company and track each rental period.",
+      "subtitle": "Track confirmed and active rentals, register equipment deliveries and returns, and monitor upcoming return dates.",
+      "summary-confirmed": "Awaiting delivery",
       "summary": "Active rentals",
+      "summary-due-soon": "Returns due soon",
+      "overdue-summary": "{{count}} overdue",
       "list-label": "Rentals",
-      "list-title": "Active rentals",
+      "list-title": "Rental operations",
       "equipment": "Equipment",
       "customer": "Customer",
+      "start-date": "Start date",
+      "return-date": "Return date",
       "period": "Rental period",
       "status-label": "Status",
+      "actions": "Actions",
+      "register-delivery": "Register delivery",
+      "register-return": "Register return",
+      "updating": "Updating...",
+      "date-required": "The date is required.",
+      "notes": "Notes",
+      "cancel": "Cancel",
       "status": {
-        "active": "Active"
+        "confirmed": "Confirmed",
+        "active": "Active",
+        "completed": "Completed"
       },
-      "load-error": "The active rentals could not be loaded.",
-      "empty-title": "No active rentals",
-      "empty-description": "Your company does not currently have any active rentals."
+      "return-indicator": {
+        "awaiting-delivery": "Awaiting delivery",
+        "scheduled": "Scheduled",
+        "due-soon": "Due soon",
+        "overdue": "Overdue"
+      },
+      "delivery": {
+        "section": "Rental delivery",
+        "title": "Register delivery",
+        "subtitle": "Confirm that the equipment was delivered to the customer and start the active rental.",
+        "date": "Delivery date",
+        "notes-placeholder": "Add relevant delivery observations",
+        "confirm": "Confirm delivery",
+        "success": "The delivery was registered successfully and the rental is now active."
+      },
+      "return": {
+        "section": "Equipment return",
+        "title": "Register return",
+        "subtitle": "Record the equipment return and indicate whether maintenance is required.",
+        "date": "Return date",
+        "notes-placeholder": "Add return condition or relevant observations",
+        "maintenance-required": "The equipment requires maintenance",
+        "maintenance-help": "Select this option when the returned equipment must remain unavailable for technical attention.",
+        "confirm": "Confirm return",
+        "success": "The return was registered successfully and the rental was completed."
+      },
+      "load-error": "The rentals could not be loaded.",
+      "operation-error": "The delivery or return operation could not be completed.",
+      "empty-title": "No rental operations",
+      "empty-description": "Your company does not currently have confirmed or active rentals."
     },
     "my-requests": {
       "section": "Rental operations",
