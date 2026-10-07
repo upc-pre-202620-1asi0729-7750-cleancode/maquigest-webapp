@@ -85,6 +85,10 @@ export class Layout {
       return 'navigation.plan-subscription';
     }
 
+    if (url.startsWith('/rentals/my-requests')) {
+      return 'navigation.my-requests';
+    }
+
     if (url.startsWith('/rentals/requests')) {
       return 'navigation.rental-requests';
     }

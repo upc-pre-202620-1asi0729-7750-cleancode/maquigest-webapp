@@ -64,6 +64,11 @@ export class Navigation {
 
           label: 'navigation.search-equipment',
         },
+        {
+          link: '/rentals/my-requests',
+
+          label: 'navigation.my-requests',
+        },
       ];
     }
 

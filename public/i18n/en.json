@@ -9,7 +9,8 @@
     "plan-subscription": "Plan & Subscription",
     "profile": "Profile",
     "rental-requests": "Rental Requests",
-    "rentals": "Rentals"
+    "rentals": "Rentals",
+    "my-requests": "My Requests"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -241,6 +242,41 @@
       "load-error": "The active rentals could not be loaded.",
       "empty-title": "No active rentals",
       "empty-description": "Your company does not currently have any active rentals."
+    },
+    "my-requests": {
+      "section": "Rental operations",
+      "title": "My Requests",
+      "subtitle": "Review the rental requests submitted by your company and check their current status.",
+      "summary": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "list-label": "Requests",
+      "list-title": "Submitted requests",
+      "equipment": "Equipment",
+      "period": "Requested period",
+      "requested-at": "Requested on",
+      "status-label": "Status",
+      "actions": "Actions",
+      "view-detail": "View detail",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "load-error": "Your rental requests could not be loaded.",
+      "empty-title": "No rental requests yet",
+      "empty-description": "Your company has not submitted any rental requests yet.",
+      "detail": {
+        "back": "Back to My Requests",
+        "section": "Rental request",
+        "title": "Request",
+        "subtitle": "Review the current status and information for this rental request.",
+        "not-found-title": "Rental request not found",
+        "not-found-description": "The requested rental request does not exist or is not available for your company.",
+        "load-error": "The rental request could not be loaded."
+      }
     }
   },
   "subscriptions": {

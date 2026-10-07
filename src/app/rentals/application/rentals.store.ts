@@ -42,6 +42,14 @@ export class RentalsStore {
 
   readonly rentalRequests = this.#rentalRequestsSignal.asReadonly();
 
+  readonly #selectedRentalRequestSignal = signal<RentalRequest | null>(null);
+
+  readonly selectedRentalRequest = this.#selectedRentalRequestSignal.asReadonly();
+
+  readonly #rentalRequestNotFoundSignal = signal<boolean>(false);
+
+  readonly rentalRequestNotFound = this.#rentalRequestNotFoundSignal.asReadonly();
+
   readonly #rentalsSignal = signal<Rental[]>([]);
 
   readonly rentals = this.#rentalsSignal.asReadonly();
@@ -172,6 +180,152 @@ export class RentalsStore {
           this.clearRentalRequests();
 
           this.#errorSignal.set(this.#formatError(error, 'Failed to load rental requests'));
+
+          this.#loadingSignal.set(false);
+        },
+      });
+  }
+
+  loadRentalRequestsForConstructionCompany(constructionUserId: number): void {
+    this.#loadingSignal.set(true);
+
+    this.#errorSignal.set(null);
+
+    this.#rentalsApi
+      .getRentalRequests()
+      .pipe(
+        map((requests) =>
+          requests
+            .filter((request) => request.constructionUserId === constructionUserId)
+            .sort(
+              (firstRequest, secondRequest) =>
+                secondRequest.createdAt.getTime() - firstRequest.createdAt.getTime(),
+            ),
+        ),
+
+        switchMap((requests) => {
+          if (requests.length === 0) {
+            return of({
+              requests,
+
+              equipmentInformation: [] as RentalEquipmentInformation[],
+            });
+          }
+
+          const equipmentIds = Array.from(new Set(requests.map((request) => request.equipmentId)));
+
+          return this.#equipmentInformation.getEquipmentInformationByIds(equipmentIds).pipe(
+            map((equipmentInformation) => ({
+              requests,
+              equipmentInformation,
+            })),
+          );
+        }),
+
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: ({ requests, equipmentInformation }) => {
+          this.#rentalRequestsSignal.set(requests);
+
+          this.#equipmentInformationSignal.set(
+            new Map(equipmentInformation.map((equipment) => [equipment.id, equipment])),
+          );
+
+          this.#participantInformationSignal.set(new Map());
+
+          this.#loadingSignal.set(false);
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.clearRentalRequests();
+
+          this.#errorSignal.set(this.#formatError(error, 'Failed to load my rental requests'));
+
+          this.#loadingSignal.set(false);
+        },
+      });
+  }
+
+  loadRentalRequestDetail(requestId: number, constructionUserId: number): void {
+    this.#loadingSignal.set(true);
+
+    this.#errorSignal.set(null);
+
+    this.#rentalRequestNotFoundSignal.set(false);
+
+    this.#selectedRentalRequestSignal.set(null);
+
+    this.#rentalsApi
+      .getRentalRequest(requestId)
+      .pipe(
+        switchMap((request) => {
+          if (request.constructionUserId !== constructionUserId) {
+            return of({
+              request: null as RentalRequest | null,
+
+              equipmentInformation: [] as RentalEquipmentInformation[],
+            });
+          }
+
+          return this.#equipmentInformation
+            .getEquipmentInformationByIds([request.equipmentId])
+            .pipe(
+              map((equipmentInformation) => ({
+                request: request as RentalRequest | null,
+
+                equipmentInformation,
+              })),
+            );
+        }),
+
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: ({ request, equipmentInformation }) => {
+          if (!request) {
+            this.#selectedRentalRequestSignal.set(null);
+
+            this.#equipmentInformationSignal.set(new Map());
+
+            this.#rentalRequestNotFoundSignal.set(true);
+
+            this.#loadingSignal.set(false);
+
+            return;
+          }
+
+          this.#selectedRentalRequestSignal.set(request);
+
+          this.#equipmentInformationSignal.set(
+            new Map(equipmentInformation.map((equipment) => [equipment.id, equipment])),
+          );
+
+          this.#rentalRequestNotFoundSignal.set(false);
+
+          this.#loadingSignal.set(false);
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.#selectedRentalRequestSignal.set(null);
+
+          this.#equipmentInformationSignal.set(new Map());
+
+          const message = this.#formatError(error, 'Failed to load rental request');
+
+          if (message.includes('Resource not found')) {
+            this.#rentalRequestNotFoundSignal.set(true);
+
+            this.#errorSignal.set(null);
+          } else {
+            this.#rentalRequestNotFoundSignal.set(false);
+
+            this.#errorSignal.set(message);
+          }
 
           this.#loadingSignal.set(false);
         },
@@ -329,6 +483,16 @@ export class RentalsStore {
     this.#participantInformationSignal.set(new Map());
 
     this.#updatingRequestIdSignal.set(null);
+  }
+
+  clearRentalRequestDetail(): void {
+    this.#selectedRentalRequestSignal.set(null);
+
+    this.#rentalRequestNotFoundSignal.set(false);
+
+    this.#equipmentInformationSignal.set(new Map());
+
+    this.#errorSignal.set(null);
   }
 
   clearRentals(): void {

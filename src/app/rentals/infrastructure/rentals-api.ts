@@ -16,23 +16,49 @@ import { RentalRequestApiEndpoint } from './rental-request-api-endpoint';
   providedIn: 'root',
 })
 export class RentalsApi extends BaseApi {
-  readonly #rentalRequestEndpoint = new RentalRequestApiEndpoint(this.http);
+  readonly #rentalRequestEndpoint =
+    new RentalRequestApiEndpoint(
+      this.http,
+    );
 
-  readonly #rentalEndpoint = new RentalApiEndpoint(this.http);
+  readonly #rentalEndpoint =
+    new RentalApiEndpoint(
+      this.http,
+    );
 
-  getRentalRequests(): Observable<RentalRequest[]> {
-    return this.#rentalRequestEndpoint.getAll();
+  getRentalRequests():
+    Observable<RentalRequest[]> {
+    return this.#rentalRequestEndpoint
+      .getAll();
   }
 
-  createRentalRequest(rentalRequest: RentalRequest): Observable<RentalRequest> {
-    return this.#rentalRequestEndpoint.create(rentalRequest);
+  getRentalRequest(
+    id: number,
+  ): Observable<RentalRequest> {
+    return this.#rentalRequestEndpoint
+      .getById(id);
   }
 
-  updateRentalRequest(rentalRequest: RentalRequest): Observable<RentalRequest> {
-    return this.#rentalRequestEndpoint.update(rentalRequest, rentalRequest.id);
+  createRentalRequest(
+    rentalRequest: RentalRequest,
+  ): Observable<RentalRequest> {
+    return this.#rentalRequestEndpoint
+      .create(rentalRequest);
   }
 
-  getRentals(): Observable<Rental[]> {
-    return this.#rentalEndpoint.getAll();
+  updateRentalRequest(
+    rentalRequest: RentalRequest,
+  ): Observable<RentalRequest> {
+    return this.#rentalRequestEndpoint
+      .update(
+        rentalRequest,
+        rentalRequest.id,
+      );
+  }
+
+  getRentals():
+    Observable<Rental[]> {
+    return this.#rentalEndpoint
+      .getAll();
   }
 }

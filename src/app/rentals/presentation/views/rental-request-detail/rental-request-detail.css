@@ -1,0 +1,208 @@
+﻿:host {
+  display: block;
+}
+
+.detail-page {
+  min-height: 100%;
+
+  padding: 38px 42px 52px;
+
+  background: #f6f8fb;
+}
+
+.back-link {
+  display: inline-flex;
+
+  margin-bottom: 24px;
+
+  color: #2563eb;
+
+  font-size: 0.8rem;
+  font-weight: 800;
+
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.detail-header {
+  max-width: 760px;
+
+  margin-bottom: 26px;
+}
+
+.section-label {
+  display: inline-block;
+
+  margin-bottom: 8px;
+
+  color: #2563eb;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detail-header h1 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.detail-header p {
+  margin: 9px 0 0;
+
+  color: #64748b;
+
+  font-size: 0.86rem;
+}
+
+.detail-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+
+  max-width: 920px;
+}
+
+.detail-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  min-height: 120px;
+
+  padding: 22px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  background: #ffffff;
+}
+
+.card-label {
+  color: #64748b;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.detail-card strong {
+  color: #1e293b;
+
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.detail-card small {
+  color: #7a879b;
+
+  font-size: 0.75rem;
+}
+
+.status-card {
+  align-items: flex-start;
+}
+
+.status-badge {
+  display: inline-flex;
+
+  padding: 6px 11px;
+
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.status-badge.pending {
+  background: #fff4d7;
+  color: #8d6500;
+}
+
+.status-badge.approved {
+  background: #e9f7ef;
+  color: #157347;
+}
+
+.status-badge.rejected {
+  background: #fff0ef;
+  color: #b42318;
+}
+
+.state-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  min-height: 260px;
+
+  padding: 32px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+.state-card h1 {
+  margin: 0 0 8px;
+
+  color: #1e293b;
+
+  font-size: 1.3rem;
+}
+
+.state-card p {
+  max-width: 520px;
+
+  margin: 0 0 20px;
+
+  color: #64748b;
+
+  line-height: 1.5;
+}
+
+.primary-link {
+  display: inline-flex;
+
+  padding: 10px 16px;
+
+  border-radius: 8px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  text-decoration: none;
+}
+
+.error-state {
+  color: #b42318;
+}
+
+@media (max-width: 800px) {
+  .detail-page {
+    padding: 26px 18px 38px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
