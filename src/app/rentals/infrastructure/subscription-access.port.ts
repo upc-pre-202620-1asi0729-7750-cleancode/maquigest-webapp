@@ -4,8 +4,10 @@ import { Observable } from 'rxjs';
 
 export interface SubscriptionAccessPort {
   hasActiveSubscription(userId: number): Observable<boolean>;
+
+  canManageRentals(userId: number): Observable<boolean>;
 }
 
 export const SUBSCRIPTION_ACCESS_PORT = new InjectionToken<SubscriptionAccessPort>(
   'SUBSCRIPTION_ACCESS_PORT',
-);
+);;

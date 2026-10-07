@@ -13,6 +13,8 @@ export const environment = {
 
   platformProviderRentalRequestsEndpointPath: '/rental-requests',
 
+  platformProviderRentalsEndpointPath: '/rentals',
+
   platformProviderEquipmentCategoriesEndpointPath: '/equipment-categories',
 
   platformProviderSubscriptionPlansEndpointPath: '/subscription-plans',

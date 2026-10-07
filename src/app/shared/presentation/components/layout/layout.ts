@@ -11,14 +11,20 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { IamStore } from '../../../../iam/application/iam.store';
 
 import { Navigation } from '../navigation/navigation';
+
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
+
 import { Footer } from '../footer/footer';
 
 @Component({
   selector: 'app-layout',
+
   imports: [RouterOutlet, Navigation, LanguageSwitcher, Footer, TranslatePipe],
+
   templateUrl: './layout.html',
+
   styleUrl: './layout.css',
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Layout {
@@ -31,9 +37,12 @@ export class Layout {
   readonly #currentUrl = toSignal(
     this.#router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+
       map(() => this.#router.url),
+
       startWith(this.#router.url),
     ),
+
     {
       initialValue: this.#router.url,
     },
@@ -74,6 +83,14 @@ export class Layout {
 
     if (url.startsWith('/subscriptions')) {
       return 'navigation.plan-subscription';
+    }
+
+    if (url.startsWith('/rentals/requests')) {
+      return 'navigation.rental-requests';
+    }
+
+    if (url.startsWith('/rentals')) {
+      return 'navigation.rentals';
     }
 
     if (url.startsWith('/inventory/search')) {

@@ -2,7 +2,9 @@
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { EMPTY, forkJoin, map, of, switchMap } from 'rxjs';
+import { EMPTY, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+
+import { Rental } from '../domain/model/rental.entity';
 
 import { RentalRequest } from '../domain/model/rental-request.entity';
 
@@ -40,6 +42,10 @@ export class RentalsStore {
 
   readonly rentalRequests = this.#rentalRequestsSignal.asReadonly();
 
+  readonly #rentalsSignal = signal<Rental[]>([]);
+
+  readonly rentals = this.#rentalsSignal.asReadonly();
+
   readonly #equipmentInformationSignal = signal<ReadonlyMap<number, RentalEquipmentInformation>>(
     new Map(),
   );
@@ -66,6 +72,10 @@ export class RentalsStore {
         .length,
   );
 
+  readonly activeRentalCount = computed(
+    () => this.rentals().filter((rental) => rental.isActive).length,
+  );
+
   readonly #latestCreatedRequestSignal = signal<RentalRequest | null>(null);
 
   readonly latestCreatedRequest = this.#latestCreatedRequestSignal.asReadonly();
@@ -85,6 +95,10 @@ export class RentalsStore {
   readonly #subscriptionRequiredSignal = signal<boolean>(false);
 
   readonly subscriptionRequired = this.#subscriptionRequiredSignal.asReadonly();
+
+  canManageRentals(userId: number): Observable<boolean> {
+    return this.#subscriptionAccess.canManageRentals(userId);
+  }
 
   loadRentalRequestsForCompany(rentalCompanyUserId: number): void {
     this.#loadingSignal.set(true);
@@ -164,6 +178,86 @@ export class RentalsStore {
       });
   }
 
+  loadActiveRentalsForCompany(rentalCompanyUserId: number): void {
+    this.#loadingSignal.set(true);
+
+    this.#errorSignal.set(null);
+
+    this.#rentalsApi
+      .getRentals()
+      .pipe(
+        map((rentals) =>
+          rentals
+            .filter(
+              (rental) => rental.rentalCompanyUserId === rentalCompanyUserId && rental.isActive,
+            )
+            .sort(
+              (firstRental, secondRental) =>
+                firstRental.period.endDate.getTime() - secondRental.period.endDate.getTime(),
+            ),
+        ),
+
+        switchMap((rentals) => {
+          if (rentals.length === 0) {
+            return of({
+              rentals,
+
+              equipmentInformation: [] as RentalEquipmentInformation[],
+
+              participantInformation: [] as RentalParticipantInformation[],
+            });
+          }
+
+          const equipmentIds = Array.from(new Set(rentals.map((rental) => rental.equipmentId)));
+
+          const participantUserIds = Array.from(
+            new Set(rentals.map((rental) => rental.constructionUserId)),
+          );
+
+          return forkJoin({
+            equipmentInformation:
+              this.#equipmentInformation.getEquipmentInformationByIds(equipmentIds),
+
+            participantInformation:
+              this.#participantInformation.getParticipantInformationByUserIds(participantUserIds),
+          }).pipe(
+            map(({ equipmentInformation, participantInformation }) => ({
+              rentals,
+              equipmentInformation,
+              participantInformation,
+            })),
+          );
+        }),
+
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        next: ({ rentals, equipmentInformation, participantInformation }) => {
+          this.#rentalsSignal.set(rentals);
+
+          this.#equipmentInformationSignal.set(
+            new Map(equipmentInformation.map((equipment) => [equipment.id, equipment])),
+          );
+
+          this.#participantInformationSignal.set(
+            new Map(participantInformation.map((participant) => [participant.userId, participant])),
+          );
+
+          this.#loadingSignal.set(false);
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.clearRentals();
+
+          this.#errorSignal.set(this.#formatError(error, 'Failed to load active rentals'));
+
+          this.#loadingSignal.set(false);
+        },
+      });
+  }
+
   getEquipmentInformation(equipmentId: number): RentalEquipmentInformation | undefined {
     return this.#equipmentInformationSignal().get(equipmentId);
   }
@@ -235,6 +329,14 @@ export class RentalsStore {
     this.#participantInformationSignal.set(new Map());
 
     this.#updatingRequestIdSignal.set(null);
+  }
+
+  clearRentals(): void {
+    this.#rentalsSignal.set([]);
+
+    this.#equipmentInformationSignal.set(new Map());
+
+    this.#participantInformationSignal.set(new Map());
   }
 
   clearCreationState(): void {

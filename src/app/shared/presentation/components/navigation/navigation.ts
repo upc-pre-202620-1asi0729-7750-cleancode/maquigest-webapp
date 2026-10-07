@@ -8,6 +8,7 @@ import { IamStore } from '../../../../iam/application/iam.store';
 
 interface NavigationOption {
   link: string;
+
   label: string;
 }
 
@@ -46,6 +47,11 @@ export class Navigation {
           link: '/rentals/requests',
 
           label: 'navigation.rental-requests',
+        },
+        {
+          link: '/rentals/active',
+
+          label: 'navigation.rentals',
         },
       ];
     }

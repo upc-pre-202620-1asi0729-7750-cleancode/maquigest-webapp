@@ -8,7 +8,8 @@
     "search-equipment": "Search equipment",
     "plan-subscription": "Plan & Subscription",
     "profile": "Profile",
-    "rental-requests": "Rental Requests"
+    "rental-requests": "Rental Requests",
+    "rentals": "Rentals"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -222,6 +223,24 @@
       "empty-description": "Your company has not received any rental requests yet.",
       "no-filter-results": "No matching requests",
       "no-filter-results-description": "No rental requests match the selected filters."
+    },
+    "active": {
+      "section": "Rental operations",
+      "title": "Rentals",
+      "subtitle": "Review the equipment that is currently rented by your company and track each rental period.",
+      "summary": "Active rentals",
+      "list-label": "Rentals",
+      "list-title": "Active rentals",
+      "equipment": "Equipment",
+      "customer": "Customer",
+      "period": "Rental period",
+      "status-label": "Status",
+      "status": {
+        "active": "Active"
+      },
+      "load-error": "The active rentals could not be loaded.",
+      "empty-title": "No active rentals",
+      "empty-description": "Your company does not currently have any active rentals."
     }
   },
   "subscriptions": {

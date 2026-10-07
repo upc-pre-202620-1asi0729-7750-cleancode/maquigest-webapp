@@ -1,0 +1,303 @@
+﻿<div class="rentals-page">
+
+  <header class="rentals-header">
+
+    <span class="section-label">
+      {{
+        'rentals.active.section'
+          | translate
+      }}
+    </span>
+
+    <h1>
+      {{
+        'rentals.active.title'
+          | translate
+      }}
+    </h1>
+
+    <p>
+      {{
+        'rentals.active.subtitle'
+          | translate
+      }}
+    </p>
+
+  </header>
+
+  <section class="summary-grid">
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.active.summary'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.activeRentalCount()
+        }}
+      </strong>
+
+    </article>
+
+  </section>
+
+  <section class="rentals-content">
+
+    <div class="content-heading">
+
+      <div>
+
+        <span class="section-label">
+          {{
+            'rentals.active.list-label'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'rentals.active.list-title'
+              | translate
+          }}
+        </h2>
+
+      </div>
+
+    </div>
+
+    @if (store.loading()) {
+
+      <div class="loading-state">
+
+        <mat-spinner
+          diameter="34">
+        </mat-spinner>
+
+      </div>
+
+    } @else if (store.error()) {
+
+      <div class="error-state">
+
+        {{
+          'rentals.active.load-error'
+            | translate
+        }}
+
+      </div>
+
+    } @else if (
+      store.rentals().length === 0
+      ) {
+
+      <div class="empty-state">
+
+        <h3>
+          {{
+            'rentals.active.empty-title'
+              | translate
+          }}
+        </h3>
+
+        <p>
+          {{
+            'rentals.active.empty-description'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table
+          mat-table
+          [dataSource]="dataSource()"
+          class="rentals-table">
+
+          <ng-container
+            matColumnDef="equipment">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.equipment'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="primary-cell">
+                {{
+                  equipmentName(
+                    rental.equipmentId
+                  )
+                }}
+              </div>
+
+              <div class="secondary-cell">
+                {{
+                  equipmentCode(
+                    rental.equipmentId
+                  )
+                }}
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="customer">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.customer'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="primary-cell">
+                {{
+                  customerName(
+                    rental.constructionUserId
+                  )
+                }}
+              </div>
+
+              <div class="secondary-cell">
+                {{
+                  customerContact(
+                    rental.constructionUserId
+                  )
+                }}
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="period">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.period'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="period-cell">
+
+                <span>
+                  {{
+                    formatDate(
+                      rental.period.startDate
+                    )
+                  }}
+                </span>
+
+                <span class="date-separator">
+                  →
+                </span>
+
+                <span>
+                  {{
+                    formatDate(
+                      rental.period.endDate
+                    )
+                  }}
+                </span>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="status">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.status-label'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <span
+                class="status-badge"
+                [class]="
+                  'status-badge ' +
+                  statusClass(
+                    rental.status
+                  )
+                ">
+
+                {{
+                  statusKey(
+                    rental.status
+                  )
+                    | translate
+                }}
+
+              </span>
+
+            </td>
+
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="
+              displayedColumns
+            ">
+          </tr>
+
+          <tr
+            mat-row
+            *matRowDef="
+              let row;
+              columns:
+                displayedColumns
+            ">
+          </tr>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</div>
