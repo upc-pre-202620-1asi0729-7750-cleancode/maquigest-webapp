@@ -1,0 +1,594 @@
+﻿<div class="plans-page">
+
+  <header class="plans-header">
+
+    <span class="section-label">
+      {{
+        'subscriptions.plans.billing'
+          | translate
+      }}
+    </span>
+
+    <h1>
+      {{
+        'subscriptions.plans.title'
+          | translate
+      }}
+    </h1>
+
+    <p>
+      {{
+        'subscriptions.plans.subtitle'
+          | translate
+      }}
+    </p>
+
+  </header>
+
+  <section class="current-subscription-section">
+
+    <div class="section-heading">
+
+      <div>
+
+        <span class="section-label">
+          {{
+            'subscriptions.plans.current-plan-label'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'subscriptions.plans.current-plan-title'
+              | translate
+          }}
+        </h2>
+
+      </div>
+
+    </div>
+
+    @if (
+      store.subscriptionLoading() &&
+      !store.currentSubscription()
+      ) {
+
+      <div class="current-subscription-loading">
+
+        <mat-spinner diameter="34">
+        </mat-spinner>
+
+      </div>
+
+    } @else if (
+      store.currentSubscription();
+      as subscription
+      ) {
+
+      <article class="current-plan-card">
+
+        <div class="current-plan-main">
+
+          @if (
+            currentPlan();
+            as activePlan
+            ) {
+
+            <div class="current-plan-information">
+
+              <div class="current-plan-name-row">
+
+                <h3>
+                  {{
+                    planNameKey(activePlan)
+                      | translate
+                  }}
+                </h3>
+
+                <span class="status-badge">
+                  {{
+                    subscriptionStatusKey()
+                      | translate
+                  }}
+                </span>
+
+              </div>
+
+              <p>
+                {{
+                  descriptionKey(activePlan)
+                    | translate
+                }}
+              </p>
+
+              <div class="features-title">
+                {{
+                  'subscriptions.plans.includes'
+                    | translate
+                }}
+              </div>
+
+              <ul class="plan-features">
+
+                @for (
+                  featureKey of featureKeys(
+                    activePlan
+                  );
+                  track featureKey
+                  ) {
+
+                  <li>
+
+                    <span
+                      class="feature-check"
+                      aria-hidden="true">
+                      ✓
+                    </span>
+
+                    <span>
+                      {{
+                        featureKey
+                          | translate
+                      }}
+                    </span>
+
+                  </li>
+
+                }
+
+              </ul>
+
+            </div>
+
+            <div class="current-plan-price">
+
+              <span class="currency">
+                S/
+              </span>
+
+              <strong>
+                {{
+                  activePlan.price.amount
+                }}
+              </strong>
+
+              <span class="period">
+                {{
+                  'subscriptions.plans.per-month'
+                    | translate
+                }}
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+        <div class="current-plan-details">
+
+          <div class="subscription-detail">
+
+            <span class="detail-label">
+              {{
+                'subscriptions.plans.subscription-status-label'
+                  | translate
+              }}
+            </span>
+
+            <strong>
+              {{
+                subscriptionStatusKey()
+                  | translate
+              }}
+            </strong>
+
+          </div>
+
+          <div class="subscription-detail">
+
+            <span class="detail-label">
+              {{
+                'subscriptions.plans.subscription-period'
+                  | translate
+              }}
+            </span>
+
+            <strong>
+
+              {{
+                formatDate(
+                  subscription
+                    .period
+                    .startDate
+                )
+              }}
+
+              —
+
+              {{
+                formatDate(
+                  subscription
+                    .period
+                    .endDate
+                )
+              }}
+
+            </strong>
+
+          </div>
+
+          <div class="subscription-detail">
+
+            <span class="detail-label">
+              {{
+                'subscriptions.plans.auto-renew'
+                  | translate
+              }}
+            </span>
+
+            <strong>
+
+              @if (
+                subscription.autoRenew
+                ) {
+
+                {{
+                  'subscriptions.plans.enabled'
+                    | translate
+                }}
+
+              } @else {
+
+                {{
+                  'subscriptions.plans.disabled'
+                    | translate
+                }}
+
+              }
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    } @else {
+
+      <article class="no-subscription-card">
+
+        <div>
+
+          <h3>
+            {{
+              'subscriptions.plans.no-current-plan'
+                | translate
+            }}
+          </h3>
+
+          <p>
+            {{
+              'subscriptions.plans.no-current-plan-description'
+                | translate
+            }}
+          </p>
+
+        </div>
+
+        <span class="no-plan-badge">
+          {{
+            'subscriptions.plans.not-subscribed'
+              | translate
+          }}
+        </span>
+
+      </article>
+
+    }
+
+    @if (
+      store.subscriptionError()
+      ) {
+
+      <div class="subscription-error">
+        {{
+          store.subscriptionError()
+        }}
+      </div>
+
+    }
+
+  </section>
+
+  <section class="available-plans-section">
+
+    <div class="section-heading">
+
+      <div>
+
+        <span class="section-label">
+          {{
+            'subscriptions.plans.available-plans-label'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'subscriptions.plans.compare-title'
+              | translate
+          }}
+        </h2>
+
+        <p>
+          {{
+            'subscriptions.plans.compare-subtitle'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+    </div>
+
+    @if (
+      store.loading()
+      ) {
+
+      <div class="loading-state">
+
+        <mat-spinner diameter="42">
+        </mat-spinner>
+
+      </div>
+
+    } @else if (
+      store.error()
+      ) {
+
+      <div class="error-state">
+        {{
+          'subscriptions.plans.load-error'
+            | translate
+        }}
+      </div>
+
+    } @else if (
+      store.plans().length === 0
+      ) {
+
+      <div class="empty-state">
+        {{
+          'subscriptions.plans.empty'
+            | translate
+        }}
+      </div>
+
+    } @else {
+
+      <section class="plans-grid">
+
+        @for (
+          plan of store.plans();
+          track plan.id
+          ) {
+
+          <article
+            class="plan-card"
+            [class.recommended]="
+              isRecommended(plan)
+            "
+            [class.current]="
+              isCurrentPlan(plan)
+            ">
+
+            @if (
+              isRecommended(plan)
+              ) {
+
+              <span class="recommended-badge">
+                {{
+                  'subscriptions.plans.recommended'
+                    | translate
+                }}
+              </span>
+
+            }
+
+            @if (
+              isCurrentPlan(plan)
+              ) {
+
+              <span class="current-badge">
+                {{
+                  'subscriptions.plans.current'
+                    | translate
+                }}
+              </span>
+
+            }
+
+            <h3>
+              {{
+                planNameKey(plan)
+                  | translate
+              }}
+            </h3>
+
+            <div class="plan-price">
+
+              <span class="currency">
+                S/
+              </span>
+
+              <strong>
+                {{
+                  plan.price.amount
+                }}
+              </strong>
+
+              <span class="period">
+                {{
+                  'subscriptions.plans.per-month'
+                    | translate
+                }}
+              </span>
+
+            </div>
+
+            <p class="plan-description">
+              {{
+                descriptionKey(plan)
+                  | translate
+              }}
+            </p>
+
+            <div class="features-title">
+              {{
+                'subscriptions.plans.includes'
+                  | translate
+              }}
+            </div>
+
+            <ul class="plan-features">
+
+              @for (
+                featureKey of featureKeys(
+                  plan
+                );
+                track featureKey
+                ) {
+
+                <li>
+
+                  <span
+                    class="feature-check"
+                    aria-hidden="true">
+                    ✓
+                  </span>
+
+                  <span>
+                    {{
+                      featureKey
+                        | translate
+                    }}
+                  </span>
+
+                </li>
+
+              }
+
+            </ul>
+
+            <div class="plan-action-area">
+
+              @if (
+                !store.currentSubscription()
+                ) {
+
+                <button
+                  type="button"
+                  class="plan-action-button"
+                  [class.primary]="
+                    isRecommended(plan)
+                  "
+                  [disabled]="
+                    store.subscriptionLoading()
+                  "
+                  (click)="
+                    selectPlan(plan)
+                  ">
+
+                  {{
+                    'subscriptions.plans.select-plan'
+                      | translate
+                  }}
+
+                </button>
+
+              } @else if (
+                isCurrentPlan(plan)
+                ) {
+
+                <button
+                  type="button"
+                  class="plan-action-button current-action"
+                  disabled>
+
+                  {{
+                    'subscriptions.plans.current-plan-button'
+                      | translate
+                  }}
+
+                </button>
+
+              } @else {
+
+                <button
+                  type="button"
+                  class="plan-action-button primary"
+                  [disabled]="
+                    store.subscriptionLoading()
+                  "
+                  (click)="
+                    selectPlan(plan)
+                  ">
+
+                  {{
+                    'subscriptions.plans.change-plan'
+                      | translate
+                  }}
+
+                </button>
+
+              }
+
+            </div>
+
+          </article>
+
+        }
+
+      </section>
+
+      <p class="plans-note">
+        {{
+          'subscriptions.plans.note'
+            | translate
+        }}
+      </p>
+
+    }
+
+  </section>
+
+  @if (
+    selectedPlan();
+    as plan
+    ) {
+
+    <app-change-plan
+      [selectedPlan]="plan"
+      [currentPlan]="
+        currentPlan() ?? null
+      "
+      [loading]="
+        store.subscriptionLoading()
+      "
+      [error]="
+        store.subscriptionError()
+      "
+      (cancelled)="
+        cancelSelection()
+      "
+      (confirmed)="
+        confirmPlanAction()
+      ">
+    </app-change-plan>
+
+  }
+
+</div>

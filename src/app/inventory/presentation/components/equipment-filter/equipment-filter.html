@@ -1,0 +1,129 @@
+<form
+  class="equipment-filter"
+  [formGroup]="form"
+  (ngSubmit)="applyFilters()">
+
+  <mat-form-field appearance="outline">
+    <mat-label>
+      {{ 'equipment.search.query' | translate }}
+    </mat-label>
+
+    <input
+      matInput
+      type="search"
+      formControlName="query"
+      [placeholder]="
+        'equipment.search.query-placeholder'
+          | translate
+      ">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>
+      {{ 'equipment.category' | translate }}
+    </mat-label>
+
+    <mat-select formControlName="categoryId">
+
+      <mat-option [value]="null">
+        {{
+          'equipment.search.all-categories'
+            | translate
+        }}
+      </mat-option>
+
+      @for (
+        category of categories();
+        track category.id
+        ) {
+        <mat-option [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+      }
+
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>
+      {{ 'equipment.location' | translate }}
+    </mat-label>
+
+    <input
+      matInput
+      type="text"
+      formControlName="location"
+      [placeholder]="
+        'equipment.search.location-placeholder'
+          | translate
+      ">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>
+      {{ 'equipment.availability' | translate }}
+    </mat-label>
+
+    <mat-select formControlName="availability">
+
+      <mat-option value="ALL">
+        {{
+          'equipment.search.all-availability'
+            | translate
+        }}
+      </mat-option>
+
+      <mat-option value="AVAILABLE">
+        {{
+          'equipment.availability-values.available'
+            | translate
+        }}
+      </mat-option>
+
+      <mat-option value="RESERVED">
+        {{
+          'equipment.availability-values.reserved'
+            | translate
+        }}
+      </mat-option>
+
+      <mat-option value="RENTED">
+        {{
+          'equipment.availability-values.rented'
+            | translate
+        }}
+      </mat-option>
+
+      <mat-option value="MAINTENANCE">
+        {{
+          'equipment.availability-values.maintenance'
+            | translate
+        }}
+      </mat-option>
+
+    </mat-select>
+  </mat-form-field>
+
+  <div class="filter-actions">
+
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit">
+
+      {{ 'equipment.search.apply' | translate }}
+
+    </button>
+
+    <button
+      mat-button
+      type="button"
+      (click)="clearFilters()">
+
+      {{ 'equipment.search.clear' | translate }}
+
+    </button>
+
+  </div>
+
+</form>

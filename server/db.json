@@ -1,0 +1,108 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "rental@maquigest.com",
+      "password": "MaquiGest123!",
+      "role": "rental_company",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "email": "construction@maquigest.com",
+      "password": "MaquiGest123!",
+      "role": "construction_company",
+      "status": "active"
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "userId": 1,
+      "firstName": "Rental",
+      "lastName": "Operator",
+      "contactEmail": "rental@maquigest.com",
+      "phoneNumber": "",
+      "companyName": "Rental Company",
+      "address": {
+        "street": "",
+        "district": "",
+        "city": "Lima",
+        "country": "Peru",
+        "latitude": 0,
+        "longitude": 0
+      }
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "firstName": "Construction",
+      "lastName": "Manager",
+      "contactEmail": "construction@maquigest.com",
+      "phoneNumber": "",
+      "companyName": "Construction Company",
+      "address": {
+        "street": "",
+        "district": "",
+        "city": "Lima",
+        "country": "Peru",
+        "latitude": 0,
+        "longitude": 0
+      }
+    }
+  ],
+  "equipment-categories": [
+    {
+      "id": 1,
+      "name": "Excavators"
+    },
+    {
+      "id": 2,
+      "name": "Loaders"
+    },
+    {
+      "id": 3,
+      "name": "Compactors"
+    },
+    {
+      "id": 4,
+      "name": "Generators"
+    }
+  ],
+  "equipment": [],
+  "rental-requests": [],
+  "rentals": [],
+  "deliveries": [],
+  "equipment-returns": [],
+  "subscription-plans": [
+    {
+      "id": 1,
+      "name": "Essential",
+      "description": "Start organizing your equipment and reservation requests.",
+      "priceAmount": 79,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "name": "Professional",
+      "description": "Centralize your company's day-to-day rental operations.",
+      "priceAmount": 149,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "name": "Growth",
+      "description": "Expand your operational oversight and manage equipment maintenance.",
+      "priceAmount": 249,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    }
+  ],
+  "user-subscriptions": [],
+  "maintenances": []
+}

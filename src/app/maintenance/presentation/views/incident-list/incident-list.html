@@ -1,0 +1,310 @@
+<div class="incidents-page">
+  <header class="page-header">
+    <div class="page-heading">
+      <span class="section-label">
+        {{ 'maintenance.incidents.list.section' | translate }}
+      </span>
+      <h1>{{ 'maintenance.incidents.list.title' | translate }}</h1>
+      <p>{{ 'maintenance.incidents.list.subtitle' | translate }}</p>
+    </div>
+
+    <div class="page-actions">
+      <a mat-stroked-button routerLink="/maintenance" class="back-button">
+        {{ 'maintenance.incidents.list.view-maintenance' | translate }}
+      </a>
+      <button
+        mat-flat-button
+        type="button"
+        class="primary-button"
+        [disabled]="busy() || store.equipmentInformation().length === 0"
+        (click)="openForm()">
+        {{ 'maintenance.incidents.list.register' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <section class="summary-grid">
+    <article class="summary-card">
+      <span>{{ 'maintenance.incidents.list.total' | translate }}</span>
+      <strong>{{ store.incidents().length }}</strong>
+    </article>
+    <article class="summary-card">
+      <span>{{ 'maintenance.incidents.list.affected-equipment' | translate }}</span>
+      <strong>{{ affectedEquipmentCount() }}</strong>
+    </article>
+    <article class="summary-card">
+      <span>{{ 'maintenance.incidents.list.last-report' | translate }}</span>
+      <strong class="summary-date">
+        @if (lastIncident(); as incident) {
+          {{ incident.reportedAt | date:'dd/MM/yyyy' }}
+        } @else {
+          -
+        }
+      </strong>
+    </article>
+  </section>
+
+  @if (store.saveSucceeded()) {
+    <div class="success-banner" role="status">
+      {{ 'maintenance.incidents.list.success' | translate }}
+    </div>
+  }
+
+  @if (store.resolveSucceeded()) {
+    <div class="success-banner" role="status">
+      {{ 'maintenance.incidents.list.resolve-success' | translate }}
+    </div>
+  }
+
+  @if (store.restrictionSucceeded()) {
+    <div class="success-banner" role="status">
+      {{ 'maintenance.incidents.list.restriction-success' | translate }}
+    </div>
+  }
+
+  @if (store.reactivationSucceeded()) {
+    <div class="success-banner" role="status">
+      {{ 'maintenance.incidents.list.reactivation-success' | translate }}
+    </div>
+  }
+
+  @if (store.error() && !store.loading()) {
+    <div class="error-banner" role="alert">{{ store.error() }}</div>
+  }
+
+  @if (store.reactivatableEquipment().length > 0) {
+    <section class="reactivation-panel">
+      <div class="reactivation-heading">
+        <h2>{{ 'maintenance.incidents.list.reactivation-title' | translate }}</h2>
+        <p>{{ 'maintenance.incidents.list.reactivation-description' | translate }}</p>
+      </div>
+
+      @for (equipment of store.reactivatableEquipment(); track equipment.id) {
+        <div class="reactivation-row">
+          <div>
+            <strong>{{ equipment.name }}</strong>
+            <span class="equipment-code">{{ equipment.code }}</span>
+          </div>
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="busy()"
+            (click)="requestReactivation(equipment.id)">
+            {{ 'maintenance.incidents.list.reactivate' | translate }}
+          </button>
+        </div>
+
+        @if (confirmingReactivationEquipmentId() === equipment.id) {
+          <div class="reactivation-confirmation">
+            <p>{{ 'maintenance.incidents.list.reactivate-warning' | translate }}</p>
+            <label class="inspection-check">
+              <input
+                type="checkbox"
+                [checked]="inspectionConfirmed()"
+                [disabled]="busy()"
+                (change)="inspectionConfirmed.set($any($event.target).checked)" />
+              {{ 'maintenance.incidents.list.inspection-confirmed' | translate }}
+            </label>
+            <div class="confirmation-actions">
+              <button mat-stroked-button type="button"
+                [disabled]="busy()" (click)="cancelReactivation()">
+                {{ 'maintenance.incidents.list.cancel-resolve' | translate }}
+              </button>
+              <button mat-flat-button type="button" class="primary-button"
+                [disabled]="busy() || !inspectionConfirmed()"
+                (click)="confirmReactivation(equipment.id)">
+                {{ (store.reactivatingEquipmentId() === equipment.id
+                  ? 'maintenance.incidents.list.reactivating'
+                  : 'maintenance.incidents.list.confirm-reactivation') | translate }}
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </section>
+  }
+
+  <section class="list-panel">
+    <div class="panel-header">
+      <span class="section-label">
+        {{ 'maintenance.incidents.list.history' | translate }}
+      </span>
+      <h2>{{ 'maintenance.incidents.list.records' | translate }}</h2>
+    </div>
+
+    @if (store.loading()) {
+      <div class="empty-state">
+        <mat-spinner [diameter]="34"></mat-spinner>
+      </div>
+    } @else if (store.error() && store.incidents().length === 0) {
+      <div class="empty-state">
+        <p>{{ 'maintenance.incidents.list.load-error' | translate }}</p>
+      </div>
+    } @else if (store.incidents().length === 0) {
+      <div class="empty-state">
+        <h3>{{ 'maintenance.incidents.list.empty-title' | translate }}</h3>
+        <p>{{ 'maintenance.incidents.list.empty-description' | translate }}</p>
+        @if (store.equipmentInformation().length === 0) {
+          <p class="equipment-help">
+            {{ 'maintenance.incidents.list.no-equipment' | translate }}
+          </p>
+          <a mat-stroked-button routerLink="/inventory/equipment/new">
+            {{ 'maintenance.incidents.list.add-equipment' | translate }}
+          </a>
+        }
+      </div>
+    } @else {
+      <div class="incident-grid">
+        @for (incident of store.incidents(); track incident.id) {
+          <article class="incident-card">
+            <div class="incident-top">
+              <div class="equipment-block">
+                <span class="field-label">
+                  {{ 'maintenance.incidents.list.equipment' | translate }}
+                </span>
+                <strong>{{ equipmentName(incident.equipmentId) }}</strong>
+                <span class="equipment-code">{{ equipmentCode(incident.equipmentId) }}</span>
+              </div>
+              <div class="date-block">
+                <span class="field-label">
+                  {{ 'maintenance.incidents.list.date' | translate }}
+                </span>
+                <span>{{ incident.reportedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <div class="status-block">
+                <span class="field-label">
+                  {{ 'maintenance.incidents.list.status' | translate }}
+                </span>
+                @if (incident.status === incidentStatus.OPEN) {
+                  <span class="status-badge status-open">
+                    {{ 'maintenance.incidents.list.open' | translate }}
+                  </span>
+                } @else {
+                  <span class="status-badge status-resolved">
+                    {{ 'maintenance.incidents.list.resolved' | translate }}
+                  </span>
+                  @if (incident.resolvedAt) {
+                    <span class="resolution-date">
+                      {{ incident.resolvedAt | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                  }
+                }
+              </div>
+            </div>
+
+            <div class="description-block">
+              <span class="field-label">
+                {{ 'maintenance.incidents.list.description' | translate }}
+              </span>
+              <p>{{ incident.description }}</p>
+            </div>
+
+            <div class="incident-footer">
+              <div class="restriction-block">
+                <span class="field-label">
+                  {{ 'maintenance.incidents.list.rental-restriction' | translate }}
+                </span>
+                @if (incident.blocksRental) {
+                  <span class="restriction-badge">
+                    {{ 'maintenance.incidents.list.blocked' | translate }}
+                  </span>
+                } @else {
+                  <span class="restriction-none">
+                    {{ 'maintenance.incidents.list.not-blocked' | translate }}
+                  </span>
+                }
+              </div>
+
+              <div class="incident-actions">
+                @if (incident.status === incidentStatus.OPEN) {
+                  @if (!incident.blocksRental) {
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      class="restriction-button"
+                      [disabled]="busy()"
+                      (click)="requestRestriction(incident)">
+                      {{ 'maintenance.incidents.list.require-restriction' | translate }}
+                    </button>
+                  }
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    class="resolve-button"
+                    [disabled]="busy()"
+                    (click)="requestResolve(incident)">
+                    {{ 'maintenance.incidents.list.resolve-short' | translate }}
+                  </button>
+                } @else {
+                  <span class="finished-action">
+                    {{ 'maintenance.incidents.list.no-actions' | translate }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            @if (confirmingRestrictionId() === incident.id && !incident.blocksRental) {
+              <div class="confirmation-panel" role="group">
+                <p>{{ 'maintenance.incidents.list.restriction-warning' | translate }}</p>
+                <div class="confirmation-actions">
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [disabled]="busy()"
+                    (click)="cancelRestriction()">
+                    {{ 'maintenance.incidents.list.cancel-resolve' | translate }}
+                  </button>
+                  <button
+                    mat-flat-button
+                    type="button"
+                    class="danger-button"
+                    [disabled]="busy()"
+                    (click)="confirmRestriction(incident)">
+                    {{ (store.restrictingIncidentId() === incident.id
+                        ? 'maintenance.incidents.list.restricting'
+                        : 'maintenance.incidents.list.confirm-restriction') | translate }}
+                  </button>
+                </div>
+              </div>
+            }
+
+            @if (confirmingIncidentId() === incident.id && incident.status === incidentStatus.OPEN) {
+              <div class="confirmation-panel" role="group">
+                <p>{{ 'maintenance.incidents.list.resolve-warning' | translate }}</p>
+                <div class="confirmation-actions">
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [disabled]="busy()"
+                    (click)="cancelResolve()">
+                    {{ 'maintenance.incidents.list.cancel-resolve' | translate }}
+                  </button>
+                  <button
+                    mat-flat-button
+                    type="button"
+                    class="primary-button"
+                    [disabled]="busy()"
+                    (click)="confirmResolve(incident)">
+                    {{ (store.resolvingIncidentId() === incident.id
+                        ? 'maintenance.incidents.list.resolving'
+                        : 'maintenance.incidents.list.confirm-resolve') | translate }}
+                  </button>
+                </div>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    }
+  </section>
+
+  @if (formOpen()) {
+    <app-incident-form
+      [equipment]="store.equipmentInformation()"
+      [saving]="store.saving()"
+      [error]="store.error()"
+      (submitted)="submitForm($event)"
+      (cancelled)="closeForm()">
+    </app-incident-form>
+  }
+</div>

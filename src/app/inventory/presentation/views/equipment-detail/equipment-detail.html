@@ -1,0 +1,507 @@
+<div class="equipment-detail-page">
+
+  <button
+    mat-button
+    type="button"
+    class="back-button"
+    (click)="backToSearch()">
+
+    {{
+      'equipment.detail.back'
+        | translate
+    }}
+
+  </button>
+
+  @if (store.loading()) {
+
+    <div class="loading-state">
+
+      <mat-spinner diameter="40">
+      </mat-spinner>
+
+    </div>
+
+  }
+
+  @if (store.error()) {
+
+    <mat-error>
+      {{ store.error() }}
+    </mat-error>
+
+  }
+
+  @if (
+    !store.loading() &&
+    equipment();
+    as equipment
+    ) {
+
+    <mat-card
+      class="detail-card"
+      appearance="outlined">
+
+      <mat-card-header>
+
+        <mat-card-title>
+          {{ equipment.name }}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+
+          {{ equipment.code }}
+          ·
+          {{
+            equipment.category?.name
+            ?? '-'
+          }}
+
+        </mat-card-subtitle>
+
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.information'
+                | translate
+            }}
+          </h2>
+
+          <p>
+            {{ equipment.description }}
+          </p>
+
+          <div class="detail-grid">
+
+            <div class="detail-item">
+
+              <span class="label">
+                {{
+                  'equipment.location'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                {{ equipment.location }}
+              </span>
+
+            </div>
+
+            <div class="detail-item">
+
+              <span class="label">
+                {{
+                  'equipment.category'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                {{
+                  equipment.category?.name
+                  ?? '-'
+                }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.rental-conditions'
+                | translate
+            }}
+          </h2>
+
+          <div class="detail-grid">
+
+            <div class="detail-item">
+
+              <span class="label">
+                {{
+                  'equipment.daily-rate'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                S/
+                {{
+                  equipment
+                    .rentalRate
+                    .dailyRate
+                    | number:'1.2-2'
+                }}
+              </span>
+
+            </div>
+
+            <div class="detail-item">
+
+              <span class="label">
+                {{
+                  'equipment.weekly-rate'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                S/
+                {{
+                  equipment
+                    .rentalRate
+                    .weeklyRate
+                    | number:'1.2-2'
+                }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.condition'
+                | translate
+            }}
+          </h2>
+
+          <div class="detail-grid">
+
+            <div class="detail-item">
+
+              <span class="label">
+                {{
+                  'equipment.status'
+                    | translate
+                }}
+              </span>
+
+              <span>
+                {{
+                  (
+                    'equipment.status-values.' +
+                    equipment.status
+                      .toLowerCase()
+                  ) | translate
+                }}
+              </span>
+
+            </div>
+
+            <div class="detail-item">
+
+              <span class="label">
+                {{
+                  'equipment.availability'
+                    | translate
+                }}
+              </span>
+
+              <app-availability-badge
+                [equipment]="equipment">
+              </app-availability-badge>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="detail-section">
+
+          <h2>
+            {{
+              'equipment.detail.period-availability'
+                | translate
+            }}
+          </h2>
+
+          <p>
+            {{
+              'equipment.detail.period-description'
+                | translate
+            }}
+          </p>
+
+          <form
+            class="availability-form"
+            [formGroup]="availabilityForm"
+            (ngSubmit)="checkAvailability()">
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                {{
+                  'equipment.detail.start-date'
+                    | translate
+                }}
+              </mat-label>
+
+              <input
+                matInput
+                type="date"
+                formControlName="startDate"
+                (input)="resetAvailabilityResult()">
+
+              @if (
+                availabilityForm
+                  .controls
+                  .startDate
+                  .touched &&
+                availabilityForm
+                  .controls
+                  .startDate
+                  .hasError('required')
+                ) {
+
+                <mat-error>
+                  {{
+                    'equipment.detail.date-required'
+                      | translate
+                  }}
+                </mat-error>
+
+              }
+
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline">
+
+              <mat-label>
+                {{
+                  'equipment.detail.end-date'
+                    | translate
+                }}
+              </mat-label>
+
+              <input
+                matInput
+                type="date"
+                formControlName="endDate"
+                (input)="resetAvailabilityResult()">
+
+              @if (
+                availabilityForm
+                  .controls
+                  .endDate
+                  .touched &&
+                availabilityForm
+                  .controls
+                  .endDate
+                  .hasError('required')
+                ) {
+
+                <mat-error>
+                  {{
+                    'equipment.detail.date-required'
+                      | translate
+                  }}
+                </mat-error>
+
+              }
+
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit">
+
+              {{
+                'equipment.detail.check-availability'
+                  | translate
+              }}
+
+            </button>
+
+          </form>
+
+          @if (
+            invalidPeriod()
+            ) {
+
+            <div
+              class="availability-result unavailable">
+
+              {{
+                'equipment.detail.invalid-period'
+                  | translate
+              }}
+
+            </div>
+
+          }
+
+          @if (checkingAvailability()) {
+            <p>{{ 'equipment.detail.availability-checking' | translate }}</p>
+          }
+          @if (availabilityCheckFailed()) {
+            <mat-error>{{ 'equipment.detail.availability-check-failed' | translate }}</mat-error>
+          }
+
+          @if (
+            availabilityResult() === true
+            ) {
+
+            <div
+              class="availability-result available">
+
+              {{
+                'equipment.detail.available-for-period'
+                  | translate
+              }}
+
+            </div>
+
+            @if (
+              !rentalsStore
+                .latestCreatedRequest()
+              ) {
+
+              <div class="rental-request-action">
+
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="button"
+                  [disabled]="
+                    rentalsStore.loading() ||
+                    rentalsStore.subscriptionRequired() ||
+                    checkingAvailability()
+                  "
+                  (click)="requestRental()">
+
+                  @if (
+                    rentalsStore.loading()
+                    ) {
+
+                    {{
+                      'equipment.detail.requesting-rental'
+                        | translate
+                    }}
+
+                  } @else {
+
+                    {{
+                      'equipment.detail.request-rental'
+                        | translate
+                    }}
+
+                  }
+
+                </button>
+
+              </div>
+
+            }
+
+          }
+
+          @if (
+            availabilityResult() === false
+            ) {
+
+            <div
+              class="availability-result unavailable">
+
+              {{
+                'equipment.detail.not-available-for-period'
+                  | translate
+              }}
+
+            </div>
+
+          }
+
+          @if (
+            rentalsStore.error()
+            ) {
+
+            <mat-error
+              class="rental-request-message">
+
+              {{
+                rentalRequestErrorTranslationKey() | translate
+              }}
+
+            </mat-error>
+
+          }
+
+          @if (
+            rentalsStore
+              .latestCreatedRequest();
+            as rentalRequest
+            ) {
+
+            <div class="rental-request-success">
+
+              <strong>
+                {{
+                  'equipment.detail.request-created'
+                    | translate
+                }}
+              </strong>
+
+              <span>
+
+                {{
+                  'equipment.detail.request-status'
+                    | translate
+                }}:
+
+                {{
+                  (
+                    'equipment.detail.request-status-values.' +
+                    rentalRequest.status
+                      .toLowerCase()
+                  ) | translate
+                }}
+
+              </span>
+
+            </div>
+
+          }
+
+        </section>
+
+      </mat-card-content>
+
+    </mat-card>
+
+  } @else if (
+    !store.loading() &&
+    !store.error()
+    ) {
+
+    <p class="empty-state">
+
+      {{
+        'equipment.detail.not-found'
+          | translate
+      }}
+
+    </p>
+
+  }
+
+</div>

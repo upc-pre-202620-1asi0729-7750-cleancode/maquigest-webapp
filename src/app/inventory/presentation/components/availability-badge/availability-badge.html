@@ -1,0 +1,23 @@
+<span
+  class="availability-badge"
+  [class.available]="
+    availability() === 'available'
+  "
+  [class.reserved]="
+    availability() === 'reserved'
+  "
+  [class.rented]="
+    availability() === 'rented'
+  "
+  [class.maintenance]="
+    availability() === 'maintenance'
+  ">
+
+  {{
+    (
+      'equipment.availability-values.' +
+      availability()
+    ) | translate
+  }}
+
+</span>

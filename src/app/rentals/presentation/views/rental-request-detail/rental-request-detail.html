@@ -1,0 +1,206 @@
+﻿<div class="detail-page">
+
+  <a
+    class="back-link"
+    routerLink="/rentals/my-requests">
+
+    ←
+    {{
+      'rentals.my-requests.detail.back'
+        | translate
+    }}
+
+  </a>
+
+  @if (store.loading()) {
+
+    <div class="state-card">
+
+      <mat-spinner
+        diameter="34">
+      </mat-spinner>
+
+    </div>
+
+  } @else if (
+    store.rentalRequestNotFound()
+    ) {
+
+    <div class="state-card">
+
+      <h1>
+        {{
+          'rentals.my-requests.detail.not-found-title'
+            | translate
+        }}
+      </h1>
+
+      <p>
+        {{
+          'rentals.my-requests.detail.not-found-description'
+            | translate
+        }}
+      </p>
+
+      <a
+        class="primary-link"
+        routerLink="/rentals/my-requests">
+
+        {{
+          'rentals.my-requests.detail.back'
+            | translate
+        }}
+
+      </a>
+
+    </div>
+
+  } @else if (store.error()) {
+
+    <div class="state-card error-state">
+
+      {{
+        'rentals.my-requests.detail.load-error'
+          | translate
+      }}
+
+    </div>
+
+  } @else if (
+    store.selectedRentalRequest();
+    as request
+    ) {
+
+    <header class="detail-header">
+
+      <span class="section-label">
+        {{
+          'rentals.my-requests.detail.section'
+            | translate
+        }}
+      </span>
+
+      <h1>
+        {{
+          'rentals.my-requests.detail.title'
+            | translate
+        }}
+        #{{ request.id }}
+      </h1>
+
+      <p>
+        {{
+          'rentals.my-requests.detail.subtitle'
+            | translate
+        }}
+      </p>
+
+    </header>
+
+    <section class="detail-grid">
+
+      <article class="detail-card">
+
+        <span class="card-label">
+          {{
+            'rentals.my-requests.equipment'
+              | translate
+          }}
+        </span>
+
+        <strong>
+          {{
+            equipmentName(
+              request.equipmentId
+            )
+          }}
+        </strong>
+
+        <small>
+          {{
+            equipmentCode(
+              request.equipmentId
+            )
+          }}
+        </small>
+
+      </article>
+
+      <article class="detail-card">
+
+        <span class="card-label">
+          {{
+            'rentals.my-requests.period'
+              | translate
+          }}
+        </span>
+
+        <strong>
+          {{
+            formatDate(
+              request.period.startDate
+            )
+          }}
+          →
+          {{
+            formatDate(
+              request.period.endDate
+            )
+          }}
+        </strong>
+
+      </article>
+
+      <article class="detail-card">
+
+        <span class="card-label">
+          {{
+            'rentals.my-requests.requested-at'
+              | translate
+          }}
+        </span>
+
+        <strong>
+          {{
+            formatDate(
+              request.createdAt
+            )
+          }}
+        </strong>
+
+      </article>
+
+      <article class="detail-card status-card">
+
+        <span class="card-label">
+          {{
+            'rentals.my-requests.status-label'
+              | translate
+          }}
+        </span>
+
+        <span
+          class="status-badge"
+          [class]="
+            'status-badge ' +
+            statusClass(
+              request.status
+            )
+          ">
+
+          {{
+            statusKey(
+              request.status
+            )
+              | translate
+          }}
+
+        </span>
+
+      </article>
+
+    </section>
+
+  }
+
+</div>

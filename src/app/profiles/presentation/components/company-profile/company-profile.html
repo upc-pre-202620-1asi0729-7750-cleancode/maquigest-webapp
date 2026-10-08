@@ -1,0 +1,130 @@
+<section class="profile-grid">
+
+  <mat-card appearance="outlined" class="profile-card">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'profile.personal-information' | translate }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.first-name' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().firstName || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.last-name' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().lastName || '—' }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-card appearance="outlined" class="profile-card">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'profile.contact-information' | translate }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.email' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().contactEmail || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.phone-number' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().phoneNumber || '—' }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-card
+    appearance="outlined"
+    class="profile-card organization-card">
+
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'profile.organization-information' | translate }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.company-name' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().companyName || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.street' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().address.street || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.district' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().address.district || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.city' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().address.city || '—' }}
+        </span>
+      </div>
+
+      <div class="information-row">
+        <span class="label">
+          {{ 'profile.country' | translate }}
+        </span>
+
+        <span class="value">
+          {{ profile().address.country || '—' }}
+        </span>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+</section>

@@ -1,0 +1,175 @@
+﻿
+<div
+  class="dialog-backdrop"
+  (click)="cancel()">
+
+  <section
+    class="dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="
+      (mode() === 'schedule'
+        ? 'maintenance.schedule.form.title'
+        : 'maintenance.form.title') | translate
+    "
+    (click)="$event.stopPropagation()">
+
+    <header class="dialog-header">
+      <div>
+        <span class="section-label">
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.section'
+              : 'maintenance.form.section') | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.title'
+              : 'maintenance.form.title') | translate
+          }}
+        </h2>
+
+        <p>
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.subtitle'
+              : 'maintenance.form.subtitle') | translate
+          }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="cancel()"
+        [disabled]="saving()"
+        [attr.aria-label]="'maintenance.form.cancel' | translate">
+        ×
+      </button>
+    </header>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()">
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'maintenance.form.equipment' | translate }}
+        </mat-label>
+
+        <mat-select formControlName="equipmentId">
+          @for (item of equipment(); track item.id) {
+            <mat-option [value]="item.id">
+              {{ item.name }} ({{ item.code }})
+            </mat-option>
+          }
+        </mat-select>
+
+        @if (isInvalidControl(form, 'equipmentId')) {
+          <mat-error>
+            {{
+              'maintenance.form.equipment-required'
+                | translate
+            }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.date'
+              : 'maintenance.form.date') | translate
+          }}
+        </mat-label>
+
+        <input
+          matInput
+          type="date"
+          formControlName="performedAt"
+          [attr.min]="mode() === 'schedule' ? today : null"
+          [attr.max]="mode() === 'register' ? today : null">
+
+        @if (isInvalidControl(form, 'performedAt')) {
+          <mat-error>
+            {{
+              'maintenance.form.date-required'
+                | translate
+            }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      @if (invalidDate()) {
+        <p class="form-error" role="alert">
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.date-invalid'
+              : 'maintenance.form.date-invalid') | translate
+          }}
+        </p>
+      }
+
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'maintenance.form.type' | translate }}
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="type"
+          maxlength="120"
+          [placeholder]="
+            'maintenance.form.type-placeholder' | translate
+          ">
+
+        @if (isInvalidControl(form, 'type')) {
+          <mat-error>
+            {{
+              'maintenance.form.type-required'
+                | translate
+            }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      @if (error()) {
+        <p class="form-error" role="alert">
+          {{ error() }}
+        </p>
+      }
+
+      <div class="dialog-actions">
+        <button
+          mat-button
+          type="button"
+          (click)="cancel()"
+          [disabled]="saving()">
+          {{ 'maintenance.form.cancel' | translate }}
+        </button>
+
+        <button
+          mat-flat-button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving()">
+          {{
+            (mode() === 'schedule'
+                ? (saving()
+                  ? 'maintenance.schedule.form.saving'
+                  : 'maintenance.schedule.form.save')
+                : (saving()
+                  ? 'maintenance.form.saving'
+                  : 'maintenance.form.save')
+            ) | translate
+          }}
+        </button>
+      </div>
+
+    </form>
+  </section>
+</div>

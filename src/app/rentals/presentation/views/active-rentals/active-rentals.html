@@ -1,0 +1,550 @@
+﻿<div class="rentals-page">
+
+  <header class="rentals-header">
+
+    <span class="section-label">
+      {{
+        'rentals.active.section'
+          | translate
+      }}
+    </span>
+
+    <h1>
+      {{
+        'rentals.active.title'
+          | translate
+      }}
+    </h1>
+
+    <p>
+      {{
+        'rentals.active.subtitle'
+          | translate
+      }}
+    </p>
+
+  </header>
+
+  <section class="summary-grid">
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.active.summary-confirmed'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.confirmedRentalCount()
+        }}
+      </strong>
+
+    </article>
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.active.summary'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.activeRentalCount()
+        }}
+      </strong>
+
+    </article>
+
+    <article class="summary-card">
+
+      <span class="summary-label">
+        {{
+          'rentals.active.summary-due-soon'
+            | translate
+        }}
+      </span>
+
+      <strong>
+        {{
+          store.upcomingReturnCount()
+        }}
+      </strong>
+
+      @if (
+        store.overdueRentalCount() > 0
+        ) {
+        <span class="overdue-summary">
+          {{
+            'rentals.active.overdue-summary'
+              | translate:
+              {
+                count:
+                  store.overdueRentalCount()
+              }
+          }}
+        </span>
+      }
+
+    </article>
+
+  </section>
+
+  @if (
+    store.operationSuccess()
+    ) {
+
+    <div class="success-banner">
+
+      {{
+        operationSuccessKey(
+          store.operationSuccess()!
+        )
+          | translate
+      }}
+
+    </div>
+
+  }
+
+  @if (
+    store.error() &&
+    store.rentals().length > 0
+    ) {
+
+    <div class="operation-error">
+
+      {{
+        'rentals.active.operation-error'
+          | translate
+      }}
+
+    </div>
+
+  }
+
+  <section class="rentals-content">
+
+    <div class="content-heading">
+
+      <div>
+
+        <span class="section-label">
+          {{
+            'rentals.active.list-label'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'rentals.active.list-title'
+              | translate
+          }}
+        </h2>
+
+      </div>
+
+    </div>
+
+    @if (store.loading()) {
+
+      <div class="loading-state">
+
+        <mat-spinner
+          diameter="34">
+        </mat-spinner>
+
+      </div>
+
+    } @else if (
+      store.error() &&
+      store.rentals().length === 0
+      ) {
+
+      <div class="error-state">
+
+        {{
+          'rentals.active.load-error'
+            | translate
+        }}
+
+      </div>
+
+    } @else if (
+      store.rentals().length === 0
+      ) {
+
+      <div class="empty-state">
+
+        <h3>
+          {{
+            'rentals.active.empty-title'
+              | translate
+          }}
+        </h3>
+
+        <p>
+          {{
+            'rentals.active.empty-description'
+              | translate
+          }}
+        </p>
+
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table
+          mat-table
+          [dataSource]="dataSource()"
+          class="rentals-table">
+
+          <ng-container
+            matColumnDef="equipment">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.equipment'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="primary-cell">
+                {{
+                  equipmentName(
+                    rental.equipmentId
+                  )
+                }}
+              </div>
+
+              <div class="secondary-cell">
+                {{
+                  equipmentCode(
+                    rental.equipmentId
+                  )
+                }}
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="customer">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.customer'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="primary-cell">
+                {{
+                  customerName(
+                    rental.constructionUserId
+                  )
+                }}
+              </div>
+
+              <div class="secondary-cell">
+                {{
+                  customerContact(
+                    rental.constructionUserId
+                  )
+                }}
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="startDate">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.start-date'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              {{
+                formatDate(
+                  rental.period.startDate
+                )
+              }}
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="returnDate">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.return-date'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <div class="return-cell">
+
+                <span class="return-date">
+                  {{
+                    formatDate(
+                      rental.period.endDate
+                    )
+                  }}
+                </span>
+
+                <span
+                  class="return-indicator"
+                  [class]="
+                    'return-indicator ' +
+                    returnIndicatorClass(
+                      rental
+                    )
+                  ">
+
+                  {{
+                    returnIndicatorKey(
+                      rental
+                    )
+                      | translate
+                  }}
+
+                </span>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="status">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.status-label'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              <span
+                class="status-badge"
+                [class]="
+                  'status-badge ' +
+                  statusClass(
+                    rental.status
+                  )
+                ">
+
+                {{
+                  statusKey(
+                    rental.status
+                  )
+                    | translate
+                }}
+
+              </span>
+
+            </td>
+
+          </ng-container>
+
+          <ng-container
+            matColumnDef="actions">
+
+            <th
+              mat-header-cell
+              *matHeaderCellDef>
+              {{
+                'rentals.active.actions'
+                  | translate
+              }}
+            </th>
+
+            <td
+              mat-cell
+              *matCellDef="let rental">
+
+              @if (
+                store.updatingRentalId() ===
+                rental.id
+                ) {
+
+                <span class="updating-label">
+                  {{
+                    'rentals.active.updating'
+                      | translate
+                  }}
+                </span>
+
+              } @else if (
+                rental.isConfirmed
+                ) {
+
+                <button
+                  mat-flat-button
+                  type="button"
+                  class="delivery-button"
+                  (click)="
+                    openDelivery(
+                      rental
+                    )
+                  ">
+
+                  {{
+                    'rentals.active.register-delivery'
+                      | translate
+                  }}
+
+                </button>
+
+              } @else if (
+                rental.isActive
+                ) {
+
+                <button
+                  mat-flat-button
+                  type="button"
+                  class="return-button"
+                  (click)="
+                    openReturn(
+                      rental
+                    )
+                  ">
+
+                  {{
+                    'rentals.active.register-return'
+                      | translate
+                  }}
+
+                </button>
+
+              }
+
+            </td>
+
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="
+              displayedColumns
+            ">
+          </tr>
+
+          <tr
+            mat-row
+            *matRowDef="
+              let row;
+              columns:
+                displayedColumns
+            ">
+          </tr>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</div>
+
+@if (
+  deliveryRental();
+  as rental
+  ) {
+
+  <app-delivery-form
+    [rental]="rental"
+    [equipmentName]="
+      equipmentName(
+        rental.equipmentId
+      )
+    "
+    [customerName]="
+      customerName(
+        rental.constructionUserId
+      )
+    "
+    (submitted)="
+      submitDelivery($event)
+    "
+    (cancelled)="
+      closeDelivery()
+    ">
+  </app-delivery-form>
+
+}
+
+@if (
+  returnRental();
+  as rental
+  ) {
+
+  <app-return-form
+    [rental]="rental"
+    [equipmentName]="
+      equipmentName(
+        rental.equipmentId
+      )
+    "
+    [customerName]="
+      customerName(
+        rental.constructionUserId
+      )
+    "
+    (submitted)="
+      submitReturn($event)
+    "
+    (cancelled)="
+      closeReturn()
+    ">
+  </app-return-form>
+
+}
