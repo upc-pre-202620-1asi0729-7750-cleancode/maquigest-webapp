@@ -1,0 +1,179 @@
+{
+  "profiles": [
+    {
+      "id": 1,
+      "userId": 1,
+      "firstName": "Operador",
+      "lastName": "Demo",
+      "contactEmail": "alquiler.demo@maquigest.example",
+      "phoneNumber": "",
+      "companyName": "MaquiGest Alquileres Demo",
+      "address": {
+        "street": "",
+        "district": "La Molina",
+        "city": "Lima",
+        "country": "Peru",
+        "latitude": 0,
+        "longitude": 0
+      }
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "firstName": "Cliente",
+      "lastName": "Demo",
+      "contactEmail": "constructora.demo@maquigest.example",
+      "phoneNumber": "",
+      "companyName": "Constructora Demo",
+      "address": {
+        "street": "",
+        "district": "Miraflores",
+        "city": "Lima",
+        "country": "Peru",
+        "latitude": 0,
+        "longitude": 0
+      }
+    }
+  ],
+  "equipment-categories": [
+    {
+      "id": 1,
+      "name": "Excavators"
+    },
+    {
+      "id": 2,
+      "name": "Loaders"
+    },
+    {
+      "id": 3,
+      "name": "Compactors"
+    },
+    {
+      "id": 4,
+      "name": "Generators"
+    }
+  ],
+  "equipment": [
+    {
+      "id": 1,
+      "userId": 1,
+      "code": "EXC-001",
+      "name": "Excavadora Caterpillar 320",
+      "description": "Excavadora hidráulica de 20 toneladas para movimientos de tierra, excavaciones y obras de construcción.",
+      "categoryId": 1,
+      "location": "Lima, La Molina",
+      "dailyRate": 850,
+      "weeklyRate": 5100,
+      "status": "AVAILABLE",
+      "availabilityBlocks": []
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "code": "EXC-002",
+      "name": "Excavadora Komatsu PC200",
+      "description": "Excavadora hidraulica destinada a trabajos de excavacion, movimiento de tierra y construccion.",
+      "categoryId": 1,
+      "location": "Lima, La Molina",
+      "dailyRate": 750,
+      "weeklyRate": 4500,
+      "status": "AVAILABLE",
+      "availabilityBlocks": []
+    },
+    {
+      "id": 3,
+      "userId": 1,
+      "code": "EXC-003",
+      "name": "Excavadora Volvo EC220",
+      "description": "Excavadora hidraulica destinada a trabajos de excavacion, movimiento de tierra y construccion.",
+      "categoryId": 1,
+      "location": "Lima, La Molina",
+      "dailyRate": 900,
+      "weeklyRate": 5400,
+      "status": "MAINTENANCE",
+      "availabilityBlocks": []
+    },
+    {
+      "id": 4,
+      "userId": 1,
+      "code": "EXC-004",
+      "name": "Excavadora Hitachi ZX200",
+      "description": "Excavadora hidraulica destinada a trabajos de excavacion, movimiento de tierra y construccion.",
+      "categoryId": 1,
+      "location": "Lima, La Molina",
+      "dailyRate": 800,
+      "weeklyRate": 4800,
+      "status": "MAINTENANCE",
+      "availabilityBlocks": []
+    },
+    {
+      "id": 5,
+      "userId": 1,
+      "code": "EXC-005",
+      "name": "Excavadora Hyundai HX220",
+      "description": "Excavadora hidraulica destinada a trabajos de excavacion, movimiento de tierra y construccion.",
+      "categoryId": 1,
+      "location": "Lima, La Molina",
+      "dailyRate": 820,
+      "weeklyRate": 4920,
+      "status": "AVAILABLE",
+      "availabilityBlocks": []
+    }
+  ],
+  "rental-requests": [],
+  "rentals": [],
+  "deliveries": [],
+  "equipment-returns": [],
+  "subscription-plans": [
+    {
+      "id": 1,
+      "name": "Essential",
+      "description": "Start organizing your equipment and reservation requests.",
+      "priceAmount": 79,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "name": "Professional",
+      "description": "Centralize your company's day-to-day rental operations.",
+      "priceAmount": 149,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "name": "Growth",
+      "description": "Expand your operational oversight and manage equipment maintenance.",
+      "priceAmount": 249,
+      "priceCurrency": "PEN",
+      "billingCycle": "MONTHLY",
+      "status": "ACTIVE"
+    }
+  ],
+  "user-subscriptions": [
+    {
+      "id": 1,
+      "userId": 1,
+      "planId": 3,
+      "startDate": "2026-01-01T00:00:00.000Z",
+      "endDate": "2027-12-31T23:59:59.000Z",
+      "status": "ACTIVE",
+      "autoRenew": true
+    }
+  ],
+  "maintenances": [],
+  "incidents": [
+    {
+      "id": 1,
+      "equipmentId": 1,
+      "description": "Inspección técnica preventiva realizada en la excavadora.",
+      "reportedAt": "2026-10-01T10:00:00.000Z",
+      "blocksRental": false,
+      "status": "RESOLVED",
+      "resolvedAt": "2026-10-01T16:00:00.000Z"
+    }
+  ]
+}
