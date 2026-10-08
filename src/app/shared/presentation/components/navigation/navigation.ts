@@ -8,7 +8,6 @@ import { IamStore } from '../../../../iam/application/iam.store';
 
 interface NavigationOption {
   link: string;
-
   label: string;
 }
 
@@ -31,7 +30,6 @@ export class Navigation {
 
     const dashboard = {
       link: '/dashboard',
-
       label: 'navigation.dashboard',
     };
 
@@ -40,18 +38,19 @@ export class Navigation {
         dashboard,
         {
           link: '/inventory/equipment',
-
           label: 'navigation.equipment',
         },
         {
           link: '/rentals/requests',
-
           label: 'navigation.rental-requests',
         },
         {
           link: '/rentals/active',
-
           label: 'navigation.rentals',
+        },
+        {
+          link: '/maintenance',
+          label: 'navigation.maintenance',
         },
       ];
     }
@@ -61,12 +60,10 @@ export class Navigation {
         dashboard,
         {
           link: '/inventory/search',
-
           label: 'navigation.search-equipment',
         },
         {
           link: '/rentals/my-requests',
-
           label: 'navigation.my-requests',
         },
       ];
@@ -80,7 +77,6 @@ export class Navigation {
 
     const profile = {
       link: '/profiles/profile',
-
       label: 'navigation.profile',
     };
 
@@ -88,10 +84,8 @@ export class Navigation {
       return [
         {
           link: '/subscriptions/plans',
-
           label: 'navigation.plan-subscription',
         },
-
         profile,
       ];
     }

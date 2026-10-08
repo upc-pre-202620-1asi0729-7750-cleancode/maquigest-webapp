@@ -42,7 +42,6 @@ export class Layout {
 
       startWith(this.#router.url),
     ),
-
     {
       initialValue: this.#router.url,
     },
@@ -80,6 +79,10 @@ export class Layout {
 
   protected readonly breadcrumbLabelKey = computed(() => {
     const url = this.#currentUrl();
+
+    if (url.startsWith('/maintenance')) {
+      return 'navigation.maintenance';
+    }
 
     if (url.startsWith('/subscriptions')) {
       return 'navigation.plan-subscription';

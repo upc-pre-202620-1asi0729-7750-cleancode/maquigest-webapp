@@ -3,6 +3,7 @@
     "name": "MaquiGest"
   },
   "navigation": {
+    "maintenance": "Mantenimiento",
     "dashboard": "Panel principal",
     "equipment": "Maquinaria",
     "search-equipment": "Buscar maquinaria",
@@ -397,6 +398,50 @@
           "history": "Historial de mantenimiento por equipo."
         }
       }
+    }
+  },
+  "maintenance": {
+    "list": {
+      "section": "Gestión de mantenimiento",
+      "title": "Mantenimiento",
+      "subtitle": "Registra los mantenimientos realizados y consulta las intervenciones de tu maquinaria.",
+      "register": "Registrar mantenimiento",
+      "total": "Registros totales",
+      "completed": "Completados",
+      "equipment-with-records": "Maquinarias con mantenimiento",
+      "success": "Mantenimiento registrado correctamente.",
+      "history": "Historial de mantenimiento",
+      "records": "Registros de mantenimiento",
+      "load-error": "No se pudieron cargar los mantenimientos.",
+      "empty-title": "Aún no hay mantenimientos registrados",
+      "empty-description": "Registra el primer mantenimiento realizado a tu maquinaria.",
+      "no-equipment": "Primero debes registrar una maquinaria.",
+      "add-equipment": "Registrar maquinaria",
+      "equipment": "Maquinaria",
+      "date": "Fecha",
+      "type": "Tipo",
+      "status": "Estado"
+    },
+    "form": {
+      "section": "Registro de mantenimiento",
+      "title": "Registrar mantenimiento",
+      "subtitle": "Registra una intervención ya realizada sobre una maquinaria.",
+      "equipment": "Maquinaria",
+      "equipment-required": "Selecciona una maquinaria.",
+      "date": "Fecha del mantenimiento",
+      "date-required": "Ingresa la fecha del mantenimiento.",
+      "date-invalid": "La fecha del mantenimiento no puede ser futura.",
+      "type": "Tipo de mantenimiento",
+      "type-placeholder": "Por ejemplo, mantenimiento preventivo",
+      "type-required": "Ingresa el tipo de mantenimiento.",
+      "cancel": "Cancelar",
+      "saving": "Guardando...",
+      "save": "Guardar mantenimiento"
+    },
+    "status": {
+      "scheduled": "Programado",
+      "in_progress": "En curso",
+      "completed": "Completado"
     }
   }
 }

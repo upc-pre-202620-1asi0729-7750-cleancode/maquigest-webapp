@@ -1,0 +1,230 @@
+﻿
+<div class="maintenance-page">
+
+  <header class="page-header">
+    <div>
+      <span class="section-label">
+        {{ 'maintenance.list.section' | translate }}
+      </span>
+
+      <h1>
+        {{ 'maintenance.list.title' | translate }}
+      </h1>
+
+      <p>
+        {{ 'maintenance.list.subtitle' | translate }}
+      </p>
+    </div>
+
+    <button
+      mat-flat-button
+      type="button"
+      class="primary-button"
+      [disabled]="
+        store.loading() ||
+        store.saving() ||
+        store.equipmentInformation().length === 0
+      "
+      (click)="openForm()">
+
+      {{ 'maintenance.list.register' | translate }}
+    </button>
+  </header>
+
+  <section class="summary-grid">
+
+    <article class="summary-card">
+      <span>
+        {{ 'maintenance.list.total' | translate }}
+      </span>
+
+      <strong>
+        {{ store.maintenances().length }}
+      </strong>
+    </article>
+
+    <article class="summary-card">
+      <span>
+        {{ 'maintenance.list.completed' | translate }}
+      </span>
+
+      <strong>
+        {{ completedCount() }}
+      </strong>
+    </article>
+
+    <article class="summary-card">
+      <span>
+        {{ 'maintenance.list.equipment-with-records' | translate }}
+      </span>
+
+      <strong>
+        {{ equipmentWithRecordsCount() }}
+      </strong>
+    </article>
+
+  </section>
+
+  @if (store.saveSucceeded()) {
+    <div class="success-banner" role="status">
+      {{ 'maintenance.list.success' | translate }}
+    </div>
+  }
+
+  @if (store.error() && !store.loading()) {
+    <div class="error-banner" role="alert">
+      {{ store.error() }}
+    </div>
+  }
+
+  <section class="list-panel">
+
+    <div class="panel-header">
+      <span class="section-label">
+        {{ 'maintenance.list.history' | translate }}
+      </span>
+
+      <h2>
+        {{ 'maintenance.list.records' | translate }}
+      </h2>
+    </div>
+
+    @if (store.loading()) {
+
+      <div class="empty-state">
+        <mat-spinner [diameter]="34"></mat-spinner>
+      </div>
+
+    } @else if (
+      store.error() &&
+      store.maintenances().length === 0
+      ) {
+
+      <div class="empty-state">
+        <p>
+          {{ 'maintenance.list.load-error' | translate }}
+        </p>
+      </div>
+
+    } @else if (store.maintenances().length === 0) {
+
+      <div class="empty-state">
+
+        <h3>
+          {{ 'maintenance.list.empty-title' | translate }}
+        </h3>
+
+        <p>
+          {{ 'maintenance.list.empty-description' | translate }}
+        </p>
+
+        @if (store.equipmentInformation().length === 0) {
+
+          <p class="equipment-help">
+            {{ 'maintenance.list.no-equipment' | translate }}
+          </p>
+
+          <a
+            mat-stroked-button
+            routerLink="/inventory/equipment/new">
+
+            {{ 'maintenance.list.add-equipment' | translate }}
+          </a>
+
+        }
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table
+          mat-table
+          [dataSource]="dataSource()"
+          class="records-table">
+
+          <ng-container matColumnDef="equipment">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'maintenance.list.equipment' | translate }}
+            </th>
+
+            <td mat-cell *matCellDef="let record">
+              <strong>
+                {{ equipmentName(record.equipmentId) }}
+              </strong>
+
+              <span class="secondary-cell">
+                {{ equipmentCode(record.equipmentId) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'maintenance.list.date' | translate }}
+            </th>
+
+            <td mat-cell *matCellDef="let record">
+              {{ record.performedAt | date:'dd/MM/yyyy' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'maintenance.list.type' | translate }}
+            </th>
+
+            <td mat-cell *matCellDef="let record">
+              {{ record.type }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'maintenance.list.status' | translate }}
+            </th>
+
+            <td mat-cell *matCellDef="let record">
+
+              <span
+                class="status-badge"
+                [class.completed]="
+                  record.status ===
+                  maintenanceStatus.COMPLETED
+                ">
+
+                {{ statusKey(record.status) | translate }}
+              </span>
+
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns">
+          </tr>
+
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns">
+          </tr>
+
+        </table>
+
+      </div>
+    }
+
+  </section>
+
+  @if (formOpen()) {
+
+    <app-maintenance-form
+      [equipment]="store.equipmentInformation()"
+      [saving]="store.saving()"
+      (submitted)="submitForm($event)"
+      (cancelled)="closeForm()">
+    </app-maintenance-form>
+
+  }
+
+</div>
