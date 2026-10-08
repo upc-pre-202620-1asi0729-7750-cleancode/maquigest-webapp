@@ -19,6 +19,8 @@ const origins = new Set([
 ]);
 
 // Identidades 100% ficticias, contraseñas de DEMOSTRACIÓN, nunca reales.
+const previewOriginPattern = /^https:\/\/maquigest-webapp-cleancode-[a-z0-9-]+-jamsy06\.vercel\.app$/;
+const isAllowedOrigin = (origin) => origins.has(origin) || previewOriginPattern.test(origin);
 const demoAccounts = [
   {
     id: 1,
@@ -52,16 +54,16 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'no-referrer');
   const origin = req.headers.origin;
-  if (origin && origins.has(origin)) {
+  if (origin && isAllowedOrigin(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   }
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(!origin || origins.has(origin) ? 204 : 403);
+    return res.sendStatus(!origin || isAllowedOrigin(origin) ? 204 : 403);
   }
-  if (origin && !origins.has(origin)) {
+  if (origin && !isAllowedOrigin(origin)) {
     return res.status(403).json({ error: 'Origen no permitido para esta demo' });
   }
   // Protección mínima contra uso abusivo. No sustituye seguridad productiva.
