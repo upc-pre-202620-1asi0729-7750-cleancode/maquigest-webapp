@@ -1,4 +1,4 @@
-﻿import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -19,6 +19,7 @@ import { SubscriptionsApi } from '../infrastructure/subscriptions-api';
 })
 export class SubscriptionsStore {
   readonly #subscriptionsApi = inject(SubscriptionsApi);
+  #subscriptionRequestVersion = 0;
 
   readonly #destroyRef = inject(DestroyRef);
 
@@ -74,6 +75,8 @@ export class SubscriptionsStore {
   }
 
   loadCurrentSubscription(userId: number): void {
+    const requestVersion = ++this.#subscriptionRequestVersion;
+    this.#currentSubscriptionSignal.set(null);
     this.#subscriptionLoadingSignal.set(true);
 
     this.#subscriptionErrorSignal.set(null);
@@ -83,6 +86,7 @@ export class SubscriptionsStore {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (subscriptions) => {
+          if (requestVersion !== this.#subscriptionRequestVersion) return;
           const currentSubscription =
             subscriptions.find(
               (subscription) =>
@@ -97,6 +101,7 @@ export class SubscriptionsStore {
         },
 
         error: (error) => {
+          if (requestVersion !== this.#subscriptionRequestVersion) return;
           this.#currentSubscriptionSignal.set(null);
 
           this.#subscriptionErrorSignal.set(
@@ -106,6 +111,13 @@ export class SubscriptionsStore {
           this.#subscriptionLoadingSignal.set(false);
         },
       });
+  }
+
+  clearCurrentSubscription(): void {
+    ++this.#subscriptionRequestVersion;
+    this.#currentSubscriptionSignal.set(null);
+    this.#subscriptionLoadingSignal.set(false);
+    this.#subscriptionErrorSignal.set(null);
   }
 
   subscribeToPlan(userId: number, planId: number): void {

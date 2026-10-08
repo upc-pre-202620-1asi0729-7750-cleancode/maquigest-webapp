@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, Signal, signal } from '@angul
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { EMPTY, forkJoin, Observable, retry, switchMap } from 'rxjs';
+import { EMPTY, forkJoin, map, Observable, retry, switchMap, tap } from 'rxjs';
 
 import { Equipment } from '../domain/model/equipment.entity';
 
@@ -35,6 +35,18 @@ export class InventoryStore {
   readonly categoryCount = computed(() => this.categories().length);
 
   readonly #loadingSignal = signal<boolean>(false);
+  #pendingOperationCount = 0;
+
+  #beginOperation(): void {
+    this.#pendingOperationCount += 1;
+    this.#loadingSignal.set(true);
+  }
+
+  #finishOperation(): void {
+    this.#pendingOperationCount = Math.max(0, this.#pendingOperationCount - 1);
+    this.#loadingSignal.set(this.#pendingOperationCount > 0);
+  }
+
 
   readonly loading = this.#loadingSignal.asReadonly();
 
@@ -45,6 +57,10 @@ export class InventoryStore {
   readonly #accessDeniedSignal = signal<boolean>(false);
 
   readonly accessDenied = this.#accessDeniedSignal.asReadonly();
+
+  /** Sequence number prevents delayed list responses from changing a newer view. */
+  #listRequestVersion = 0;
+  #detailRequestVersion = 0;
 
   readonly #saveSucceededSignal = signal<boolean>(false);
 
@@ -70,8 +86,40 @@ export class InventoryStore {
     );
   }
 
+  /** A fresh server read for edit. Presentation never reads Infrastructure directly. */
+  getEquipmentForEdit(id: number, ownerUserId: number): Observable<Equipment> {
+    return this.#inventoryApi.getEquipmentById(id).pipe(
+      map((equipment) => {
+        if (equipment.userId !== ownerUserId) {
+          throw new Error('Equipment does not belong to the current company');
+        }
+        return equipment;
+      }),
+      tap((equipment) => this.#upsertEquipment(equipment)),
+    );
+  }
+
+  /** Never infer present-day availability from an earlier cached Equipment entity. */
+  verifyEquipmentAvailability(id: number, period: import('../../shared/domain/value-object/date-range.value-object').DateRange): Observable<boolean> {
+    return this.#inventoryApi.getEquipmentById(id).pipe(
+      tap((equipment) => this.#upsertEquipment(equipment)),
+      map((equipment) => equipment.isAvailableFor(period)),
+    );
+  }
+
+  #upsertEquipment(equipment: Equipment): void {
+    const refreshed = this.#assignCategoryToEquipment(equipment);
+    this.#equipmentSignal.update((list) => {
+      const exists = list.some((item) => item.id === refreshed.id);
+      return exists
+        ? list.map((item) => item.id === refreshed.id ? refreshed : item)
+        : [...list, refreshed];
+    });
+  }
+
   loadEquipment(): void {
-    this.#loadingSignal.set(true);
+    const requestVersion = ++this.#listRequestVersion;
+    this.#beginOperation();
 
     this.#errorSignal.set(null);
 
@@ -80,9 +128,10 @@ export class InventoryStore {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (equipment) => {
+          if (requestVersion !== this.#listRequestVersion) { this.#finishOperation(); return; }
           this.#equipmentSignal.set(equipment);
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#errorSignal.set(null);
 
@@ -90,53 +139,67 @@ export class InventoryStore {
         },
 
         error: (err) => {
+          if (requestVersion !== this.#listRequestVersion) { this.#finishOperation(); return; }
           this.#errorSignal.set(this.#formatError(err, 'Failed to load equipment'));
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
         },
       });
   }
 
-  loadMarketplaceEquipment(): void {
-    this.#loadingSignal.set(true);
+  /**
+   * Refresca el catálogo activo desde Inventory y el ACL de suscripciones.
+   * background=true mantiene las tarjetas visibles durante una actualización en segundo plano.
+   */
+  loadMarketplaceEquipment(background = false): void {
+    const requestVersion = ++this.#listRequestVersion;
 
-    this.#errorSignal.set(null);
+    if (!background) {
+      this.#beginOperation();
+      this.#errorSignal.set(null);
+    }
 
     forkJoin({
       equipment: this.#inventoryApi.getEquipment(),
-
       activeProviderUserIds: this.#inventoryAccess.getActiveProviderUserIds(),
     })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: ({ equipment, activeProviderUserIds }) => {
-          const activeProviderIds = new Set(activeProviderUserIds);
+          if (requestVersion !== this.#listRequestVersion) {
+            if (!background) this.#finishOperation();
+            return;
+          }
 
+          const activeProviderIds = new Set(activeProviderUserIds);
           const marketplaceEquipment = equipment.filter((currentEquipment) =>
             activeProviderIds.has(currentEquipment.userId),
           );
 
           this.#equipmentSignal.set(marketplaceEquipment);
-
-          this.#loadingSignal.set(false);
-
-          this.#errorSignal.set(null);
-
           this.#assignCategoriesToEquipment();
+          this.#errorSignal.set(null);
+          if (!background) this.#finishOperation();
         },
-
         error: (err) => {
+          if (requestVersion !== this.#listRequestVersion) {
+            if (!background) this.#finishOperation();
+            return;
+          }
+
+          // Never present cached cards as if the current server read had succeeded.
           this.#equipmentSignal.set([]);
-
-          this.#errorSignal.set(this.#formatError(err, 'Failed to load marketplace equipment'));
-
-          this.#loadingSignal.set(false);
+          this.#errorSignal.set(
+            this.#formatError(err, 'Failed to synchronize marketplace equipment'),
+          );
+          if (!background) this.#finishOperation();
         },
       });
   }
 
   loadEquipmentById(id: number): void {
-    this.#loadingSignal.set(true);
+    const detailRequestVersion = ++this.#detailRequestVersion;
+    this.#beginOperation();
 
     this.#errorSignal.set(null);
 
@@ -145,6 +208,7 @@ export class InventoryStore {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (equipment) => {
+          if (detailRequestVersion !== this.#detailRequestVersion) { this.#finishOperation(); return; }
           equipment = this.#assignCategoryToEquipment(equipment);
 
           this.#equipmentSignal.update((equipmentCollection) => {
@@ -161,21 +225,23 @@ export class InventoryStore {
             return [...equipmentCollection, equipment];
           });
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#errorSignal.set(null);
         },
 
         error: (err) => {
+          if (detailRequestVersion !== this.#detailRequestVersion) { this.#finishOperation(); return; }
           this.#errorSignal.set(this.#formatError(err, 'Failed to load equipment'));
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
         },
       });
   }
 
   loadEquipmentByUserId(userId: number): void {
-    this.#loadingSignal.set(true);
+    const requestVersion = ++this.#listRequestVersion;
+    this.#beginOperation();
 
     this.#errorSignal.set(null);
 
@@ -184,9 +250,10 @@ export class InventoryStore {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (equipment) => {
+          if (requestVersion !== this.#listRequestVersion) { this.#finishOperation(); return; }
           this.#equipmentSignal.set(equipment);
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#errorSignal.set(null);
 
@@ -194,9 +261,10 @@ export class InventoryStore {
         },
 
         error: (err) => {
+          if (requestVersion !== this.#listRequestVersion) { this.#finishOperation(); return; }
           this.#errorSignal.set(this.#formatError(err, 'Failed to load equipment'));
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
         },
       });
   }
@@ -211,12 +279,12 @@ export class InventoryStore {
           if (!canManageInventory) {
             this.#accessDeniedSignal.set(true);
 
-            this.#loadingSignal.set(false);
+            this.#finishOperation();
 
             return EMPTY;
           }
 
-          return this.#inventoryApi.createEquipment(equipment).pipe(retry(2));
+          return this.#inventoryApi.createEquipment(equipment);
         }),
 
         takeUntilDestroyed(this.#destroyRef),
@@ -230,7 +298,7 @@ export class InventoryStore {
             createdEquipment,
           ]);
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#errorSignal.set(null);
 
@@ -242,7 +310,7 @@ export class InventoryStore {
         error: (err) => {
           this.#errorSignal.set(this.#formatError(err, 'Failed to create equipment'));
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#saveSucceededSignal.set(false);
         },
@@ -259,7 +327,7 @@ export class InventoryStore {
           if (!canManageInventory) {
             this.#accessDeniedSignal.set(true);
 
-            this.#loadingSignal.set(false);
+            this.#finishOperation();
 
             return EMPTY;
           }
@@ -279,7 +347,7 @@ export class InventoryStore {
             ),
           );
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#errorSignal.set(null);
 
@@ -291,7 +359,7 @@ export class InventoryStore {
         error: (err) => {
           this.#errorSignal.set(this.#formatError(err, 'Failed to update equipment'));
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#saveSucceededSignal.set(false);
         },
@@ -305,15 +373,18 @@ export class InventoryStore {
   }
 
   clearEquipment(): void {
+    ++this.#listRequestVersion;
+    ++this.#detailRequestVersion;
     this.#equipmentSignal.set([]);
 
     this.#errorSignal.set(null);
 
+    this.#pendingOperationCount = 0;
     this.#loadingSignal.set(false);
   }
 
   #prepareSaveOperation(): void {
-    this.#loadingSignal.set(true);
+    this.#beginOperation();
 
     this.#errorSignal.set(null);
 
@@ -323,7 +394,7 @@ export class InventoryStore {
   }
 
   #loadCategories(): void {
-    this.#loadingSignal.set(true);
+    this.#beginOperation();
 
     this.#errorSignal.set(null);
 
@@ -334,7 +405,7 @@ export class InventoryStore {
         next: (categories) => {
           this.#categoriesSignal.set(categories);
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
 
           this.#errorSignal.set(null);
 
@@ -344,7 +415,7 @@ export class InventoryStore {
         error: (err) => {
           this.#errorSignal.set(this.#formatError(err, 'Failed to load equipment categories'));
 
-          this.#loadingSignal.set(false);
+          this.#finishOperation();
         },
       });
   }

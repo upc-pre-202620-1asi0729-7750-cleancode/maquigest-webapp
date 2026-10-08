@@ -1,4 +1,4 @@
-﻿import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -24,6 +24,7 @@ export class MaintenanceStore {
   readonly #equipmentInformation = inject(MAINTENANCE_EQUIPMENT_INFORMATION_PORT);
 
   readonly #destroyRef = inject(DestroyRef);
+  #loadVersion = 0;
 
   readonly #maintenancesSignal = signal<Maintenance[]>([]);
 
@@ -50,6 +51,7 @@ export class MaintenanceStore {
   readonly error = this.#errorSignal.asReadonly();
 
   loadForCompany(userId: number): void {
+    const version = ++this.#loadVersion;
     this.#loadingSignal.set(true);
 
     this.#errorSignal.set(null);
@@ -79,6 +81,7 @@ export class MaintenanceStore {
       )
       .subscribe({
         next: ({ equipmentInformation, maintenances }) => {
+          if (version !== this.#loadVersion) return;
           this.#equipmentInformationSignal.set(equipmentInformation);
 
           this.#maintenancesSignal.set(maintenances);
@@ -89,6 +92,7 @@ export class MaintenanceStore {
         },
 
         error: (error) => {
+          if (version !== this.#loadVersion) return;
           this.#equipmentInformationSignal.set([]);
 
           this.#maintenancesSignal.set([]);
@@ -224,6 +228,7 @@ export class MaintenanceStore {
   }
 
   clear(): void {
+    ++this.#loadVersion;
     this.#maintenancesSignal.set([]);
 
     this.#equipmentInformationSignal.set([]);

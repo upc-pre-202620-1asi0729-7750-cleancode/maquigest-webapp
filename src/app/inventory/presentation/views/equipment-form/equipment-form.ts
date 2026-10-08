@@ -1,8 +1,10 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
 
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY, switchMap } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 
@@ -50,6 +52,9 @@ export class EquipmentForm extends BaseForm {
   readonly #inventoryStore = inject(InventoryStore);
 
   readonly #iamStore = inject(IamStore);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly editReady = signal(false);
+  readonly editLoadFailed = signal(false);
 
   readonly categories = this.#inventoryStore.categories;
 
@@ -116,37 +121,56 @@ export class EquipmentForm extends BaseForm {
       }
     });
 
-    this.#route.params.subscribe((params) => {
-      this.equipmentId = params['id'] ? +params['id'] : null;
-
-      this.isEdit = !!this.equipmentId;
-
-      if (this.isEdit && this.equipmentId) {
-        const equipment = this.#inventoryStore.getEquipmentById(this.equipmentId)();
-
-        if (equipment) {
-          this.form.patchValue({
-            code: equipment.code,
-
-            name: equipment.name,
-
-            description: equipment.description,
-
-            categoryId: equipment.categoryId,
-
-            location: equipment.location,
-
-            dailyRate: equipment.rentalRate.dailyRate,
-
-            weeklyRate: equipment.rentalRate.weeklyRate,
-          });
+    // switchMap discards old HTTP results when /equipment/:id/edit changes quickly.
+    this.#route.paramMap.pipe(
+      switchMap((params) => {
+        this.equipmentId = params.has('id') ? Number(params.get('id')) : null;
+        this.isEdit = this.equipmentId !== null;
+        this.editReady.set(false);
+        this.editLoadFailed.set(false);
+        this.form.reset();
+        if (!this.isEdit) {
+          this.form.enable({ emitEvent: false });
+          return EMPTY;
         }
-      }
+        this.form.disable({ emitEvent: false });
+        const ownerUserId = this.#iamStore.currentUserId();
+        if (!Number.isInteger(this.equipmentId) || !this.equipmentId || ownerUserId === null) {
+          this.editLoadFailed.set(true);
+          return EMPTY;
+        }
+        return this.#inventoryStore.getEquipmentForEdit(this.equipmentId, ownerUserId).pipe(
+          catchError(() => {
+            this.editLoadFailed.set(true);
+            this.form.disable({ emitEvent: false });
+            return EMPTY;
+          }),
+        );
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    ).subscribe({
+      next: (equipment) => {
+        this.form.patchValue({
+          code: equipment.code,
+          name: equipment.name,
+          description: equipment.description,
+          categoryId: equipment.categoryId,
+          location: equipment.location,
+          dailyRate: equipment.rentalRate.dailyRate,
+          weeklyRate: equipment.rentalRate.weeklyRate,
+        });
+        this.form.enable({ emitEvent: false });
+        this.editReady.set(true);
+      },
+      error: () => {
+        this.editLoadFailed.set(true);
+        this.form.disable({ emitEvent: false });
+      },
     });
   }
 
   submit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || (this.isEdit && !this.editReady())) {
       this.form.markAllAsTouched();
 
       return;
@@ -161,6 +185,15 @@ export class EquipmentForm extends BaseForm {
     const currentEquipment = this.equipmentId
       ? this.#inventoryStore.getEquipmentById(this.equipmentId)()
       : undefined;
+
+    if (this.isEdit && (
+      !currentEquipment ||
+      currentEquipment.userId !== currentUserId ||
+      currentEquipment.id !== this.equipmentId
+    )) {
+      this.editLoadFailed.set(true);
+      return;
+    }
 
     const equipment = new Equipment({
       id: this.equipmentId ?? 0,

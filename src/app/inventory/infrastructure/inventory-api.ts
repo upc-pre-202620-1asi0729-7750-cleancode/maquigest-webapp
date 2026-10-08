@@ -34,7 +34,7 @@ export class InventoryApi extends BaseApi {
   }
 
   updateEquipment(equipment: Equipment): Observable<Equipment> {
-    return this.#equipmentEndpoint.update(equipment, equipment.id);
+    return this.#equipmentEndpoint.patchEditableFields(equipment);
   }
 
   deleteEquipment(id: number): Observable<void> {

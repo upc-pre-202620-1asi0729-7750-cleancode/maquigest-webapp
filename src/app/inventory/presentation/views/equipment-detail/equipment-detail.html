@@ -350,6 +350,13 @@
 
           }
 
+          @if (checkingAvailability()) {
+            <p>{{ 'equipment.detail.availability-checking' | translate }}</p>
+          }
+          @if (availabilityCheckFailed()) {
+            <mat-error>{{ 'equipment.detail.availability-check-failed' | translate }}</mat-error>
+          }
+
           @if (
             availabilityResult() === true
             ) {
@@ -377,7 +384,8 @@
                   type="button"
                   [disabled]="
                     rentalsStore.loading() ||
-                    rentalsStore.subscriptionRequired()
+                    rentalsStore.subscriptionRequired() ||
+                    checkingAvailability()
                   "
                   (click)="requestRental()">
 
@@ -431,7 +439,7 @@
               class="rental-request-message">
 
               {{
-                rentalsStore.error()
+                rentalRequestErrorTranslationKey() | translate
               }}
 
             </mat-error>

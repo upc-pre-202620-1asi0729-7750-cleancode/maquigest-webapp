@@ -1,4 +1,4 @@
-﻿import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -32,6 +32,11 @@ import {
 
 import { SUBSCRIPTION_ACCESS_PORT } from '../infrastructure/subscription-access.port';
 
+import { RentalRequestEligibilityPolicy } from '../domain/policy/rental-request-eligibility.policy';
+import { EQUIPMENT_REQUEST_AVAILABILITY_PORT } from '../infrastructure/equipment-request-availability.port';
+import { MAINTENANCE_INCIDENT_RESTRICTION_PORT } from '../infrastructure/maintenance-incident-restriction.port';
+import { RENTAL_REQUESTER_ACCESS_PORT } from '../infrastructure/rental-requester-access.port';
+
 export type RentalOperationSuccess = 'DELIVERY' | 'RETURN';
 
 @Injectable({
@@ -39,6 +44,7 @@ export type RentalOperationSuccess = 'DELIVERY' | 'RETURN';
 })
 export class RentalsStore {
   readonly #rentalsApi = inject(RentalsApi);
+  readonly #requesterAccess = inject(RENTAL_REQUESTER_ACCESS_PORT);
 
   readonly #subscriptionAccess = inject(SUBSCRIPTION_ACCESS_PORT);
 
@@ -46,9 +52,14 @@ export class RentalsStore {
 
   readonly #equipmentOperation = inject(EQUIPMENT_OPERATION_PORT);
 
+  readonly #equipmentRequestAvailability = inject(EQUIPMENT_REQUEST_AVAILABILITY_PORT);
+
+  readonly #maintenanceIncidentRestriction = inject(MAINTENANCE_INCIDENT_RESTRICTION_PORT);
+
   readonly #participantInformation = inject(PARTICIPANT_INFORMATION_PORT);
 
   readonly #destroyRef = inject(DestroyRef);
+  #readRequestVersion = 0;
 
   readonly #rentalRequestsSignal = signal<RentalRequest[]>([]);
 
@@ -157,6 +168,7 @@ export class RentalsStore {
   }
 
   loadRentalRequestsForCompany(rentalCompanyUserId: number): void {
+    const readVersion = ++this.#readRequestVersion;
     this.#loadingSignal.set(true);
 
     this.#errorSignal.set(null);
@@ -211,6 +223,7 @@ export class RentalsStore {
       )
       .subscribe({
         next: ({ requests, equipmentInformation, participantInformation }) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.#rentalRequestsSignal.set(requests);
 
           this.#equipmentInformationSignal.set(
@@ -227,6 +240,7 @@ export class RentalsStore {
         },
 
         error: (error) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.clearRentalRequests();
 
           this.#errorSignal.set(this.#formatError(error, 'Failed to load rental requests'));
@@ -237,6 +251,7 @@ export class RentalsStore {
   }
 
   loadRentalRequestsForConstructionCompany(constructionUserId: number): void {
+    const readVersion = ++this.#readRequestVersion;
     this.#loadingSignal.set(true);
 
     this.#errorSignal.set(null);
@@ -277,6 +292,7 @@ export class RentalsStore {
       )
       .subscribe({
         next: ({ requests, equipmentInformation }) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.#rentalRequestsSignal.set(requests);
 
           this.#equipmentInformationSignal.set(
@@ -291,6 +307,7 @@ export class RentalsStore {
         },
 
         error: (error) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.clearRentalRequests();
 
           this.#errorSignal.set(this.#formatError(error, 'Failed to load my rental requests'));
@@ -301,6 +318,7 @@ export class RentalsStore {
   }
 
   loadRentalRequestDetail(requestId: number, constructionUserId: number): void {
+    const readVersion = ++this.#readRequestVersion;
     this.#loadingSignal.set(true);
 
     this.#errorSignal.set(null);
@@ -336,6 +354,7 @@ export class RentalsStore {
       )
       .subscribe({
         next: ({ request, equipmentInformation }) => {
+          if (readVersion !== this.#readRequestVersion) return;
           if (!request) {
             this.#selectedRentalRequestSignal.set(null);
 
@@ -362,6 +381,7 @@ export class RentalsStore {
         },
 
         error: (error) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.#selectedRentalRequestSignal.set(null);
 
           this.#equipmentInformationSignal.set(new Map());
@@ -384,6 +404,7 @@ export class RentalsStore {
   }
 
   loadActiveRentalsForCompany(rentalCompanyUserId: number): void {
+    const readVersion = ++this.#readRequestVersion;
     this.#loadingSignal.set(true);
 
     this.#errorSignal.set(null);
@@ -444,6 +465,7 @@ export class RentalsStore {
       )
       .subscribe({
         next: ({ rentals, equipmentInformation, participantInformation }) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.#rentalsSignal.set(rentals);
 
           this.#equipmentInformationSignal.set(
@@ -460,6 +482,7 @@ export class RentalsStore {
         },
 
         error: (error) => {
+          if (readVersion !== this.#readRequestVersion) return;
           this.clearRentals();
 
           this.#errorSignal.set(this.#formatError(error, 'Failed to load rentals'));
@@ -486,6 +509,12 @@ export class RentalsStore {
   }
 
   createRentalRequest(rentalRequest: RentalRequest): void {
+    if (!this.#requesterAccess.canSubmitRentalRequest(rentalRequest.constructionUserId)) {
+      this.#latestCreatedRequestSignal.set(null);
+      this.#errorSignal.set('Only construction companies can request equipment rental');
+      this.#loadingSignal.set(false);
+      return;
+    }
     this.#loadingSignal.set(true);
 
     this.#errorSignal.set(null);
@@ -506,7 +535,32 @@ export class RentalsStore {
             return EMPTY;
           }
 
-          return this.#rentalsApi.createRentalRequest(rentalRequest);
+          // Re-read the authoritative Inventory and Maintenance projections on every submission.
+          return forkJoin({
+            equipment: this.#equipmentRequestAvailability.assertAvailableForRequest(
+              rentalRequest.equipmentId,
+              rentalRequest.rentalCompanyUserId,
+              rentalRequest.period.startDate,
+              rentalRequest.period.endDate,
+            ),
+            hasOpenBlockingIncident: this.#maintenanceIncidentRestriction.hasOpenBlockingIncident(
+              rentalRequest.equipmentId,
+            ),
+            rentals: this.#rentalsApi.getRentals(),
+          }).pipe(
+            switchMap(({ hasOpenBlockingIncident, rentals }) => {
+              if (hasOpenBlockingIncident) {
+                throw new Error('Equipment has an open blocking maintenance incident');
+              }
+
+              RentalRequestEligibilityPolicy.ensureNoOverlappingCommittedRental(
+                rentalRequest,
+                rentals,
+              );
+
+              return this.#rentalsApi.createRentalRequest(rentalRequest);
+            }),
+          );
         }),
 
         takeUntilDestroyed(this.#destroyRef),
@@ -723,6 +777,19 @@ export class RentalsStore {
       });
   }
 
+  /** Called by app composition root when identity changes. */
+  clearForIdentityChange(): void {
+    ++this.#readRequestVersion;
+    this.clearRentalRequests();
+    this.clearRentalRequestDetail();
+    this.clearRentals();
+    this.clearCreationState();
+    this.#loadingSignal.set(false);
+    this.#updatingRequestIdSignal.set(null);
+    this.#updatingRentalIdSignal.set(null);
+    this.#errorSignal.set(null);
+  }
+
   clearRentalRequests(): void {
     this.#rentalRequestsSignal.set([]);
 
@@ -835,17 +902,21 @@ export class RentalsStore {
         status: RentalStatus.CONFIRMED,
       });
 
-      operation = this.#equipmentOperation
-        .reservePeriod(
-          currentRequest.equipmentId,
-
-          currentRequest.period.startDate,
-
-          currentRequest.period.endDate,
-        )
+      operation = this.#maintenanceIncidentRestriction
+        .hasOpenBlockingIncident(currentRequest.equipmentId)
         .pipe(
-          switchMap(() => this.#rentalsApi.createRental(confirmedRental)),
+          switchMap((hasOpenBlockingIncident) => {
+            if (hasOpenBlockingIncident) {
+              throw new Error('Equipment has an open blocking maintenance incident');
+            }
 
+            return this.#equipmentOperation.reservePeriod(
+              currentRequest.equipmentId,
+              currentRequest.period.startDate,
+              currentRequest.period.endDate,
+            );
+          }),
+          switchMap(() => this.#rentalsApi.createRental(confirmedRental)),
           switchMap(() => this.#rentalsApi.updateRentalRequest(updatedRequest)),
         );
     } else {

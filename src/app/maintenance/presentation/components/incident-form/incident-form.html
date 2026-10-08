@@ -1,0 +1,177 @@
+<div
+  class="dialog-backdrop"
+  (click)="cancel()">
+
+  <section
+    class="dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="
+      'maintenance.incidents.form.title' | translate
+    "
+    (click)="$event.stopPropagation()">
+
+    <header class="dialog-header">
+      <div>
+        <span class="section-label">
+          {{
+            'maintenance.incidents.form.section'
+              | translate
+          }}
+        </span>
+
+        <h2>
+          {{
+            'maintenance.incidents.form.title'
+              | translate
+          }}
+        </h2>
+
+        <p>
+          {{
+            'maintenance.incidents.form.subtitle'
+              | translate
+          }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="cancel()"
+        [disabled]="saving()"
+        [attr.aria-label]="
+          'maintenance.incidents.form.cancel' | translate
+        ">
+        &times;
+      </button>
+    </header>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()">
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          {{
+            'maintenance.incidents.form.equipment'
+              | translate
+          }}
+        </mat-label>
+
+        <mat-select formControlName="equipmentId">
+
+          @for (item of equipment(); track item.id) {
+            <mat-option [value]="item.id">
+              {{ item.name }} ({{ item.code }})
+            </mat-option>
+          }
+
+        </mat-select>
+
+        @if (isInvalidControl(form, 'equipmentId')) {
+          <mat-error>
+            {{
+              'maintenance.incidents.form.equipment-required'
+                | translate
+            }}
+          </mat-error>
+        }
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          {{
+            'maintenance.incidents.form.description'
+              | translate
+          }}
+        </mat-label>
+
+        <textarea
+          matInput
+          rows="5"
+          maxlength="1000"
+          formControlName="description"
+          [placeholder]="
+            'maintenance.incidents.form.description-placeholder'
+              | translate
+          ">
+        </textarea>
+
+        <mat-hint align="end">
+          {{ form.controls.description.value.length }}/1000
+        </mat-hint>
+
+        @if (isInvalidControl(form, 'description')) {
+          <mat-error>
+            {{
+              'maintenance.incidents.form.description-required'
+                | translate
+            }}
+          </mat-error>
+        }
+
+      </mat-form-field>
+
+      <div class="rental-restriction">
+        <mat-checkbox
+          formControlName="blocksRental"
+          [disabled]="saving()">
+          {{
+            'maintenance.incidents.form.block-rental'
+              | translate
+          }}
+        </mat-checkbox>
+
+        <p>
+          {{
+            'maintenance.incidents.form.block-rental-hint'
+              | translate
+          }}
+        </p>
+      </div>
+
+      @if (error()) {
+        <p class="form-error" role="alert">
+          {{ error() }}
+        </p>
+      }
+
+      <div class="dialog-actions">
+
+        <button
+          mat-button
+          type="button"
+          (click)="cancel()"
+          [disabled]="saving()">
+          {{
+            'maintenance.incidents.form.cancel'
+              | translate
+          }}
+        </button>
+
+        <button
+          mat-flat-button
+          type="submit"
+          class="primary-button"
+          [disabled]="saving()">
+
+          {{
+            (saving()
+              ? 'maintenance.incidents.form.saving'
+              : 'maintenance.incidents.form.save'
+            ) | translate
+          }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>

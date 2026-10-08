@@ -21,6 +21,8 @@ export const environment = {
 
   platformProviderMaintenancesEndpointPath: '/maintenances',
 
+  platformProviderIncidentsEndpointPath: '/incidents',
+
   platformProviderEquipmentCategoriesEndpointPath: '/equipment-categories',
 
   platformProviderSubscriptionPlansEndpointPath: '/subscription-plans',

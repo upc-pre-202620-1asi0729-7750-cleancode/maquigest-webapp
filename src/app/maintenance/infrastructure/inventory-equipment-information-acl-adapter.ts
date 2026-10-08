@@ -1,4 +1,4 @@
-﻿import { inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -11,16 +11,15 @@ import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-
 import {
   EquipmentInformationPort,
   MaintenanceEquipmentInformation,
+  MaintenanceEquipmentOperationalStatus,
 } from './equipment-information.port';
 
 interface ExternalEquipmentResource {
   id: number;
-
   userId: number;
-
   code: string;
-
   name: string;
+  status?: MaintenanceEquipmentOperationalStatus;
 }
 
 interface ExternalEquipmentsResponse {
@@ -47,15 +46,12 @@ export class InventoryEquipmentInformationAclAdapter
 
           return resources.map((resource) => ({
             id: resource.id,
-
             ownerUserId: resource.userId,
-
             code: resource.code,
-
             name: resource.name,
+            status: resource.status,
           }));
         }),
-
         catchError(this.handleError('Failed to fetch equipment information for maintenance')),
       );
   }

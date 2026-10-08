@@ -1,10 +1,11 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { Component, computed, effect, inject, output } from '@angular/core';
 
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IamStore } from '../../../../iam/application/iam.store';
+import { SubscriptionsStore } from '../../../../subscriptions/application/subscriptions.store';
 
 interface NavigationOption {
   link: string;
@@ -22,6 +23,19 @@ interface NavigationOption {
 })
 export class Navigation {
   protected readonly store = inject(IamStore);
+  protected readonly subscriptions = inject(SubscriptionsStore);
+
+  constructor() {
+    effect(() => {
+      const role = this.store.currentRole();
+      const userId = this.store.currentUserId();
+      if (role === 'rental_company' && userId !== null) {
+        this.subscriptions.loadCurrentSubscription(userId);
+      } else {
+        this.subscriptions.clearCurrentSubscription();
+      }
+    });
+  }
 
   readonly optionSelected = output<void>();
 
@@ -34,25 +48,21 @@ export class Navigation {
     };
 
     if (role === 'rental_company') {
-      return [
-        dashboard,
-        {
-          link: '/inventory/equipment',
-          label: 'navigation.equipment',
-        },
-        {
-          link: '/rentals/requests',
-          label: 'navigation.rental-requests',
-        },
-        {
-          link: '/rentals/active',
-          label: 'navigation.rentals',
-        },
-        {
-          link: '/maintenance',
-          label: 'navigation.maintenance',
-        },
-      ];
+      const subscription = this.subscriptions.currentSubscription();
+      const planId = subscription && subscription.userId === this.store.currentUserId() &&
+        subscription.period.contains(new Date()) ? subscription.planId : 0;
+      const options: NavigationOption[] = [dashboard];
+      if (planId >= 1) {
+        options.push({ link: '/inventory/equipment', label: 'navigation.equipment' });
+        options.push({ link: '/rentals/requests', label: 'navigation.rental-requests' });
+      }
+      if (planId >= 2) {
+        options.push({ link: '/rentals/active', label: 'navigation.rentals' });
+      }
+      if (planId >= 3) {
+        options.push({ link: '/maintenance', label: 'navigation.maintenance' });
+      }
+      return options;
     }
 
     if (role === 'construction_company') {

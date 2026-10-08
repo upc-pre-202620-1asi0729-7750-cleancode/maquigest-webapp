@@ -171,6 +171,10 @@
       }
     </mat-form-field>
 
+    @if (isEdit && editLoadFailed()) {
+      <mat-error class="form-error">{{ 'equipment.error.edit-load-failed' | translate }}</mat-error>
+    }
+
     @if (error()) {
       <mat-error class="form-error">
         {{ error() }}
@@ -181,7 +185,7 @@
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="form.invalid || loading()">
+      [disabled]="form.invalid || loading() || (isEdit && !editReady())">
 
       {{
         (
