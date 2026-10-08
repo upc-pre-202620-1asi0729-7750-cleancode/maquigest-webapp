@@ -1,4 +1,5 @@
-﻿import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+﻿
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -13,6 +14,8 @@ import { BaseForm } from '../../../../shared/presentation/components/base-form/b
 
 import { MaintenanceEquipmentInformation } from '../../../infrastructure/equipment-information.port';
 
+export type MaintenanceFormMode = 'register' | 'schedule';
+
 export interface MaintenanceFormValue {
   equipmentId: number;
   performedAt: Date;
@@ -21,7 +24,6 @@ export interface MaintenanceFormValue {
 
 @Component({
   selector: 'app-maintenance-form',
-
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
@@ -30,23 +32,24 @@ export interface MaintenanceFormValue {
     MatSelectModule,
     TranslatePipe,
   ],
-
   templateUrl: './maintenance-form.html',
-
   styleUrl: './maintenance-form.css',
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MaintenanceForm extends BaseForm {
   readonly equipment = input.required<MaintenanceEquipmentInformation[]>();
 
+  readonly mode = input<MaintenanceFormMode>('register');
+
   readonly saving = input(false);
+
+  readonly error = input<string | null>(null);
 
   readonly submitted = output<MaintenanceFormValue>();
 
   readonly cancelled = output<void>();
 
-  protected readonly today = this.#today();
+  protected readonly today = this.#localDateString(new Date());
 
   protected readonly invalidDate = signal(false);
 
@@ -62,7 +65,6 @@ export class MaintenanceForm extends BaseForm {
 
     type: new FormControl('', {
       nonNullable: true,
-
       validators: [Validators.required, Validators.maxLength(120)],
     }),
   });
@@ -76,9 +78,17 @@ export class MaintenanceForm extends BaseForm {
 
     const type = this.form.controls.type.value.trim();
 
-    const performedAt = new Date(`${dateString}T12:00:00`);
+    const maintenanceDate = new Date(`${dateString}T12:00:00`);
 
-    const dateIsValid = !Number.isNaN(performedAt.getTime()) && dateString <= this.today;
+    const validCalendarDate =
+      /^\d{4}-\d{2}-\d{2}$/.test(dateString) &&
+      !Number.isNaN(maintenanceDate.getTime()) &&
+      this.#localDateString(maintenanceDate) === dateString;
+
+    const validDateForMode =
+      this.mode() === 'schedule' ? dateString >= this.today : dateString <= this.today;
+
+    const dateIsValid = validCalendarDate && validDateForMode;
 
     this.invalidDate.set(!dateIsValid);
 
@@ -94,7 +104,7 @@ export class MaintenanceForm extends BaseForm {
 
     this.submitted.emit({
       equipmentId,
-      performedAt,
+      performedAt: maintenanceDate,
       type,
     });
   }
@@ -105,11 +115,13 @@ export class MaintenanceForm extends BaseForm {
     }
   }
 
-  #today(): string {
-    const now = new Date();
+  #localDateString(date: Date): string {
+    const year = date.getFullYear();
 
-    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60_000);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
 
-    return localDate.toISOString().slice(0, 10);
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }

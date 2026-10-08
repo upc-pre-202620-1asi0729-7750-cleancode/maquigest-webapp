@@ -100,6 +100,7 @@ export class MaintenanceStore {
       });
   }
 
+  // US23 - Register completed maintenance
   registerMaintenance(userId: number, equipmentId: number, performedAt: Date, type: string): void {
     this.#saveSucceededSignal.set(false);
 
@@ -121,13 +122,9 @@ export class MaintenanceStore {
     try {
       maintenance = new Maintenance({
         id: 0,
-
         equipmentId,
-
         performedAt,
-
         type,
-
         status: MaintenanceStatus.COMPLETED,
       });
     } catch (error) {
@@ -158,6 +155,64 @@ export class MaintenanceStore {
           this.#saveSucceededSignal.set(false);
 
           this.#errorSignal.set(this.#formatError(error, 'Failed to register maintenance'));
+        },
+      });
+  }
+
+  // US24 - Schedule pending maintenance
+  scheduleMaintenance(userId: number, equipmentId: number, scheduledAt: Date, type: string): void {
+    this.#saveSucceededSignal.set(false);
+
+    this.#errorSignal.set(null);
+
+    const equipment = this.#equipmentInformationSignal().find(
+      (currentEquipment) =>
+        currentEquipment.id === equipmentId && currentEquipment.ownerUserId === userId,
+    );
+
+    if (!equipment) {
+      this.#errorSignal.set('The selected equipment does not exist for this company');
+
+      return;
+    }
+
+    let maintenance: Maintenance;
+
+    try {
+      maintenance = Maintenance.schedule({
+        id: 0,
+        equipmentId,
+        scheduledAt,
+        type,
+      });
+    } catch (error) {
+      this.#errorSignal.set(this.#formatError(error, 'Invalid scheduled maintenance information'));
+
+      return;
+    }
+
+    this.#savingSignal.set(true);
+
+    this.#maintenanceApi
+      .createMaintenance(maintenance)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (createdMaintenance) => {
+          this.#maintenancesSignal.update((maintenances) => [createdMaintenance, ...maintenances]);
+
+          this.#savingSignal.set(false);
+
+          this.#saveSucceededSignal.set(true);
+
+          this.#errorSignal.set(null);
+        },
+
+        error: (error) => {
+          this.#savingSignal.set(false);
+
+          this.#saveSucceededSignal.set(false);
+
+          this.#errorSignal.set(this.#formatError(error, 'Failed to schedule maintenance'));
         },
       });
   }

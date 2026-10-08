@@ -401,6 +401,28 @@
     }
   },
   "maintenance": {
+    "schedule": {
+      "list": {
+        "subtitle": "Register completed maintenance and schedule upcoming equipment maintenance.",
+        "button": "Schedule maintenance",
+        "pending": "Pending",
+        "success": "Maintenance scheduled successfully.",
+        "empty-description": "Register completed maintenance or schedule an upcoming intervention.",
+        "filter-label": "Filter maintenance records",
+        "filter-all": "All",
+        "filter-pending": "Pending",
+        "no-pending": "There are no pending scheduled maintenance records."
+      },
+      "form": {
+        "section": "Maintenance scheduling",
+        "title": "Schedule maintenance",
+        "subtitle": "Select equipment and a date on or after today.",
+        "date": "Scheduled date",
+        "date-invalid": "The scheduled date cannot be in the past.",
+        "saving": "Scheduling...",
+        "save": "Save schedule"
+      }
+    },
     "list": {
       "section": "Maintenance management",
       "title": "Maintenance",
