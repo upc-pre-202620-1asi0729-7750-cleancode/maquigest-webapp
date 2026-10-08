@@ -12,23 +12,36 @@
       </h1>
 
       <p>
-        {{ 'maintenance.list.subtitle' | translate }}
+        {{ 'maintenance.schedule.list.subtitle' | translate }}
       </p>
     </div>
 
-    <button
-      mat-flat-button
-      type="button"
-      class="primary-button"
-      [disabled]="
-        store.loading() ||
-        store.saving() ||
-        store.equipmentInformation().length === 0
-      "
-      (click)="openForm()">
+    <div class="maintenance-actions">
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="
+          store.loading() ||
+          store.saving() ||
+          store.equipmentInformation().length === 0
+        "
+        (click)="openForm('register')">
+        {{ 'maintenance.list.register' | translate }}
+      </button>
 
-      {{ 'maintenance.list.register' | translate }}
-    </button>
+      <button
+        mat-flat-button
+        type="button"
+        class="primary-button"
+        [disabled]="
+          store.loading() ||
+          store.saving() ||
+          store.equipmentInformation().length === 0
+        "
+        (click)="openForm('schedule')">
+        {{ 'maintenance.schedule.list.button' | translate }}
+      </button>
+    </div>
   </header>
 
   <section class="summary-grid">
@@ -55,6 +68,16 @@
 
     <article class="summary-card">
       <span>
+        {{ 'maintenance.schedule.list.pending' | translate }}
+      </span>
+
+      <strong>
+        {{ scheduledCount() }}
+      </strong>
+    </article>
+
+    <article class="summary-card">
+      <span>
         {{ 'maintenance.list.equipment-with-records' | translate }}
       </span>
 
@@ -67,7 +90,7 @@
 
   @if (store.saveSucceeded()) {
     <div class="success-banner" role="status">
-      {{ 'maintenance.list.success' | translate }}
+      {{ successMessageKey() | translate }}
     </div>
   }
 
@@ -109,17 +132,15 @@
     } @else if (store.maintenances().length === 0) {
 
       <div class="empty-state">
-
         <h3>
           {{ 'maintenance.list.empty-title' | translate }}
         </h3>
 
         <p>
-          {{ 'maintenance.list.empty-description' | translate }}
+          {{ 'maintenance.schedule.list.empty-description' | translate }}
         </p>
 
         @if (store.equipmentInformation().length === 0) {
-
           <p class="equipment-help">
             {{ 'maintenance.list.no-equipment' | translate }}
           </p>
@@ -127,104 +148,132 @@
           <a
             mat-stroked-button
             routerLink="/inventory/equipment/new">
-
             {{ 'maintenance.list.add-equipment' | translate }}
           </a>
-
         }
       </div>
 
     } @else {
 
-      <div class="table-wrapper">
+      <div class="maintenance-filters">
+        <mat-button-toggle-group
+          [value]="recordFilter()"
+          [attr.aria-label]="
+            'maintenance.schedule.list.filter-label'
+              | translate
+          "
+          (change)="changeRecordFilter($event.value)">
 
-        <table
-          mat-table
-          [dataSource]="dataSource()"
-          class="records-table">
+          <mat-button-toggle value="all">
+            {{ 'maintenance.schedule.list.filter-all' | translate }}
+          </mat-button-toggle>
 
-          <ng-container matColumnDef="equipment">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ 'maintenance.list.equipment' | translate }}
-            </th>
+          <mat-button-toggle value="scheduled">
+            {{ 'maintenance.schedule.list.filter-pending' | translate }}
+          </mat-button-toggle>
 
-            <td mat-cell *matCellDef="let record">
-              <strong>
-                {{ equipmentName(record.equipmentId) }}
-              </strong>
-
-              <span class="secondary-cell">
-                {{ equipmentCode(record.equipmentId) }}
-              </span>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ 'maintenance.list.date' | translate }}
-            </th>
-
-            <td mat-cell *matCellDef="let record">
-              {{ record.performedAt | date:'dd/MM/yyyy' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ 'maintenance.list.type' | translate }}
-            </th>
-
-            <td mat-cell *matCellDef="let record">
-              {{ record.type }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>
-              {{ 'maintenance.list.status' | translate }}
-            </th>
-
-            <td mat-cell *matCellDef="let record">
-
-              <span
-                class="status-badge"
-                [class.completed]="
-                  record.status ===
-                  maintenanceStatus.COMPLETED
-                ">
-
-                {{ statusKey(record.status) | translate }}
-              </span>
-
-            </td>
-          </ng-container>
-
-          <tr
-            mat-header-row
-            *matHeaderRowDef="displayedColumns">
-          </tr>
-
-          <tr
-            mat-row
-            *matRowDef="let row; columns: displayedColumns">
-          </tr>
-
-        </table>
-
+        </mat-button-toggle-group>
       </div>
+
+      @if (filteredMaintenances().length === 0) {
+
+        <div class="empty-state">
+          <h3>
+            {{ 'maintenance.schedule.list.no-pending' | translate }}
+          </h3>
+        </div>
+
+      } @else {
+
+        <div class="table-wrapper">
+
+          <table
+            mat-table
+            [dataSource]="dataSource()"
+            class="records-table">
+
+            <ng-container matColumnDef="equipment">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'maintenance.list.equipment' | translate }}
+              </th>
+
+              <td mat-cell *matCellDef="let record">
+                <strong>
+                  {{ equipmentName(record.equipmentId) }}
+                </strong>
+
+                <span class="secondary-cell">
+                  {{ equipmentCode(record.equipmentId) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'maintenance.list.date' | translate }}
+              </th>
+
+              <td mat-cell *matCellDef="let record">
+                {{ record.performedAt | date:'dd/MM/yyyy' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'maintenance.list.type' | translate }}
+              </th>
+
+              <td mat-cell *matCellDef="let record">
+                {{ record.type }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'maintenance.list.status' | translate }}
+              </th>
+
+              <td mat-cell *matCellDef="let record">
+                <span
+                  class="status-badge"
+                  [class.completed]="
+                    record.status === maintenanceStatus.COMPLETED
+                  "
+                  [class.scheduled]="
+                    record.status === maintenanceStatus.SCHEDULED
+                  ">
+                  {{ statusKey(record.status) | translate }}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumns">
+            </tr>
+
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns">
+            </tr>
+
+          </table>
+
+        </div>
+      }
     }
 
   </section>
 
   @if (formOpen()) {
-
     <app-maintenance-form
       [equipment]="store.equipmentInformation()"
+      [mode]="formMode()"
       [saving]="store.saving()"
+      [error]="store.error()"
       (submitted)="submitForm($event)"
       (cancelled)="closeForm()">
     </app-maintenance-form>
-
   }
 
 </div>

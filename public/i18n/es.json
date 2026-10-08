@@ -401,6 +401,28 @@
     }
   },
   "maintenance": {
+    "schedule": {
+      "list": {
+        "subtitle": "Registra mantenimientos realizados y programa nuevas intervenciones para tu maquinaria.",
+        "button": "Programar mantenimiento",
+        "pending": "Pendientes",
+        "success": "Mantenimiento programado correctamente.",
+        "empty-description": "Registra un mantenimiento realizado o programa la próxima intervención.",
+        "filter-label": "Filtrar registros de mantenimiento",
+        "filter-all": "Todos",
+        "filter-pending": "Pendientes",
+        "no-pending": "No hay mantenimientos programados pendientes."
+      },
+      "form": {
+        "section": "Programación de mantenimiento",
+        "title": "Programar mantenimiento",
+        "subtitle": "Selecciona una maquinaria y una fecha igual o posterior a hoy.",
+        "date": "Fecha programada",
+        "date-invalid": "La fecha programada no puede ser anterior a hoy.",
+        "saving": "Programando...",
+        "save": "Guardar programación"
+      }
+    },
     "list": {
       "section": "Gestión de mantenimiento",
       "title": "Mantenimiento",

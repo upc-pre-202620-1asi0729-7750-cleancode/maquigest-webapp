@@ -7,21 +7,37 @@
     class="dialog"
     role="dialog"
     aria-modal="true"
-    [attr.aria-label]="'maintenance.form.title' | translate"
+    [attr.aria-label]="
+      (mode() === 'schedule'
+        ? 'maintenance.schedule.form.title'
+        : 'maintenance.form.title') | translate
+    "
     (click)="$event.stopPropagation()">
 
     <header class="dialog-header">
       <div>
         <span class="section-label">
-          {{ 'maintenance.form.section' | translate }}
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.section'
+              : 'maintenance.form.section') | translate
+          }}
         </span>
 
         <h2>
-          {{ 'maintenance.form.title' | translate }}
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.title'
+              : 'maintenance.form.title') | translate
+          }}
         </h2>
 
         <p>
-          {{ 'maintenance.form.subtitle' | translate }}
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.subtitle'
+              : 'maintenance.form.subtitle') | translate
+          }}
         </p>
       </div>
 
@@ -54,32 +70,47 @@
 
         @if (isInvalidControl(form, 'equipmentId')) {
           <mat-error>
-            {{ 'maintenance.form.equipment-required' | translate }}
+            {{
+              'maintenance.form.equipment-required'
+                | translate
+            }}
           </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>
-          {{ 'maintenance.form.date' | translate }}
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.date'
+              : 'maintenance.form.date') | translate
+          }}
         </mat-label>
 
         <input
           matInput
           type="date"
           formControlName="performedAt"
-          [max]="today">
+          [attr.min]="mode() === 'schedule' ? today : null"
+          [attr.max]="mode() === 'register' ? today : null">
 
         @if (isInvalidControl(form, 'performedAt')) {
           <mat-error>
-            {{ 'maintenance.form.date-required' | translate }}
+            {{
+              'maintenance.form.date-required'
+                | translate
+            }}
           </mat-error>
         }
       </mat-form-field>
 
       @if (invalidDate()) {
-        <p class="form-error">
-          {{ 'maintenance.form.date-invalid' | translate }}
+        <p class="form-error" role="alert">
+          {{
+            (mode() === 'schedule'
+              ? 'maintenance.schedule.form.date-invalid'
+              : 'maintenance.form.date-invalid') | translate
+          }}
         </p>
       }
 
@@ -92,14 +123,25 @@
           matInput
           formControlName="type"
           maxlength="120"
-          [placeholder]="'maintenance.form.type-placeholder' | translate">
+          [placeholder]="
+            'maintenance.form.type-placeholder' | translate
+          ">
 
         @if (isInvalidControl(form, 'type')) {
           <mat-error>
-            {{ 'maintenance.form.type-required' | translate }}
+            {{
+              'maintenance.form.type-required'
+                | translate
+            }}
           </mat-error>
         }
       </mat-form-field>
+
+      @if (error()) {
+        <p class="form-error" role="alert">
+          {{ error() }}
+        </p>
+      }
 
       <div class="dialog-actions">
         <button
@@ -116,9 +158,14 @@
           class="primary-button"
           [disabled]="saving()">
           {{
-            (saving()
-              ? 'maintenance.form.saving'
-              : 'maintenance.form.save') | translate
+            (mode() === 'schedule'
+                ? (saving()
+                  ? 'maintenance.schedule.form.saving'
+                  : 'maintenance.schedule.form.save')
+                : (saving()
+                  ? 'maintenance.form.saving'
+                  : 'maintenance.form.save')
+            ) | translate
           }}
         </button>
       </div>

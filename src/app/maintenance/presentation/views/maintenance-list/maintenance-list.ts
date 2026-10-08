@@ -1,4 +1,5 @@
-﻿import {
+﻿
+import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -12,6 +13,8 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
+
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -29,26 +32,26 @@ import { MaintenanceStatus } from '../../../domain/model/maintenance-status.enum
 
 import {
   MaintenanceForm,
+  MaintenanceFormMode,
   MaintenanceFormValue,
 } from '../../components/maintenance-form/maintenance-form';
 
+type MaintenanceRecordFilter = 'all' | 'scheduled';
+
 @Component({
   selector: 'app-maintenance-list',
-
   imports: [
     DatePipe,
     RouterLink,
     MatButtonModule,
+    MatButtonToggleModule,
     MatProgressSpinnerModule,
     MatTableModule,
     TranslatePipe,
     MaintenanceForm,
   ],
-
   templateUrl: './maintenance-list.html',
-
   styleUrl: './maintenance-list.css',
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MaintenanceList {
@@ -62,8 +65,33 @@ export class MaintenanceList {
 
   protected readonly formOpen = signal(false);
 
+  protected readonly formMode = signal<MaintenanceFormMode>('register');
+
+  protected readonly recordFilter = signal<MaintenanceRecordFilter>('all');
+
+  protected readonly successMessageKey = signal('maintenance.list.success');
+
+  protected readonly filteredMaintenances = computed(() => {
+    const maintenances = this.store.maintenances();
+
+    if (this.recordFilter() === 'scheduled') {
+      return maintenances.filter(
+        (maintenance) => maintenance.status === MaintenanceStatus.SCHEDULED,
+      );
+    }
+
+    return maintenances;
+  });
+
   protected readonly dataSource = computed(
-    () => new MatTableDataSource<Maintenance>(this.store.maintenances()),
+    () => new MatTableDataSource<Maintenance>(this.filteredMaintenances()),
+  );
+
+  protected readonly scheduledCount = computed(
+    () =>
+      this.store
+        .maintenances()
+        .filter((maintenance) => maintenance.status === MaintenanceStatus.SCHEDULED).length,
   );
 
   protected readonly completedCount = computed(
@@ -83,7 +111,6 @@ export class MaintenanceList {
 
       if (userId === null) {
         this.store.clear();
-
         return;
       }
 
@@ -109,7 +136,11 @@ export class MaintenanceList {
     return `maintenance.status.${status.toLowerCase()}`;
   }
 
-  protected openForm(): void {
+  protected changeRecordFilter(filter: MaintenanceRecordFilter): void {
+    this.recordFilter.set(filter);
+  }
+
+  protected openForm(mode: MaintenanceFormMode): void {
     if (
       this.store.loading() ||
       this.store.saving() ||
@@ -120,21 +151,35 @@ export class MaintenanceList {
 
     this.store.clearSaveState();
 
+    this.formMode.set(mode);
+
     this.formOpen.set(true);
   }
 
   protected closeForm(): void {
     if (!this.store.saving()) {
       this.formOpen.set(false);
+
+      this.store.clearSaveState();
     }
   }
 
   protected submitForm(value: MaintenanceFormValue): void {
     const userId = this.#iamStore.currentUserId();
 
-    if (userId === null) {
+    if (userId === null || this.store.saving()) {
       return;
     }
+
+    if (this.formMode() === 'schedule') {
+      this.successMessageKey.set('maintenance.schedule.list.success');
+
+      this.store.scheduleMaintenance(userId, value.equipmentId, value.performedAt, value.type);
+
+      return;
+    }
+
+    this.successMessageKey.set('maintenance.list.success');
 
     this.store.registerMaintenance(userId, value.equipmentId, value.performedAt, value.type);
   }
