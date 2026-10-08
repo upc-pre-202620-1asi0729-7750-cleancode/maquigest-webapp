@@ -3,6 +3,7 @@
     "name": "MaquiGest"
   },
   "navigation": {
+    "maintenance": "Maintenance",
     "dashboard": "Dashboard",
     "equipment": "Equipment",
     "search-equipment": "Search equipment",
@@ -397,6 +398,50 @@
           "history": "Maintenance history for each piece of equipment."
         }
       }
+    }
+  },
+  "maintenance": {
+    "list": {
+      "section": "Maintenance management",
+      "title": "Maintenance",
+      "subtitle": "Register completed maintenance activities and track equipment history.",
+      "register": "Register maintenance",
+      "total": "Total records",
+      "completed": "Completed",
+      "equipment-with-records": "Equipment with maintenance",
+      "success": "Maintenance registered successfully.",
+      "history": "Maintenance history",
+      "records": "Maintenance records",
+      "load-error": "Maintenance records could not be loaded.",
+      "empty-title": "No maintenance records yet",
+      "empty-description": "Register the first completed maintenance activity for your equipment.",
+      "no-equipment": "Register equipment before adding maintenance records.",
+      "add-equipment": "Add equipment",
+      "equipment": "Equipment",
+      "date": "Date",
+      "type": "Type",
+      "status": "Status"
+    },
+    "form": {
+      "section": "Maintenance record",
+      "title": "Register maintenance",
+      "subtitle": "Record maintenance work already performed on equipment.",
+      "equipment": "Equipment",
+      "equipment-required": "Select equipment.",
+      "date": "Maintenance date",
+      "date-required": "Enter the maintenance date.",
+      "date-invalid": "The maintenance date cannot be in the future.",
+      "type": "Maintenance type",
+      "type-placeholder": "For example, preventive maintenance",
+      "type-required": "Enter the maintenance type.",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save maintenance"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "in_progress": "In progress",
+      "completed": "Completed"
     }
   }
 }
