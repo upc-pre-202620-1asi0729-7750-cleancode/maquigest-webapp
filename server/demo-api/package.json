@@ -1,0 +1,16 @@
+{
+  "name": "maquigest-demo-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MaquiGest API simulada para demostraciones académicas, no para producción",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20 <25"
+  },
+  "dependencies": {
+    "json-server": "0.17.4"
+  }
+}
