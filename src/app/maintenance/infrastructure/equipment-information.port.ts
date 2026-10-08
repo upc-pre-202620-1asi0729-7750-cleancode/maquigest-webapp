@@ -1,15 +1,18 @@
-﻿import { InjectionToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
+export type MaintenanceEquipmentOperationalStatus =
+  | 'AVAILABLE'
+  | 'RENTED'
+  | 'MAINTENANCE';
+
 export interface MaintenanceEquipmentInformation {
   id: number;
-
   ownerUserId: number;
-
   code: string;
-
   name: string;
+  status?: MaintenanceEquipmentOperationalStatus;
 }
 
 export interface EquipmentInformationPort {

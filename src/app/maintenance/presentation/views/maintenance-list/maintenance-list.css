@@ -1,4 +1,5 @@
-﻿:host {
+﻿
+:host {
   display: block;
 }
 
@@ -50,7 +51,8 @@ h1 {
   flex-shrink: 0;
 }
 
-.maintenance-actions button {
+.maintenance-actions button,
+.maintenance-actions a {
   min-height: 40px;
   white-space: nowrap;
 }
@@ -252,7 +254,8 @@ h1 {
     width: 100%;
   }
 
-  .maintenance-actions button {
+  .maintenance-actions button,
+  .maintenance-actions a {
     width: 100%;
   }
 

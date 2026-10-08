@@ -17,6 +17,13 @@
     </div>
 
     <div class="maintenance-actions">
+
+      <a
+        mat-stroked-button
+        routerLink="/maintenance/incidents">
+        {{ 'maintenance.incidents.list.title' | translate }}
+      </a>
+
       <button
         mat-stroked-button
         type="button"
@@ -41,6 +48,7 @@
         (click)="openForm('schedule')">
         {{ 'maintenance.schedule.list.button' | translate }}
       </button>
+
     </div>
   </header>
 

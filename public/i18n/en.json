@@ -1,4 +1,4 @@
-﻿{
+{
   "app": {
     "name": "MaquiGest"
   },
@@ -145,7 +145,8 @@
       "category-required": "Category is required.",
       "location-required": "Location is required.",
       "daily-rate-invalid": "Enter a daily rate greater than zero.",
-      "weekly-rate-invalid": "Enter a weekly rate greater than zero."
+      "weekly-rate-invalid": "Enter a weekly rate greater than zero.",
+      "edit-load-failed": "Could not load the equipment for editing. Confirm that it belongs to your company."
     },
     "search": {
       "title": "Search equipment",
@@ -179,11 +180,27 @@
       "requesting-rental": "Submitting request...",
       "request-created": "Rental request created successfully.",
       "request-status": "Status",
+      "request-errors": {
+        "status-changed": "The rental request could not be submitted because the equipment is no longer available. Check its availability again.",
+        "blocking-incident": "You cannot request this equipment because it has an unresolved blocking maintenance incident.",
+        "reserved": "The equipment is already reserved for the selected period.",
+        "rental-overlap": "The equipment has a confirmed or active rental that overlaps the selected dates.",
+        "company-mismatch": "The equipment does not belong to the selected rental company.",
+        "not-found": "The requested equipment could not be found.",
+        "reservations-check-failed": "The equipment reservations could not be verified. Please try again.",
+        "incidents-check-failed": "The maintenance restrictions could not be verified. Please try again.",
+        "invalid-request": "The equipment or rental dates are invalid.",
+        "availability-check-failed": "The current availability could not be checked. Please try again.",
+        "generic": "The rental request could not be submitted. Please try again.",
+        "requester-role": "Only construction companies can submit rental requests."
+      },
       "request-status-values": {
         "pending": "Pending",
         "approved": "Approved",
         "rejected": "Rejected"
-      }
+      },
+      "availability-checking": "Checking current availability...",
+      "availability-check-failed": "Could not check current availability. Please try again."
     }
   },
   "rentals": {
@@ -401,6 +418,72 @@
     }
   },
   "maintenance": {
+    "incidents": {
+      "list": {
+        "section": "Incident management",
+        "title": "Equipment incidents",
+        "subtitle": "Register and review problems reported with your company equipment.",
+        "view-maintenance": "View maintenance",
+        "register": "Report incident",
+        "total": "Reported incidents",
+        "affected-equipment": "Affected equipment",
+        "last-report": "Latest report",
+        "success": "Incident registered successfully.",
+        "history": "Incident history",
+        "records": "Reported incidents",
+        "load-error": "Incident records could not be loaded.",
+        "empty-title": "No incidents reported yet",
+        "empty-description": "Report an incident when equipment experiences a problem.",
+        "no-equipment": "Register equipment before reporting incidents.",
+        "add-equipment": "Add equipment",
+        "equipment": "Equipment",
+        "date": "Report date",
+        "description": "Problem description",
+        "status": "Status",
+        "open": "Open",
+        "resolved": "Resolved",
+        "rental-restriction": "Rental restriction",
+        "blocked": "Blocking",
+        "not-blocked": "No withdrawal",
+        "actions": "Actions",
+        "resolve": "Resolve incident",
+        "resolve-warning": "Confirm the issue has been addressed. Resolving does not make the equipment available.",
+        "cancel-resolve": "Cancel",
+        "confirm-resolve": "Confirm resolution",
+        "resolving": "Resolving...",
+        "resolve-success": "Incident resolved. Equipment under maintenance remains unavailable until manually reactivated.",
+        "require-restriction": "Mark as blocking",
+        "confirm-restriction": "Confirm withdrawal",
+        "restricting": "Updating...",
+        "restriction-warning": "Confirm to mark this incident as blocking and temporarily withdraw the equipment from new rentals. This does not cancel existing rentals or make the equipment available again.",
+        "restriction-success": "The incident is now blocking. The equipment remains under maintenance and cannot receive new rentals.",
+        "resolve-short": "Resolve",
+        "no-actions": "No actions",
+        "reactivation-title": "Equipment reactivation",
+        "reactivation-description": "Reactivate equipment under maintenance once all blocking incidents are resolved and a technical inspection is confirmed.",
+        "reactivate": "Reactivate equipment",
+        "reactivate-warning": "The equipment will become available for new requests. Check that no active rentals or other maintenance reasons remain.",
+        "inspection-confirmed": "I confirm the equipment was inspected, is fit to operate, and has no active rentals.",
+        "confirm-reactivation": "Confirm reactivation",
+        "reactivating": "Reactivating...",
+        "reactivation-success": "Equipment reactivated and available again. Incident history was preserved."
+      },
+      "form": {
+        "section": "Incident reporting",
+        "title": "Report incident",
+        "subtitle": "Select the affected equipment and describe the problem.",
+        "equipment": "Equipment",
+        "equipment-required": "Select equipment.",
+        "description": "Problem description",
+        "description-placeholder": "Describe the failure, damage or problem affecting the equipment.",
+        "description-required": "Enter a valid problem description.",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "save": "Save incident",
+        "block-rental": "Temporarily withdraw from rental",
+        "block-rental-hint": "Enable this when equipment cannot operate safely. It will be marked as under maintenance and unavailable for new rentals. Currently rented equipment requires separate handling."
+      }
+    },
     "schedule": {
       "list": {
         "subtitle": "Register completed maintenance and schedule upcoming equipment maintenance.",

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+
+import { ChangeDetectionStrategy, Component, DestroyRef, PLATFORM_ID, computed, effect, inject, signal, untracked } from '@angular/core';
+
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { auditTime, filter, fromEvent, interval, merge } from 'rxjs';
 
 import { Router } from '@angular/router';
 
@@ -11,6 +17,8 @@ import { MatError } from '@angular/material/form-field';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { IamStore } from '../../../../iam/application/iam.store';
 
 import { InventoryStore } from '../../../application/inventory.store';
 
@@ -49,6 +57,11 @@ export class EquipmentSearch {
 
   readonly #router = inject(Router);
 
+  readonly #iamStore = inject(IamStore);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #platformId = inject(PLATFORM_ID);
+  readonly #document = inject(DOCUMENT);
+
   readonly #filters = signal<EquipmentFilterCriteria>({
     query: '',
     categoryId: null,
@@ -70,7 +83,35 @@ export class EquipmentSearch {
   });
 
   constructor() {
-    this.store.loadMarketplaceEquipment();
+    // User/account changes invalidate the previous marketplace projection.
+    // Reads are coordinated from the Inventory Application Store, never from Presentation.
+    effect(() => {
+      const userId = this.#iamStore.currentUserId();
+      const role = this.#iamStore.currentRole();
+      if (userId === null || role !== 'construction_company') return;
+      untracked(() => this.store.loadMarketplaceEquipment());
+    });
+
+    if (!isPlatformBrowser(this.#platformId)) return;
+
+    // Another tab or actor may edit equipment while this view remains mounted.
+    // Refresh immediately on focus/visibility and at most every 15s while visible.
+    merge(
+      fromEvent(window, 'focus'),
+      fromEvent(this.#document, 'visibilitychange').pipe(
+        filter(() => !this.#document.hidden),
+      ),
+      interval(15_000).pipe(filter(() => !this.#document.hidden)),
+    )
+      .pipe(auditTime(250), takeUntilDestroyed(this.#destroyRef))
+      .subscribe(() => {
+        if (
+          this.#iamStore.currentUserId() !== null &&
+          this.#iamStore.currentRole() === 'construction_company'
+        ) {
+          this.store.loadMarketplaceEquipment(true);
+        }
+      });
   }
 
   applyFilters(filters: EquipmentFilterCriteria): void {

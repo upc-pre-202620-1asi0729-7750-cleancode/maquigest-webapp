@@ -45,6 +45,22 @@ import { MAINTENANCE_ACCESS_PORT } from './maintenance/infrastructure/maintenanc
 
 import { SubscriptionMaintenanceAccessAclAdapter } from './maintenance/infrastructure/subscription-maintenance-access-acl-adapter';
 
+import { MAINTENANCE_EQUIPMENT_OPERATION_PORT } from './maintenance/infrastructure/equipment-incident-operation.port';
+import { InventoryEquipmentIncidentOperationAclAdapter } from './maintenance/infrastructure/inventory-equipment-incident-operation-acl-adapter';
+import { MAINTENANCE_RENTAL_ACTIVITY_PORT } from './maintenance/infrastructure/rental-activity.port';
+import { RentalsRentalActivityAclAdapter } from './maintenance/infrastructure/rentals-rental-activity-acl-adapter';
+
+import { EQUIPMENT_REQUEST_AVAILABILITY_PORT } from './rentals/infrastructure/equipment-request-availability.port';
+import { InventoryEquipmentRequestAvailabilityAclAdapter } from './rentals/infrastructure/inventory-equipment-request-availability-acl-adapter';
+import { MAINTENANCE_INCIDENT_RESTRICTION_PORT } from './rentals/infrastructure/maintenance-incident-restriction.port';
+import { MaintenanceIncidentRestrictionAclAdapter } from './rentals/infrastructure/maintenance-incident-restriction-acl-adapter';
+
+import { RENTAL_REQUESTER_ACCESS_PORT } from './rentals/infrastructure/rental-requester-access.port';
+import { IamRentalRequesterAccessAclAdapter } from './rentals/infrastructure/iam-rental-requester-access-acl-adapter';
+
+import { EQUIPMENT_RENTAL_REQUEST_PORT } from './inventory/infrastructure/equipment-rental-request.port';
+import { RentalsEquipmentRentalRequestAclAdapter } from './inventory/infrastructure/rentals-equipment-rental-request-acl-adapter';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -90,8 +106,30 @@ export const appConfig: ApplicationConfig = {
     },
 
     {
+      provide: EQUIPMENT_REQUEST_AVAILABILITY_PORT,
+
+      useClass: InventoryEquipmentRequestAvailabilityAclAdapter,
+    },
+
+    {
+      provide: MAINTENANCE_INCIDENT_RESTRICTION_PORT,
+
+      useClass: MaintenanceIncidentRestrictionAclAdapter,
+    },
+
+    {
+      provide: RENTAL_REQUESTER_ACCESS_PORT,
+      useClass: IamRentalRequesterAccessAclAdapter,
+    },
+
+    {
       provide: EQUIPMENT_OPERATION_PORT,
       useClass: InventoryEquipmentOperationAclAdapter,
+    },
+
+    {
+      provide: EQUIPMENT_RENTAL_REQUEST_PORT,
+      useClass: RentalsEquipmentRentalRequestAclAdapter,
     },
 
     {
@@ -104,6 +142,14 @@ export const appConfig: ApplicationConfig = {
       useClass: MaintenanceInventoryEquipmentInformationAclAdapter,
     },
 
+    {
+      provide: MAINTENANCE_RENTAL_ACTIVITY_PORT,
+      useClass: RentalsRentalActivityAclAdapter,
+    },
+    {
+      provide: MAINTENANCE_EQUIPMENT_OPERATION_PORT,
+      useClass: InventoryEquipmentIncidentOperationAclAdapter,
+    },
     {
       provide: MAINTENANCE_ACCESS_PORT,
       useClass: SubscriptionMaintenanceAccessAclAdapter,

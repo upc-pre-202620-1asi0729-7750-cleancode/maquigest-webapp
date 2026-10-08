@@ -25,6 +25,26 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<
     );
   }
 
+  /** PATCH only editable fields; Inventory operational state and reservations are never sent. */
+  patchEditableFields(equipment: Equipment): Observable<Equipment> {
+    if (!Number.isInteger(equipment.id) || equipment.id <= 0) {
+      throw new Error('Invalid equipment identifier');
+    }
+    const editable = {
+      code: equipment.code,
+      name: equipment.name,
+      description: equipment.description,
+      categoryId: equipment.categoryId,
+      location: equipment.location,
+      dailyRate: equipment.rentalRate.dailyRate,
+      weeklyRate: equipment.rentalRate.weeklyRate,
+    };
+    return this.http.patch<EquipmentResource>(`${this.endpointUrl}/${equipment.id}`, editable).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError('Failed to update editable equipment fields')),
+    );
+  }
+
   getByUserId(userId: number): Observable<Equipment[]> {
     const params = new HttpParams().set('userId', userId.toString());
 

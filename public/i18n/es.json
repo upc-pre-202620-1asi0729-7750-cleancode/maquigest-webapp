@@ -1,4 +1,4 @@
-﻿{
+{
   "app": {
     "name": "MaquiGest"
   },
@@ -145,7 +145,8 @@
       "category-required": "La categoría es obligatoria.",
       "location-required": "La ubicación es obligatoria.",
       "daily-rate-invalid": "Ingresa una tarifa diaria mayor que cero.",
-      "weekly-rate-invalid": "Ingresa una tarifa semanal mayor que cero."
+      "weekly-rate-invalid": "Ingresa una tarifa semanal mayor que cero.",
+      "edit-load-failed": "No se pudo cargar la maquinaria para editarla. Comprueba que pertenece a tu empresa."
     },
     "search": {
       "title": "Buscar maquinaria",
@@ -179,11 +180,27 @@
       "requesting-rental": "Registrando solicitud...",
       "request-created": "Solicitud de alquiler registrada correctamente.",
       "request-status": "Estado",
+      "request-errors": {
+        "status-changed": "No se pudo registrar la solicitud porque la maquinaria ya no está disponible. Vuelve a consultar su disponibilidad.",
+        "blocking-incident": "No puedes solicitar esta maquinaria porque tiene una incidencia de mantenimiento bloqueante pendiente.",
+        "reserved": "La maquinaria ya está reservada para el periodo seleccionado.",
+        "rental-overlap": "La maquinaria tiene un alquiler confirmado o activo que se cruza con las fechas seleccionadas.",
+        "company-mismatch": "La maquinaria no pertenece a la empresa de alquiler indicada.",
+        "not-found": "No se encontró la maquinaria solicitada.",
+        "reservations-check-failed": "No se pudieron comprobar las reservas de esta maquinaria. Intenta nuevamente.",
+        "incidents-check-failed": "No se pudieron comprobar las restricciones de mantenimiento. Intenta nuevamente.",
+        "invalid-request": "Los datos de la maquinaria o del periodo de alquiler no son válidos.",
+        "availability-check-failed": "No se pudo verificar la disponibilidad actual. Intenta nuevamente.",
+        "generic": "No se pudo registrar la solicitud de alquiler. Intenta nuevamente.",
+        "requester-role": "Solo las empresas constructoras pueden enviar solicitudes de alquiler."
+      },
       "request-status-values": {
         "pending": "Pendiente",
         "approved": "Aprobada",
         "rejected": "Rechazada"
-      }
+      },
+      "availability-checking": "Consultando disponibilidad actualizada...",
+      "availability-check-failed": "No se pudo consultar la disponibilidad actual. Inténtalo nuevamente."
     }
   },
   "rentals": {
@@ -401,6 +418,72 @@
     }
   },
   "maintenance": {
+    "incidents": {
+      "list": {
+        "section": "Gestión de incidencias",
+        "title": "Incidencias de maquinaria",
+        "subtitle": "Registra y consulta los problemas reportados en la maquinaria de tu empresa.",
+        "view-maintenance": "Ver mantenimientos",
+        "register": "Registrar incidencia",
+        "total": "Incidencias registradas",
+        "affected-equipment": "Maquinarias afectadas",
+        "last-report": "Último reporte",
+        "success": "Incidencia registrada correctamente.",
+        "history": "Historial de incidencias",
+        "records": "Incidencias registradas",
+        "load-error": "No se pudieron cargar las incidencias.",
+        "empty-title": "Aún no hay incidencias registradas",
+        "empty-description": "Registra una incidencia cuando una maquinaria presente un problema.",
+        "no-equipment": "Primero debes registrar una maquinaria.",
+        "add-equipment": "Registrar maquinaria",
+        "equipment": "Maquinaria",
+        "date": "Fecha del reporte",
+        "description": "Descripción del problema",
+        "status": "Estado",
+        "open": "Abierta",
+        "resolved": "Resuelta",
+        "rental-restriction": "Retiro temporal",
+        "blocked": "Bloqueante",
+        "not-blocked": "Sin retiro",
+        "actions": "Acciones",
+        "resolve": "Resolver incidencia",
+        "resolve-warning": "Confirma que el problema fue atendido. Resolver no vuelve a habilitar la maquinaria.",
+        "cancel-resolve": "Cancelar",
+        "confirm-resolve": "Confirmar resolución",
+        "resolving": "Resolviendo...",
+        "resolve-success": "Incidencia resuelta. Si la maquinaria estaba en mantenimiento, permanecerá fuera de servicio hasta su reactivación manual.",
+        "require-restriction": "Marcar bloqueante",
+        "confirm-restriction": "Confirmar retiro",
+        "restricting": "Actualizando...",
+        "restriction-warning": "Al confirmar, esta incidencia quedara como bloqueante y la maquinaria sera retirada temporalmente de nuevos alquileres. Esta accion no cancela alquileres existentes ni vuelve disponible el equipo.",
+        "restriction-success": "La incidencia ahora es bloqueante. La maquinaria permanece en mantenimiento y no admite nuevos alquileres.",
+        "resolve-short": "Resolver",
+        "no-actions": "Sin acciones",
+        "reactivation-title": "Reactivación de maquinaria",
+        "reactivation-description": "Puedes reactivar equipos en mantenimiento una vez resueltas sus incidencias bloqueantes y confirmada su inspección técnica.",
+        "reactivate": "Reactivar maquinaria",
+        "reactivate-warning": "La maquinaria volverá a estar disponible para nuevas solicitudes. Comprueba que no haya alquileres activos ni otras causas de mantenimiento pendientes.",
+        "inspection-confirmed": "Confirmo que inspeccioné la maquinaria, está apta para operar y no tiene alquileres activos.",
+        "confirm-reactivation": "Confirmar reactivación",
+        "reactivating": "Reactivando...",
+        "reactivation-success": "Maquinaria reactivada. Su estado ahora es Disponible; el historial de incidencias se conserva."
+      },
+      "form": {
+        "section": "Registro de incidencias",
+        "title": "Registrar incidencia",
+        "subtitle": "Selecciona la maquinaria afectada y describe el problema ocurrido.",
+        "equipment": "Maquinaria",
+        "equipment-required": "Selecciona una maquinaria.",
+        "description": "Descripción del problema",
+        "description-placeholder": "Describe la falla, avería o problema presentado por la maquinaria.",
+        "description-required": "Ingresa una descripción válida del problema.",
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "save": "Guardar incidencia",
+        "block-rental": "Retirar temporalmente del alquiler",
+        "block-rental-hint": "Activa esta opción si la maquinaria no puede operar con seguridad. Se marcará como en mantenimiento y no podrá recibir nuevos alquileres. Los equipos actualmente alquilados requieren una gestión independiente."
+      }
+    },
     "schedule": {
       "list": {
         "subtitle": "Registra mantenimientos realizados y programa nuevas intervenciones para tu maquinaria.",
