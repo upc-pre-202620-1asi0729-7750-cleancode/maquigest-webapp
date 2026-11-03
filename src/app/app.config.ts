@@ -15,11 +15,9 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
 
-import { environment } from '../environments/environment';
 
 import { SIGN_IN_PORT } from './iam/infrastructure/sign-in.port';
 import { SignInApiEndpoint } from './iam/infrastructure/sign-in-api-endpoint';
-import { FakeSignInApiEndpoint } from './iam/infrastructure/fake-sign-in-api-endpoint';
 import { iamInterceptor } from './iam/infrastructure/iam.interceptor';
 
 import { SUBSCRIPTION_ACCESS_PORT } from './rentals/infrastructure/subscription-access.port';
@@ -87,7 +85,7 @@ export const appConfig: ApplicationConfig = {
 
     {
       provide: SIGN_IN_PORT,
-      useClass: environment.production ? SignInApiEndpoint : FakeSignInApiEndpoint,
+      useClass: SignInApiEndpoint,
     },
 
     {
