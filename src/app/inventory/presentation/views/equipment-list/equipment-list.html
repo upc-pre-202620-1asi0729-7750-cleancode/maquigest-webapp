@@ -192,6 +192,14 @@
             <button
               mat-icon-button
               type="button"
+              [attr.aria-label]="'maintenance.history.view' | translate"
+              (click)="openHistory(equipment.id)">
+              <mat-icon>history</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              type="button"
               [attr.aria-label]="
                 'equipment.edit' | translate
               "

@@ -558,6 +558,37 @@
       "scheduled": "Programado",
       "in_progress": "En curso",
       "completed": "Completado"
+    },
+    "history": {
+      "section": "Historial operativo",
+      "title": "Historial de maquinaria",
+      "description": "Consulta los alquileres, incidencias y mantenimientos asociados a este equipo.",
+      "back": "Volver a maquinaria",
+      "equipment": "Maquinaria",
+      "code": "Código",
+      "records": "registros",
+      "loading": "Cargando historial…",
+      "invalid-id": "El identificador de la maquinaria no es válido.",
+      "not-found": "No se encontró el historial de esta maquinaria.",
+      "forbidden": "No tienes permiso para consultar este historial.",
+      "load-error": "No fue posible cargar el historial. Comprueba la conexión con MaquiGest Platform.",
+      "empty": "Todavía no existen operaciones registradas para esta maquinaria.",
+      "view": "Ver historial",
+      "status-label": "Estado",
+      "kind": {
+        "rental": "Alquiler",
+        "incident": "Incidencia",
+        "maintenance": "Mantenimiento"
+      },
+      "status": {
+        "confirmed": "Confirmado",
+        "active": "Activo",
+        "completed": "Completado",
+        "scheduled": "Programado",
+        "in_progress": "En proceso",
+        "open": "Abierta",
+        "resolved": "Resuelta"
+      }
     }
   }
 }
