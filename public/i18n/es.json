@@ -45,6 +45,17 @@
       "new-to-maquigest": "¿Nuevo en MaquiGest?",
       "create-account": "Crear una cuenta",
       "registration-success": "Tu cuenta fue creada correctamente. Ya puedes iniciar sesión."
+    },
+    "recovery": {
+      "title": "Recuperar contraseña",
+      "subtitle": "Ingresa tu correo para solicitar instrucciones de recuperación.",
+      "submit": "Solicitar recuperación",
+      "sending": "Enviando solicitud…",
+      "invalid-email": "Ingresa un correo electrónico válido.",
+      "success": "Si la cuenta existe, recibirás instrucciones cuando el servicio de correo esté configurado.",
+      "unavailable": "La recuperación aún no está disponible en este servidor. Se habilitará con el backend de MaquiGest.",
+      "error": "No se pudo procesar la solicitud. Inténtalo más tarde.",
+      "back-to-sign-in": "Volver al inicio de sesión"
     }
   },
   "dashboard": {
