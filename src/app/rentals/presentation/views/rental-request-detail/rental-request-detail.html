@@ -1,4 +1,4 @@
-﻿<div class="detail-page">
+<div class="detail-page">
 
   <a
     class="back-link"
@@ -200,6 +200,62 @@
       </article>
 
     </section>
+
+    @if (store.reschedulingSucceeded()) {
+      <div class="reschedule-feedback reschedule-feedback--success" role="status">
+        {{ rescheduleCopy().success }}
+      </div>
+    }
+
+    @if (request.isPending && !editingDates()) {
+      <div class="reschedule-actions">
+        <button type="button" class="reschedule-primary-button" (click)="startEditingDates(request)">
+          {{ rescheduleCopy().edit }}
+        </button>
+      </div>
+    }
+
+    @if (request.isPending && editingDates()) {
+      <form class="reschedule-form" [formGroup]="periodForm" (ngSubmit)="saveNewDates(request)">
+        <h2>{{ rescheduleCopy().title }}</h2>
+        <p>{{ rescheduleCopy().hint }}</p>
+        <div class="reschedule-fields">
+          <label for="reschedule-start-date">
+            <span>{{ rescheduleCopy().start }}</span>
+            <input id="reschedule-start-date" type="date" formControlName="startDate"
+                   [min]="todayLima()" [disabled]="store.reschedulingRequestId() !== null" />
+          </label>
+          <label for="reschedule-end-date">
+            <span>{{ rescheduleCopy().end }}</span>
+            <input id="reschedule-end-date" type="date" formControlName="endDate"
+                   [min]="todayLima()" [disabled]="store.reschedulingRequestId() !== null" />
+          </label>
+        </div>
+        @if (localDateIssue()) {
+          <div class="reschedule-feedback reschedule-feedback--error" role="alert">
+            {{ dateIssueMessage() }}
+          </div>
+        }
+        @if (store.reschedulingError()) {
+          <div class="reschedule-feedback reschedule-feedback--error" role="alert">
+            {{ backendErrorMessage() }}
+          </div>
+        }
+        <div class="reschedule-form-actions">
+          <button type="submit" class="reschedule-primary-button"
+                  [disabled]="store.reschedulingRequestId() !== null">
+            @if (store.reschedulingRequestId() !== null) {
+              {{ rescheduleCopy().saving }}
+            } @else {
+              {{ rescheduleCopy().save }}
+            }
+          </button>
+          <button type="button" class="reschedule-secondary-button"
+                  [disabled]="store.reschedulingRequestId() !== null"
+                  (click)="cancelEditingDates()">{{ rescheduleCopy().cancel }}</button>
+        </div>
+      </form>
+    }
 
   }
 
