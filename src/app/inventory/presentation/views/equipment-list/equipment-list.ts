@@ -105,6 +105,10 @@ export class EquipmentList {
     });
   }
 
+  openHistory(id: number): void {
+    this.#router.navigate(['/maintenance/equipment', id, 'history']).then();
+  }
+
   editEquipment(id: number): void {
     this.#router.navigate(['/inventory/equipment', id, 'edit']).then();
   }

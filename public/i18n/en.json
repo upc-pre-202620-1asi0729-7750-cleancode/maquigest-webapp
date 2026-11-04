@@ -558,6 +558,37 @@
       "scheduled": "Scheduled",
       "in_progress": "In progress",
       "completed": "Completed"
+    },
+    "history": {
+      "section": "Operational history",
+      "title": "Equipment history",
+      "description": "Review rentals, incidents and maintenance associated with this equipment.",
+      "back": "Back to equipment",
+      "equipment": "Equipment",
+      "code": "Code",
+      "records": "records",
+      "loading": "Loading history…",
+      "invalid-id": "The equipment identifier is invalid.",
+      "not-found": "Equipment history was not found.",
+      "forbidden": "You are not authorized to view this history.",
+      "load-error": "Unable to load history. Check the connection to MaquiGest Platform.",
+      "empty": "No operations have been recorded for this equipment yet.",
+      "view": "View history",
+      "status-label": "Status",
+      "kind": {
+        "rental": "Rental",
+        "incident": "Incident",
+        "maintenance": "Maintenance"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "active": "Active",
+        "completed": "Completed",
+        "scheduled": "Scheduled",
+        "in_progress": "In progress",
+        "open": "Open",
+        "resolved": "Resolved"
+      }
     }
   }
 }
