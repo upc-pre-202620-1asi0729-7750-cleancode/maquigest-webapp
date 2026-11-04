@@ -86,4 +86,11 @@ export class IncidentApiEndpoint extends BaseApiEndpoint<
       map((resource) => this.#incidentAssembler.toEntityFromResource(resource)),
     );
   }
+
+  reactivateEquipment(equipmentId: number, inspectionConfirmed: boolean): Observable<void> {
+    return this.#httpClient.post<void>(
+      `${this.#endpointUrl}/equipment/${equipmentId}/reactivate`,
+      { inspectionConfirmed },
+    );
+  }
 }
