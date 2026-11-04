@@ -149,6 +149,11 @@ export class EquipmentDetail {
     // External mutations (other tab / JSON Server) are detected when returning to this tab.
     if (typeof window !== 'undefined') {
       fromEvent(window, 'focus').pipe(takeUntilDestroyed(this.#destroyRef)).subscribe(() => {
+        // Keep a completed rental request visible when the browser regains focus.
+        // Do not restart availability checks while the request is being submitted.
+        if (this.rentalsStore.loading() || this.rentalsStore.latestCreatedRequest()) {
+          return;
+        }
         const id = this.equipmentId();
         this.#invalidateAvailability();
         if (!Number.isInteger(id) || id <= 0) return;
