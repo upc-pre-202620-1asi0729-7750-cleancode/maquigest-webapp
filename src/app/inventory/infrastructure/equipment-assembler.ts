@@ -71,11 +71,18 @@ export class EquipmentAssembler implements BaseAssembler<
       id: resource.id,
 
       period: new DateRange({
-        startDate: new Date(resource.startDate),
+        startDate: this.#calendarDateFromApi(resource.startDate),
 
-        endDate: new Date(resource.endDate),
+        endDate: this.#calendarDateFromApi(resource.endDate, true),
       }),
     });
+  }
+
+  // The API stores inclusive calendar days. Compare them against the date
+  // input in local calendar time, with the final day included until 23:59:59.999.
+  #calendarDateFromApi(value: string, endOfDay = false): Date {
+    const day = value.slice(0, 10);
+    return new Date(`${day}T${endOfDay ? '23:59:59.999' : '00:00:00.000'}`);
   }
 
   #toAvailabilityBlockResource(block: AvailabilityBlock): AvailabilityBlockResource {

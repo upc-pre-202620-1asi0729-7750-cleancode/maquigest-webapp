@@ -5,6 +5,7 @@ import { BaseApi } from '../../shared/infrastructure/base-api';
 
 import { Equipment } from '../domain/model/equipment.entity';
 import { EquipmentCategory } from '../domain/model/equipment-category.entity';
+import { DateRange } from '../../shared/domain/value-object/date-range.value-object';
 
 import { EquipmentApiEndpoint } from './equipment-api-endpoint';
 import { EquipmentCategoriesApiEndpoint } from './equipment-categories-api-endpoint';
@@ -27,6 +28,10 @@ export class InventoryApi extends BaseApi {
 
   getEquipmentById(id: number): Observable<Equipment> {
     return this.#equipmentEndpoint.getById(id);
+  }
+
+  getEquipmentAvailability(id: number, period: DateRange): Observable<boolean> {
+    return this.#equipmentEndpoint.getAvailability(id, period);
   }
 
   createEquipment(equipment: Equipment): Observable<Equipment> {

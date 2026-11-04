@@ -6,6 +6,7 @@ import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { environment } from '../../../environments/environment';
 
 import { Equipment } from '../domain/model/equipment.entity';
+import { DateRange } from '../../shared/domain/value-object/date-range.value-object';
 
 import { EquipmentResource, EquipmentsResponse } from './equipment-response';
 
@@ -42,6 +43,28 @@ export class EquipmentApiEndpoint extends BaseApiEndpoint<
     return this.http.patch<EquipmentResource>(`${this.endpointUrl}/${equipment.id}`, editable).pipe(
       map((resource) => this.assembler.toEntityFromResource(resource)),
       catchError(this.handleError('Failed to update editable equipment fields')),
+    );
+  }
+
+  /** Use Inventory's authoritative inclusive-date availability contract. */
+  getAvailability(id: number, period: DateRange): Observable<boolean> {
+    // Date input values are local calendar days. Avoid toISOString(), which can
+    // shift the date when the browser's timezone is not UTC.
+    const calendarDay = (date: Date): string =>
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    const params = new HttpParams()
+      .set('startDate', calendarDay(period.startDate))
+      .set('endDate', calendarDay(period.endDate));
+
+    return this.http.get<{ available: boolean }>(`${this.endpointUrl}/${id}/availability`, { params }).pipe(
+      map((response) => {
+        if (!response || typeof response.available !== 'boolean') {
+          throw new Error('Invalid equipment availability response');
+        }
+        return response.available;
+      }),
+      catchError(this.handleError('Failed to check equipment availability')),
     );
   }
 
