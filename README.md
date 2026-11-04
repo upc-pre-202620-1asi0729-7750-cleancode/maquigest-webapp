@@ -218,3 +218,29 @@ La relación de autores de cada commit puede consultarse directamente en el [his
 <div align="center">
   <strong>MaquiGest · CleanCode · Universidad Peruana de Ciencias Aplicadas</strong>
 </div>
+
+
+---
+
+## Integracion con MaquiGest Platform
+
+Este repositorio contiene exclusivamente el frontend Angular de MaquiGest.
+
+- Angular gestiona interfaces, formularios, navegacion y estados de presentacion.
+- Spring Boot gestiona autenticacion, autorizacion, reglas de negocio y persistencia.
+- La Fake API y json-server fueron retirados.
+
+### Configuracion local
+
+- Instalar dependencias: npm ci
+- Iniciar Angular: npm start
+- API base: /api/v1
+- Backend local: http://127.0.0.1:8080
+- El proxy de desarrollo esta configurado en proxy.conf.json.
+
+### Verificacion
+
+- Compilar: npm run build
+- Ejecutar pruebas: npm test -- --watch=false
+
+Las operaciones con datos requieren los endpoints reales de maquigest-platform.
