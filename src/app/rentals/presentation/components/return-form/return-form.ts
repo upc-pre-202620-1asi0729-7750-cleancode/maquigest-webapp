@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -10,11 +10,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { BaseForm } from '../../../../shared/presentation/components/base-form/base-form';
 
 import { Rental } from '../../../domain/model/rental.entity';
+
+import { RentalLifecycleDatePolicy } from '../../../domain/policy/rental-lifecycle-date.policy';
 
 export interface ReturnFormValue {
   returnedAt: Date;
@@ -41,6 +43,7 @@ export interface ReturnFormValue {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReturnForm extends BaseForm {
+  readonly #translate = inject(TranslateService);
   readonly rental = input.required<Rental>();
 
   readonly equipmentName = input.required<string>();
@@ -67,24 +70,43 @@ export class ReturnForm extends BaseForm {
     }),
   });
 
+  protected earliestDate(): string {
+    return RentalLifecycleDatePolicy.limaDay(this.rental().period.startDate);
+  }
+
+  protected todayDate(): string {
+    return RentalLifecycleDatePolicy.limaDay(new Date());
+  }
+
+  protected dateIssue() {
+    return RentalLifecycleDatePolicy.returnDayIssue(
+      this.form.controls.returnedAt.value, this.rental(),
+    );
+  }
+
+  protected dateIssueMessage(): string {
+    const issue = this.dateIssue();
+    return issue === null ? '' : RentalLifecycleDatePolicy.describe(
+      issue, this.#translate.currentLang() || 'es', this.earliestDate(),
+    );
+  }
+
+  protected canSubmit(): boolean {
+    return this.form.valid && this.dateIssue() === null;
+  }
+
   protected submit(): void {
     this.form.markAllAsTouched();
+    if (!this.canSubmit()) return;
 
-    if (this.form.invalid) {
-      return;
-    }
-
-    const returnedAt = new Date(`${this.form.controls.returnedAt.value}T12:00:00`);
-
-    if (Number.isNaN(returnedAt.getTime())) {
-      return;
-    }
+    const returnedAt = RentalLifecycleDatePolicy.selectedDayToInstant(
+      this.form.controls.returnedAt.value,
+    );
+    if (RentalLifecycleDatePolicy.returnInstantIssue(returnedAt, this.rental()) !== null) return;
 
     this.submitted.emit({
       returnedAt,
-
       notes: this.form.controls.notes.value,
-
       maintenanceRequired: this.form.controls.maintenanceRequired.value,
     });
   }
@@ -94,10 +116,6 @@ export class ReturnForm extends BaseForm {
   }
 
   #today(): string {
-    const now = new Date();
-
-    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60_000);
-
-    return localDate.toISOString().slice(0, 10);
+    return RentalLifecycleDatePolicy.limaDay(new Date());
   }
 }

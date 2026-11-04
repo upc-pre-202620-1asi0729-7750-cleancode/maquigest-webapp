@@ -1,4 +1,4 @@
-﻿<div
+<div
   class="operation-backdrop"
   (click)="cancel()">
 
@@ -99,7 +99,9 @@
         <input
           matInput
           type="date"
-          formControlName="deliveredAt">
+          formControlName="deliveredAt"
+          [min]="earliestDate()"
+          [max]="todayDate()">
 
         @if (
           isInvalidControl(
@@ -116,6 +118,10 @@
         }
 
       </mat-form-field>
+
+      @if (dateIssue()) {
+        <p class="date-validation-warning" role="alert">{{ dateIssueMessage() }}</p>
+      }
 
       <mat-form-field
         appearance="outline">
@@ -157,7 +163,8 @@
         <button
           mat-flat-button
           type="submit"
-          class="primary-button">
+          class="primary-button"
+          [disabled]="!canSubmit()">
 
           {{
             'rentals.active.delivery.confirm'
