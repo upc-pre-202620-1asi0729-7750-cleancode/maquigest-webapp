@@ -1,8 +1,9 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
 import { BaseApi } from '../../shared/infrastructure/base-api';
+import { DateRange } from '../../shared/domain/value-object/date-range.value-object';
 
 import { Delivery } from '../domain/model/delivery.entity';
 
@@ -46,6 +47,10 @@ export class RentalsApi extends BaseApi {
 
   updateRentalRequest(rentalRequest: RentalRequest): Observable<RentalRequest> {
     return this.#rentalRequestEndpoint.update(rentalRequest, rentalRequest.id);
+  }
+
+  reschedulePendingRentalRequest(requestId: number, period: DateRange): Observable<RentalRequest> {
+    return this.#rentalRequestEndpoint.reschedulePending(requestId, period);
   }
 
   getRentals(): Observable<Rental[]> {

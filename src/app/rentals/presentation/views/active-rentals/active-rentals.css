@@ -1,4 +1,4 @@
-﻿:host {
+:host {
   display: block;
 }
 
@@ -284,4 +284,31 @@
   .summary-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Disabled delivery: neutral appearance and a visible availability explanation. */
+.delivery-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.delivery-button:disabled,
+.delivery-button[disabled] {
+  background: #e2e8f0 !important;
+  color: #64748b !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+}
+
+.delivery-disabled-hint {
+  display: block;
+  max-width: 184px;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.45;
 }

@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -8,11 +8,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatInputModule } from '@angular/material/input';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { BaseForm } from '../../../../shared/presentation/components/base-form/base-form';
 
 import { Rental } from '../../../domain/model/rental.entity';
+
+import { RentalLifecycleDatePolicy } from '../../../domain/policy/rental-lifecycle-date.policy';
 
 export interface DeliveryFormValue {
   deliveredAt: Date;
@@ -37,6 +39,7 @@ export interface DeliveryFormValue {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeliveryForm extends BaseForm {
+  readonly #translate = inject(TranslateService);
   readonly rental = input.required<Rental>();
 
   readonly equipmentName = input.required<string>();
@@ -59,24 +62,45 @@ export class DeliveryForm extends BaseForm {
     }),
   });
 
+  protected earliestDate(): string {
+    return RentalLifecycleDatePolicy.limaDay(this.rental().period.startDate);
+  }
+
+  protected latestDate(): string {
+    return RentalLifecycleDatePolicy.limaDay(this.rental().period.endDate);
+  }
+
+  protected todayDate(): string {
+    return RentalLifecycleDatePolicy.limaDay(new Date());
+  }
+
+  protected dateIssue() {
+    return RentalLifecycleDatePolicy.deliveryDayIssue(
+      this.form.controls.deliveredAt.value, this.rental(),
+    );
+  }
+
+  protected dateIssueMessage(): string {
+    const issue = this.dateIssue();
+    return issue === null ? '' : RentalLifecycleDatePolicy.describe(
+      issue, this.#translate.currentLang() || 'es', this.earliestDate(), this.latestDate(),
+    );
+  }
+
+  protected canSubmit(): boolean {
+    return this.form.valid && this.dateIssue() === null;
+  }
+
   protected submit(): void {
     this.form.markAllAsTouched();
+    if (!this.canSubmit()) return;
 
-    if (this.form.invalid) {
-      return;
-    }
+    const deliveredAt = RentalLifecycleDatePolicy.selectedDayToInstant(
+      this.form.controls.deliveredAt.value,
+    );
+    if (RentalLifecycleDatePolicy.deliveryInstantIssue(deliveredAt, this.rental()) !== null) return;
 
-    const deliveredAt = new Date(`${this.form.controls.deliveredAt.value}T12:00:00`);
-
-    if (Number.isNaN(deliveredAt.getTime())) {
-      return;
-    }
-
-    this.submitted.emit({
-      deliveredAt,
-
-      notes: this.form.controls.notes.value,
-    });
+    this.submitted.emit({ deliveredAt, notes: this.form.controls.notes.value });
   }
 
   protected cancel(): void {
@@ -84,10 +108,6 @@ export class DeliveryForm extends BaseForm {
   }
 
   #today(): string {
-    const now = new Date();
-
-    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60_000);
-
-    return localDate.toISOString().slice(0, 10);
+    return RentalLifecycleDatePolicy.limaDay(new Date());
   }
 }

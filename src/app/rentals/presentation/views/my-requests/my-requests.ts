@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 
@@ -69,6 +69,6 @@ export class MyRequests {
   }
 
   protected formatDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    return new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
   }
 }

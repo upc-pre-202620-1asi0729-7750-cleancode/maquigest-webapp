@@ -1,4 +1,4 @@
-﻿<div class="rentals-page">
+<div class="rentals-page">
 
   <header class="rentals-header">
 
@@ -425,22 +425,48 @@
                 rental.isConfirmed
                 ) {
 
-                <button
-                  mat-flat-button
-                  type="button"
-                  class="delivery-button"
-                  (click)="
-                    openDelivery(
-                      rental
-                    )
+                <div
+                  class="delivery-action"
+                  [attr.title]="
+                    canRegisterDelivery(rental)
+                      ? null
+                      : deliveryUnavailableReason(rental)
                   ">
 
-                  {{
-                    'rentals.active.register-delivery'
-                      | translate
-                  }}
+                  <button
+                    mat-flat-button
+                    type="button"
+                    class="delivery-button"
+                    [disabled]="!canRegisterDelivery(rental)"
+                    [attr.aria-describedby]="
+                      !canRegisterDelivery(rental)
+                        ? 'delivery-reason-' + rental.id
+                        : null
+                    "
+                    (click)="
+                      openDelivery(
+                        rental
+                      )
+                    ">
 
-                </button>
+                    {{
+                      'rentals.active.register-delivery'
+                        | translate
+                    }}
+
+                  </button>
+
+                  @if (!canRegisterDelivery(rental)) {
+
+                    <span
+                      class="delivery-disabled-hint"
+                      [id]="'delivery-reason-' + rental.id">
+                      {{ deliveryUnavailableReason(rental) }}
+                    </span>
+
+                  }
+
+                </div>
 
               } @else if (
                 rental.isActive

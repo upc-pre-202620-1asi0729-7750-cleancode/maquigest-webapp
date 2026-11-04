@@ -8,12 +8,11 @@ import {
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { forkJoin, map, switchMap, tap, throwError } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 
 import { Incident } from '../domain/model/incident.entity';
 import { IncidentStatus } from '../domain/model/incident-status.enum';
 import { IncidentReactivationPolicy } from '../domain/model/incident-reactivation-policy';
-import { MAINTENANCE_RENTAL_ACTIVITY_PORT } from '../infrastructure/rental-activity.port';
 import { IncidentApi } from '../infrastructure/incident-api';
 
 import {
@@ -21,18 +20,12 @@ import {
   MaintenanceEquipmentInformation,
 } from '../infrastructure/equipment-information.port';
 
-import {
-  MAINTENANCE_EQUIPMENT_OPERATION_PORT,
-} from '../infrastructure/equipment-incident-operation.port';
-
 @Injectable({
   providedIn: 'root',
 })
 export class IncidentStore {
   readonly #incidentApi = inject(IncidentApi);
   readonly #equipmentInformation = inject(MAINTENANCE_EQUIPMENT_INFORMATION_PORT);
-  readonly #equipmentOperation = inject(MAINTENANCE_EQUIPMENT_OPERATION_PORT);
-  readonly #rentalActivity = inject(MAINTENANCE_RENTAL_ACTIVITY_PORT);
   readonly #destroyRef = inject(DestroyRef);
   #loadVersion = 0;
 
@@ -178,19 +171,11 @@ export class IncidentStore {
       return;
     }
 
+    // Spring Boot owns the incident creation and any required Inventory status change.
+    // Do not PATCH Inventory separately from the browser.
     this.#savingSignal.set(true);
-    let equipmentWasChanged = false;
 
-    const request$ = blocksRental
-      ? this.#equipmentOperation.markAsMaintenance(userId, equipmentId).pipe(
-          tap((transition) => {
-            equipmentWasChanged = transition === 'CHANGED';
-          }),
-          switchMap(() => this.#incidentApi.createIncident(incident)),
-        )
-      : this.#incidentApi.createIncident(incident);
-
-    request$
+    this.#incidentApi.createIncident(incident)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (createdIncident) => {
@@ -208,14 +193,8 @@ export class IncidentStore {
         error: (error) => {
           this.#savingSignal.set(false);
           this.#saveSucceededSignal.set(false);
-          const message = this.#formatError(
-            error,
-            'Failed to register incident',
-          );
           this.#errorSignal.set(
-            equipmentWasChanged
-              ? `${message}. The equipment was marked as MAINTENANCE. Check its status before trying again.`
-              : message,
+            this.#formatError(error, 'Failed to register incident'),
           );
         },
       });
@@ -359,18 +338,11 @@ export class IncidentStore {
       return;
     }
 
+    // The backend updates the incident and its operational restriction atomically.
     this.#restrictingIncidentIdSignal.set(incidentId);
-    let equipmentWasChanged = false;
 
-    this.#equipmentOperation
-      .markAsMaintenance(userId, current.equipmentId)
-      .pipe(
-        tap((transition) => {
-          equipmentWasChanged = transition === 'CHANGED';
-        }),
-        switchMap(() => this.#incidentApi.requireRentalRestriction(updated)),
-        takeUntilDestroyed(this.#destroyRef),
-      )
+    this.#incidentApi.requireRentalRestriction(updated)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (persisted) => {
           this.#incidentsSignal.update((incidents) =>
@@ -386,14 +358,8 @@ export class IncidentStore {
         error: (error) => {
           this.#restrictingIncidentIdSignal.set(null);
           this.#restrictionSucceededSignal.set(false);
-          const message = this.#formatError(
-            error,
-            'Failed to update rental restriction',
-          );
           this.#errorSignal.set(
-            equipmentWasChanged
-              ? `${message}. Equipment is already in MAINTENANCE. Verify the incident before retrying.`
-              : message,
+            this.#formatError(error, 'Failed to update rental restriction'),
           );
         },
       });
@@ -438,27 +404,10 @@ export class IncidentStore {
 
     this.#reactivatingEquipmentIdSignal.set(equipmentId);
 
-    // Independently recheck Maintenance and Rentals before updating Inventory.
-    forkJoin({
-      incidents: this.#incidentApi.getIncidents(),
-      hasActiveRental: this.#rentalActivity.hasActiveRental(equipmentId),
-    })
-      .pipe(
-        switchMap(({ incidents, hasActiveRental }) => {
-          if (!IncidentReactivationPolicy.canReactivate(equipmentId, incidents)) {
-            return throwError(
-              () => new Error('New or unresolved blocking incidents prevent reactivation'),
-            );
-          }
-          if (hasActiveRental) {
-            return throwError(
-              () => new Error('The equipment still has an active rental'),
-            );
-          }
-          return this.#equipmentOperation.reactivateEquipment(userId, equipmentId);
-        }),
-        takeUntilDestroyed(this.#destroyRef),
-      )
+    // The server checks open incidents, active rentals, inspection confirmation,
+    // and maintenance transitions before reactivating Inventory.
+    this.#incidentApi.reactivateEquipment(equipmentId, inspectionConfirmed)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
           this.#equipmentInformationSignal.update((items) =>
