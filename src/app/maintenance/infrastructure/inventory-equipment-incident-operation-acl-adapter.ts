@@ -69,7 +69,7 @@ export class InventoryEquipmentIncidentOperationAclAdapter
           return throwError(() => new Error('Equipment status does not allow this operation'));
         }
 
-        return this.#http.patch<ExternalEquipmentResource>(url, {
+        return this.#http.patch<ExternalEquipmentResource>(`${url}/operational-status`, {
           status: 'MAINTENANCE',
         }).pipe(map(() => 'CHANGED' as EquipmentIncidentTransition));
       }),
@@ -99,7 +99,7 @@ export class InventoryEquipmentIncidentOperationAclAdapter
         }
 
         // PATCH only the operational state, preserving rental periods and other Inventory fields.
-        return this.#http.patch<ExternalEquipmentResource>(url, {
+        return this.#http.patch<ExternalEquipmentResource>(`${url}/operational-status`, {
           status: 'AVAILABLE',
         }).pipe(map(() => undefined));
       }),
