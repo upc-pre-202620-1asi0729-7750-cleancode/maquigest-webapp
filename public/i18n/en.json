@@ -45,6 +45,17 @@
       "new-to-maquigest": "New to MaquiGest?",
       "create-account": "Create an account",
       "registration-success": "Your account was created successfully. You can now sign in."
+    },
+    "recovery": {
+      "title": "Recover your password",
+      "subtitle": "Enter your email to request password recovery instructions.",
+      "submit": "Request recovery",
+      "sending": "Sending request…",
+      "invalid-email": "Enter a valid email address.",
+      "success": "If this account exists, instructions will be sent once email delivery is configured.",
+      "unavailable": "Password recovery is not yet supported by this server. It will be enabled with the MaquiGest backend.",
+      "error": "We could not process the request. Please try again later.",
+      "back-to-sign-in": "Back to sign in"
     }
   },
   "dashboard": {
