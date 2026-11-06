@@ -1,4 +1,5 @@
 ﻿import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
@@ -21,6 +22,12 @@ export class UserSubscriptionApiEndpoint extends BaseApiEndpoint<
       http,
       `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserSubscriptionsEndpointPath}`,
       new UserSubscriptionAssembler(),
+    );
+  }
+  cancel(id: number): Observable<UserSubscription> {
+    return this.http.patch<UserSubscriptionResource>(`${this.endpointUrl}/${id}/cancel`, {}).pipe(
+      map((resource) => this.assembler.toEntityFromResource(resource)),
+      catchError(this.handleError('Failed to cancel subscription')),
     );
   }
 }
