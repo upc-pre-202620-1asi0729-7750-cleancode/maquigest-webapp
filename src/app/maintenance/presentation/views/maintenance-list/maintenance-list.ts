@@ -1,4 +1,4 @@
-﻿
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -68,20 +68,47 @@ export class MaintenanceList {
   protected readonly formMode = signal<MaintenanceFormMode>('register');
 
   protected readonly recordFilter = signal<MaintenanceRecordFilter>('all');
+  protected readonly searchPanelOpen = signal(false);
+
+  // F6.2: presentation-only filters over the records already loaded by MaintenanceStore.
+  protected readonly searchQuery = signal('');
+  protected readonly startDate = signal('');
+  protected readonly endDate = signal('');
+  protected readonly hasActiveSearch = computed(() =>
+    !!this.searchQuery().trim() || !!this.startDate() || !!this.endDate(),
+  );
+  protected readonly invalidDateRange = computed(() =>
+    !!this.startDate() && !!this.endDate() && this.startDate() > this.endDate(),
+  );
+
 
   protected readonly successMessageKey = signal('maintenance.list.success');
 
   protected readonly filteredMaintenances = computed(() => {
-    const maintenances = this.store.maintenances();
+    const query = this.#normalizeSearch(this.searchQuery());
+    const from = this.startDate();
+    const to = this.endDate();
 
-    if (this.recordFilter() === 'scheduled') {
-      return maintenances.filter(
-        (maintenance) => maintenance.status === MaintenanceStatus.SCHEDULED,
+    if (from && to && from > to) return [];
+
+    return this.store.maintenances().filter((maintenance) => {
+      if (
+        this.recordFilter() === 'scheduled' &&
+        maintenance.status !== MaintenanceStatus.SCHEDULED
+      ) return false;
+
+      const equipment = this.store.getEquipmentInformation(maintenance.equipmentId);
+      const haystack = this.#normalizeSearch(
+        `${equipment?.name ?? ''} ${equipment?.code ?? ''}`,
       );
-    }
+      if (query && !haystack.includes(query)) return false;
 
-    return maintenances;
+      const day = this.#dateKey(maintenance.performedAt);
+      return (!from || day >= from) && (!to || day <= to);
+    });
   });
+
+  protected readonly filteredCount = computed(() => this.filteredMaintenances().length);
 
   protected readonly dataSource = computed(
     () => new MatTableDataSource<Maintenance>(this.filteredMaintenances()),
@@ -136,8 +163,29 @@ export class MaintenanceList {
     return `maintenance.status.${status.toLowerCase()}`;
   }
 
+  protected toggleSearchPanel(): void {
+    this.searchPanelOpen.update((open) => !open);
+  }
+
   protected changeRecordFilter(filter: MaintenanceRecordFilter): void {
     this.recordFilter.set(filter);
+  }
+
+  protected clearHistoryFilters(): void {
+    this.searchQuery.set('');
+    this.startDate.set('');
+    this.endDate.set('');
+  }
+
+  #normalizeSearch(value: string): string {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  }
+
+  #dateKey(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   protected openForm(mode: MaintenanceFormMode): void {
