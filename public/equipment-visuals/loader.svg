@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-label="Ilustracion decorativa de maquinaria">
+<defs>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="13"/></filter>
+</defs>
+<rect width="1200" height="500" fill="#ffffff"/>
+<ellipse cx="603" cy="421" rx="395" ry="18" fill="#7e8b91" opacity=".20" filter="url(#shadow)"/>
+<g><g transform="translate(80,22)"><circle cx="460" cy="331" r="54" fill="#192c46"/><circle cx="460" cy="331" r="45" fill="#294763" stroke="#182a43" stroke-width="8"/><circle cx="460" cy="331" r="21" fill="#a0b6c6" stroke="#dde8eb" stroke-width="6"/><circle cx="460" cy="331" r="7" fill="#5a748e"/><circle cx="727" cy="331" r="54" fill="#192c46"/><circle cx="727" cy="331" r="45" fill="#294763" stroke="#182a43" stroke-width="8"/><circle cx="727" cy="331" r="21" fill="#a0b6c6" stroke="#dde8eb" stroke-width="6"/><circle cx="727" cy="331" r="7" fill="#5a748e"/><path d="M356 315 L365 252 L500 213 L574 212 L611 278 L802 288 L804 320 Z" fill="#efa918" stroke="#273a53" stroke-width="12"/><path d="M540 214 L564 148 L667 148 L702 266 L596 270Z" fill="#f5b324" stroke="#2a3f58" stroke-width="12"/><path d="M575 165 H654 L681 254 L594 254 Z" fill="#82bfd5" stroke="#243b56" stroke-width="10"/><path d="M376 254 L272 266 L240 309" fill="none" stroke="#273c57" stroke-width="42" stroke-linejoin="round" stroke-linecap="round"/><path d="M376 254 L272 266 L240 309" fill="none" stroke="#f0aa1d" stroke-width="30" stroke-linejoin="round" stroke-linecap="round"/><path d="M376 254 L272 266 L240 309" fill="none" stroke="#ffd16b" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" transform="translate(0 -7)" opacity=".7"/><path d="M153 296 H251 V365 H164 Q128 342 137 305 Z" fill="#445f74" stroke="#1b304c" stroke-width="10"/><rect x="705" y="265" width="61" height="20" rx="8" fill="#fce59e"/><path d="M343 318 H810" stroke="#ffcf63" stroke-width="8"/></g></g>
+
+</svg>
