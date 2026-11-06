@@ -64,7 +64,48 @@
     "rental-company": "Empresa de alquiler",
     "construction-company": "Empresa constructora",
     "welcome": "Bienvenido,",
-    "sign-out": "Cerrar sesión"
+    "sign-out": "Cerrar sesión",
+    "rental-overview": "Mantén tus equipos y alquileres organizados.",
+    "construction-overview": "Consulta tus solicitudes, reservas y alquileres desde un solo lugar.",
+    "overview-label": "Resumen operativo",
+    "available-equipment": "Maquinaria disponible",
+    "equipment-on-rent": "Maquinaria alquilada",
+    "under-maintenance": "En mantenimiento",
+    "upcoming-reservations": "Próximas reservas",
+    "pending-requests": "Solicitudes pendientes",
+    "active-rentals": "Alquileres activos",
+    "my-requests": "Mis solicitudes",
+    "equipment-care": "Cuidado de maquinaria",
+    "recent-activity": "Actividad reciente",
+    "equipment-area": "Consulta el módulo de Maquinaria",
+    "rentals-area": "Consulta el módulo de Alquileres",
+    "maintenance-area": "Consulta el módulo de Mantenimiento",
+    "reservations-area": "Consulta las solicitudes y alquileres",
+    "requests-area": "Consulta Mis solicitudes",
+    "reservations-subtitle": "Prepara los equipos para la siguiente entrega.",
+    "active-rentals-subtitle": "Consulta entregas y devoluciones pendientes.",
+    "equipment-care-subtitle": "Mantenimientos e inspecciones por atender.",
+    "construction-reservations-subtitle": "Equipos confirmados para tus proyectos.",
+    "construction-active-subtitle": "Sigue las fechas de devolución de tus equipos.",
+    "my-requests-subtitle": "Tus solicitudes de alquiler recientes.",
+    "panel-information-note": "El detalle se consulta desde el módulo correspondiente del menú.",
+    "visual-only-note": "Diseño visual basado en los mockups. Sin cifras simuladas ni cambios en la lógica.",
+    "loading-data": "Cargando datos actualizados…",
+    "unavailable-data": "No se pudieron consultar estos datos.",
+    "no-records": "No hay registros para mostrar.",
+    "no-upcoming": "No hay próximas reservas.",
+    "no-active": "No hay alquileres activos.",
+    "no-pending": "No hay solicitudes recientes.",
+    "no-care": "No hay mantenimientos ni incidencias abiertos.",
+    "in-progress": "En proceso",
+    "scheduled": "Programado",
+    "open-incident": "Incidencia abierta",
+    "recent-request": "Solicitud",
+    "view-requests": "Ver solicitudes",
+    "view-rentals": "Ver alquileres",
+    "view-equipment": "Ver maquinaria",
+    "search-equipment": "Buscar maquinaria",
+    "active-summary": "Registros actuales de alquiler"
   },
   "sign-up": {
     "workspace-badge": "Crea tu espacio de trabajo",
@@ -119,6 +160,17 @@
     }
   },
   "equipment": {
+    "form": {
+      "back": "Volver a maquinaria",
+      "subtitle-create": "Completa la información para añadir un equipo a tu inventario.",
+      "subtitle-edit": "Actualiza la información de este equipo sin cambiar su historial.",
+      "details": "Información de la maquinaria",
+      "details-note": "Datos generales, identificación y ubicación.",
+      "rates": "Tarifas de alquiler",
+      "rates-note": "Indica el precio diario y semanal del equipo.",
+      "required-note": "* Campos obligatorios",
+      "cancel": "Cancelar"
+    },
     "list-title": "Maquinaria",
     "new-title": "Registrar maquinaria",
     "edit-title": "Editar maquinaria",
@@ -212,6 +264,23 @@
       },
       "availability-checking": "Consultando disponibilidad actualizada...",
       "availability-check-failed": "No se pudo consultar la disponibilidad actual. Inténtalo nuevamente."
+    },
+    "ui": {
+      "section": "Inventario",
+      "subtitle": "Administra tu maquinaria, disponibilidad y estado operativo.",
+      "overview": "Resumen de maquinaria",
+      "total": "Maquinaria total",
+      "available": "Disponible",
+      "unavailable": "No disponible",
+      "registered": "Equipos registrados",
+      "ready": "Lista para un nuevo alquiler",
+      "unavailable-description": "Alquilada o en mantenimiento",
+      "inventory": "Inventario de maquinaria",
+      "search-placeholder": "Buscar por nombre, código, categoría o ubicación",
+      "filters": "Filtros",
+      "all-statuses": "Todos los estados",
+      "clear-filters": "Limpiar filtros",
+      "no-results": "Ningún equipo coincide con los filtros seleccionados."
     }
   },
   "rentals": {
@@ -252,7 +321,11 @@
       "empty-title": "Aún no hay solicitudes de alquiler",
       "empty-description": "Tu empresa todavía no ha recibido solicitudes de alquiler.",
       "no-filter-results": "No hay solicitudes coincidentes",
-      "no-filter-results-description": "Ninguna solicitud de alquiler coincide con los filtros seleccionados."
+      "no-filter-results-description": "Ninguna solicitud de alquiler coincide con los filtros seleccionados.",
+      "ui": {
+        "search-placeholder": "Buscar solicitud, cliente o maquinaria",
+        "filters": "Filtros"
+      }
     },
     "active": {
       "section": "Operaciones de alquiler",
@@ -311,7 +384,16 @@
       "load-error": "No fue posible cargar los alquileres.",
       "operation-error": "No fue posible completar la operación de entrega o devolución.",
       "empty-title": "No hay operaciones de alquiler",
-      "empty-description": "Tu empresa no tiene alquileres confirmados o activos en este momento."
+      "empty-description": "Tu empresa no tiene alquileres confirmados o activos en este momento.",
+      "ui": {
+        "list-description": "Consulta las reservas confirmadas y los alquileres en curso, sin perder las acciones de entrega y devolución.",
+        "views-label": "Filtrar operaciones por etapa",
+        "all": "Todas las operaciones",
+        "reservations": "Reservas confirmadas",
+        "active-rentals": "Alquileres activos",
+        "no-filter-results": "No hay registros en esta etapa",
+        "no-filter-description": "Prueba con otra vista para consultar las operaciones de tu empresa."
+      }
     },
     "my-requests": {
       "section": "Operaciones de alquiler",
@@ -385,6 +467,12 @@
       "change-confirmation-label": "Cambio de plan",
       "change-confirmation-title": "Confirma el cambio de plan",
       "change-confirmation-description": "Revisa el plan seleccionado antes de actualizar tu suscripción.",
+      "manage-subscription": "Gestionar suscripción",
+      "cancel-plan-title": "¿Cancelar la suscripción actual?",
+      "cancel-plan-description": "La cancelación es inmediata. Tu empresa perderá el acceso a los módulos que requieren un plan activo.",
+      "cancel-plan-warning": "No se borrarán los registros existentes. Puedes contratar otro plan después y recuperar los módulos que correspondan a su categoría. Esta operación no devuelve pagos automáticamente.",
+      "keep-plan": "Mantener mi plan",
+      "cancel-plan-action": "Confirmar cancelación",
       "selected-plan": "Plan seleccionado",
       "new-plan": "Nuevo plan",
       "cancel": "Cancelar",
@@ -434,8 +522,18 @@
         "section": "Gestión de incidencias",
         "title": "Incidencias de maquinaria",
         "subtitle": "Registra y consulta los problemas reportados en la maquinaria de tu empresa.",
-        "view-maintenance": "Ver mantenimientos",
-        "register": "Registrar incidencia",
+        "view-incidents": "Gestionar incidencias",
+        "shortcut-title": "Incidencias de maquinaria",
+        "shortcut-description": "Consulta qué problemas requieren atención y cómo gestionar equipos restringidos.",
+        "shortcut-open-title": "Incidencias abiertas",
+        "shortcut-open-description": "Identifica reportes que siguen pendientes de atención.",
+        "shortcut-restriction-title": "Restricciones de alquiler",
+        "shortcut-restriction-description": "Comprueba qué maquinaria fue retirada temporalmente.",
+        "shortcut-return-title": "Reactivación segura",
+        "shortcut-return-description": "Confirma la inspección después de resolver incidencias bloqueantes.",
+        "shortcut-cta": "Ver incidencias",
+        "view-maintenance": "Volver a mantenimiento",
+        "register": "Registrar nueva incidencia",
         "total": "Incidencias registradas",
         "affected-equipment": "Maquinarias afectadas",
         "last-report": "Último reporte",
@@ -492,7 +590,7 @@
         "saving": "Guardando...",
         "save": "Guardar incidencia",
         "block-rental": "Retirar temporalmente del alquiler",
-        "block-rental-hint": "Activa esta opción si la maquinaria no puede operar con seguridad. Se marcará como en mantenimiento y no podrá recibir nuevos alquileres. Los equipos actualmente alquilados requieren una gestión independiente."
+        "block-rental-hint": "Si no es seguro operar, el equipo pasará a mantenimiento y no aceptará nuevos alquileres. Los alquileres existentes no se cancelan."
       }
     },
     "schedule": {
@@ -589,6 +687,21 @@
         "open": "Abierta",
         "resolved": "Resuelta"
       }
+    },
+    "history-filters": {
+      "title": "Filtros del historial",
+      "equipment": "Buscar maquinaria",
+      "placeholder": "Nombre o código del equipo",
+      "from": "Desde",
+      "to": "Hasta",
+      "clear": "Limpiar filtros",
+      "results": "Registros encontrados",
+      "empty": "No se encontraron registros con estos filtros.",
+      "invalid-range": "La fecha inicial no puede ser posterior a la final.",
+      "show-history": "Mostrar historial",
+      "hide-history": "Ocultar historial",
+      "search-toggle": "Buscar",
+      "apply": "Aplicar"
     }
   }
 }
