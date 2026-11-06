@@ -25,7 +25,7 @@
 
   </header>
 
-  <section class="summary-grid">
+  <section class="summary-grid" aria-label="Rental operations overview">
 
     <article class="summary-card">
 
@@ -131,25 +131,35 @@
   <section class="rentals-content">
 
     <div class="content-heading">
-
       <div>
-
-        <span class="section-label">
-          {{
-            'rentals.active.list-label'
-              | translate
-          }}
-        </span>
-
-        <h2>
-          {{
-            'rentals.active.list-title'
-              | translate
-          }}
-        </h2>
-
+        <h2>{{ 'rentals.active.list-title' | translate }}</h2>
+        <p class="content-description">{{ 'rentals.active.ui.list-description' | translate }}</p>
       </div>
+    </div>
 
+    <!-- Vistas visuales sobre la misma colección ya cargada: sin nuevas llamadas a API -->
+    <div class="operation-tabs" role="group" [attr.aria-label]="'rentals.active.ui.views-label' | translate">
+      <button type="button" class="operation-tab"
+        [class.is-selected]="selectedView() === 'ALL'"
+        [attr.aria-pressed]="selectedView() === 'ALL'"
+        (click)="selectView('ALL')">
+        {{ 'rentals.active.ui.all' | translate }}
+        <span>{{ store.rentals().length }}</span>
+      </button>
+      <button type="button" class="operation-tab"
+        [class.is-selected]="selectedView() === 'CONFIRMED'"
+        [attr.aria-pressed]="selectedView() === 'CONFIRMED'"
+        (click)="selectView('CONFIRMED')">
+        {{ 'rentals.active.ui.reservations' | translate }}
+        <span>{{ store.confirmedRentalCount() }}</span>
+      </button>
+      <button type="button" class="operation-tab"
+        [class.is-selected]="selectedView() === 'ACTIVE'"
+        [attr.aria-pressed]="selectedView() === 'ACTIVE'"
+        (click)="selectView('ACTIVE')">
+        {{ 'rentals.active.ui.active-rentals' | translate }}
+        <span>{{ store.activeRentalCount() }}</span>
+      </button>
     </div>
 
     @if (store.loading()) {
@@ -198,6 +208,14 @@
 
       </div>
 
+    } @else if (visibleRentals().length === 0) {
+
+      <div class="empty-state" role="status">
+        <span class="material-symbols-outlined empty-icon" aria-hidden="true">event_available</span>
+        <h3>{{ 'rentals.active.ui.no-filter-results' | translate }}</h3>
+        <p>{{ 'rentals.active.ui.no-filter-description' | translate }}</p>
+      </div>
+
     } @else {
 
       <div class="table-wrapper">
@@ -221,7 +239,7 @@
 
             <td
               mat-cell
-              *matCellDef="let rental">
+              *matCellDef="let rental" [attr.data-label]="'rentals.active.equipment' | translate">
 
               <div class="primary-cell">
                 {{
@@ -257,7 +275,7 @@
 
             <td
               mat-cell
-              *matCellDef="let rental">
+              *matCellDef="let rental" [attr.data-label]="'rentals.active.customer' | translate">
 
               <div class="primary-cell">
                 {{
@@ -293,7 +311,7 @@
 
             <td
               mat-cell
-              *matCellDef="let rental">
+              *matCellDef="let rental" [attr.data-label]="'rentals.active.start-date' | translate">
 
               {{
                 formatDate(
@@ -319,7 +337,7 @@
 
             <td
               mat-cell
-              *matCellDef="let rental">
+              *matCellDef="let rental" [attr.data-label]="'rentals.active.return-date' | translate">
 
               <div class="return-cell">
 
@@ -369,7 +387,7 @@
 
             <td
               mat-cell
-              *matCellDef="let rental">
+              *matCellDef="let rental" [attr.data-label]="'rentals.active.status-label' | translate">
 
               <span
                 class="status-badge"
@@ -407,7 +425,7 @@
 
             <td
               mat-cell
-              *matCellDef="let rental">
+              *matCellDef="let rental" [attr.data-label]="'rentals.active.actions' | translate">
 
               @if (
                 store.updatingRentalId() ===
