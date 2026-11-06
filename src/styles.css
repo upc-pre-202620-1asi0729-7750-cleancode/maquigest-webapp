@@ -1,1 +1,521 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* MaquiGest F6.2: shared, presentation-only history search UI.
+   Global placement prevents duplicate component style budgets. */
+/* F6.2: search filters, applied only to loaded records (no backend changes). */
+.history-search-panel {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.5fr) minmax(145px, .75fr) minmax(145px, .75fr) auto;
+  align-items: end;
+  gap: 13px;
+  padding: 19px 20px 12px;
+  background: #fff;
+}
+.history-search-field,.history-date-field { min-width: 0; }
+.history-search-panel label { display: block; margin-bottom: 7px; font-size: 12px; font-weight: 750; color: #536a87; }
+.history-search-input { display: flex; align-items: center; gap: 9px; padding: 0 11px; border: 1px solid #d2dfec; border-radius: 9px; height: 44px; background: #fff; }
+.history-search-input:focus-within, .history-date-field input:focus-visible { outline: 2px solid #2464a9; outline-offset: 1px; }
+.history-search-input .material-symbols-outlined { color: #748aa5; font-size: 21px; }
+.history-search-input input { min-width: 0; width: 100%; background: transparent; outline: none; border: 0; color: #233c5b; font: inherit; font-size: 13px; }
+.history-date-field input { box-sizing: border-box; width: 100%; height: 44px; padding: 0 10px; border: 1px solid #d2dfec; border-radius: 9px; color: #233c5b; background: #fff; font: inherit; font-size: 13px; color-scheme: light; }
+.history-clear-button { display: inline-flex; justify-content: center; align-items: center; gap: 5px; min-height: 44px; border: 1px solid #d5e0ec; border-radius: 9px; padding: 0 12px; background: #f6f9fd; color: #275483; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; white-space: nowrap; }
+.history-clear-button:disabled { opacity: .5; cursor: default; }
+.history-clear-button:not(:disabled):hover { background: #eaf2fb; }
+.history-clear-button .material-symbols-outlined { font-size: 17px; }
+.history-result-line { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 7px; padding: 0 20px 12px; color: #647c99; font-size: 12px; }
+.history-result-line strong { color: #183b65; }
+.history-filter-warning { color: #a4531b; font-weight: 650; }
+@media(max-width:1180px) { .history-search-panel { grid-template-columns: minmax(0,1fr) minmax(160px,.6fr) minmax(160px,.6fr); } .history-clear-button { grid-column: 1 / -1; justify-self: end; } }
+@media(max-width:680px) { .history-search-panel { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 16px 14px 9px; gap: 11px; } .history-search-field { grid-column: 1 / -1; } .history-date-field input { min-width: 0; } .history-clear-button { grid-column: 1 / -1; width: 100%; justify-self: stretch; } .history-result-line { padding: 0 14px 12px; } }
+
+.history-no-results { border-top: 1px solid #edf2f7; }
+
+/* MAQUIGEST-F6-4: historial colapsable, barra de filtros y CTAs de incidencias. */
+.maintenance-page .history-panel-heading,
+.incidents-page .history-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.history-panel-heading-text { min-width: 0; flex: 1 1 240px; }
+.history-panel-body[hidden] { display: none !important; }
+.history-toggle-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 42px; padding: 8px 14px; border-radius: 10px;
+  border: 1px solid #cddbec; color: #234875; background: #f7faff;
+  font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  white-space: nowrap;
+}
+.history-toggle-button:hover { background: #eaf2fd; }
+.history-toggle-button:focus-visible { outline: 2px solid #215ba0; outline-offset: 2px; }
+.history-toggle-button .material-symbols-outlined { font-size: 21px; }
+/* Barra en dos filas: ningun boton queda recortado junto a la tarjeta lateral. */
+.maintenance-page .history-search-panel,
+.incidents-page .history-search-panel {
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  column-gap: 12px; row-gap: 10px;
+}
+.maintenance-page .history-search-panel .history-clear-button,
+.incidents-page .history-search-panel .history-clear-button {
+  grid-column: 1 / -1;
+  justify-self: end;
+  min-width: 148px;
+}
+.maintenance-page .history-search-input,
+.incidents-page .history-search-input,
+.maintenance-page .history-search-panel input,
+.incidents-page .history-search-panel input { max-width: 100%; box-sizing: border-box; }
+.incidents-page .page-actions .incident-return-action,
+.incidents-page .page-actions .incident-create-action {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  border-radius: 10px; font-weight: 750;
+}
+.incidents-page .page-actions .incident-return-action { border-color: #cfddec; color: #244c7b; }
+.incidents-page .page-actions .incident-return-action:hover { background: #eef4fc; }
+.incidents-page .page-actions .incident-create-action { box-shadow: 0 3px 12px rgba(245,158,11,.15); }
+.incidents-page .page-actions .material-symbols-outlined { font-size: 19px; line-height: 1; }
+@media (max-width: 1020px) {
+  .maintenance-page .history-search-panel,
+  .incidents-page .history-search-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .maintenance-page .history-search-field,
+  .incidents-page .history-search-field { grid-column: 1 / -1; }
+}
+@media (max-width: 540px) {
+  .history-panel-heading { align-items: stretch; }
+  .history-toggle-button { width: 100%; }
+  .maintenance-page .history-search-panel,
+  .incidents-page .history-search-panel { grid-template-columns: minmax(0, 1fr); }
+  .maintenance-page .history-search-field,
+  .incidents-page .history-search-field { grid-column: 1; }
+  .maintenance-page .history-search-panel .history-clear-button,
+  .incidents-page .history-search-panel .history-clear-button { grid-column: 1; justify-self: stretch; width: 100%; }
+  .incidents-page .page-actions .incident-return-action,
+  .incidents-page .page-actions .incident-create-action { min-width: 0; white-space: normal; }
+}
+
+/* MAQUIGEST-F6-5: buscador bajo demanda, sin colapsar los registros. */
+.maintenance-page .history-toolbar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.maintenance-page .history-search-trigger,
+.incidents-page .history-search-trigger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 46px; padding: 9px 18px; color: #184579; background: #fff;
+  border: 1px solid #cedded; border-radius: 11px;
+  font: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
+}
+.maintenance-page .history-search-trigger:hover,
+.incidents-page .history-search-trigger:hover,
+.maintenance-page .history-search-trigger-active,
+.incidents-page .history-search-trigger-active { background: #edf4fd; border-color: #8fb0d7; }
+.maintenance-page .history-search-trigger:focus-visible,
+.incidents-page .history-search-trigger:focus-visible,
+.history-apply-button:focus-visible { outline: 2px solid #185c9e; outline-offset: 2px; }
+.history-search-trigger .material-symbols-outlined { font-size: 20px; }
+.history-filter-dot { width: 7px; height: 7px; border-radius: 50%; background: #ef8f10; }
+.maintenance-page .history-search-panel-collapsible,
+.incidents-page .history-search-panel-collapsible {
+  display: grid; grid-template-columns: minmax(0,1.4fr) repeat(2,minmax(0,1fr));
+  gap: 12px; align-items: end; margin: 10px 18px;
+  padding: 16px; background: #f8fbff; border: 1px solid #e0eaf5;
+  border-radius: 12px;
+}
+.maintenance-page .history-search-panel-collapsible .history-search-actions,
+.incidents-page .history-search-panel-collapsible .history-search-actions {
+  grid-column: 1 / -1; display: flex; flex-wrap: wrap;
+  justify-content: flex-end; gap: 10px; align-items: center;
+}
+.maintenance-page .history-search-panel-collapsible .history-clear-button,
+.incidents-page .history-search-panel-collapsible .history-clear-button {
+  grid-column: auto; justify-self: auto; width: auto;
+}
+.history-apply-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 9px 18px; border: 0; border-radius: 9px;
+  color: #112e50; background: #f59e0b; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 750;
+}
+.history-apply-button:hover { background: #ed9200; }
+.history-apply-button .material-symbols-outlined { font-size: 18px; }
+.incidents-page .page-heading .incident-return-action {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; margin-bottom: 16px; min-height: 41px;
+  padding: 6px 14px; border: 1px solid #cfdded; border-radius: 10px;
+  color: #235083; background: #f8fbff;
+  font: inherit; font-size: 13px; font-weight: 750; text-decoration: none;
+}
+.incidents-page .page-heading .incident-return-action:hover { background: #edf4fd; }
+.incidents-page .page-heading .incident-return-action .material-symbols-outlined { font-size: 19px; }
+@media(max-width: 900px) {
+  .maintenance-page .history-search-panel-collapsible,
+  .incidents-page .history-search-panel-collapsible { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .maintenance-page .history-search-panel-collapsible .history-search-field,
+  .incidents-page .history-search-panel-collapsible .history-search-field { grid-column: 1 / -1; }
+}
+@media(max-width: 580px) {
+  .maintenance-page .history-search-panel-collapsible,
+  .incidents-page .history-search-panel-collapsible { grid-template-columns: minmax(0,1fr); margin: 8px 12px; padding: 12px; }
+  .maintenance-page .history-search-panel-collapsible .history-search-field,
+  .incidents-page .history-search-panel-collapsible .history-search-field { grid-column: 1; }
+  .maintenance-page .history-search-panel-collapsible .history-search-actions,
+  .incidents-page .history-search-panel-collapsible .history-search-actions { justify-content: stretch; }
+  .history-apply-button { flex: 1 1 100%; }
+  .maintenance-page .history-search-panel-collapsible .history-clear-button,
+  .incidents-page .history-search-panel-collapsible .history-clear-button { flex: 1 1 100%; }
+}
+
+/* MAQUIGEST-F6-6: navigation on a separate row; instant history filtering. */
+.incidents-page .incident-return-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.incidents-page .incident-return-row .incident-return-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 6px 16px;
+  border: 1px solid #cedded;
+  border-radius: 11px;
+  color: #184579;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.incidents-page .incident-return-row .incident-return-action:hover {
+  background: #edf4fd;
+}
+.incidents-page .incident-return-row .incident-return-action:focus-visible {
+  outline: 2px solid #185c9e;
+  outline-offset: 3px;
+}
+.incidents-page .incident-return-row .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* MAQUIGEST-F6-7: final visual hierarchy for maintenance and incidents. */
+/* The back navigation is a text link, not a boxed action button. */
+.incidents-page .incident-return-row a.incident-return-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: fit-content;
+  min-height: 28px;
+  margin: 0;
+  padding: 2px 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #20558b;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.incidents-page .incident-return-row a.incident-return-action:hover {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #123c6c;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.incidents-page .incident-return-row a.incident-return-action:focus-visible {
+  outline: 2px solid #245e96;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.incidents-page .incident-return-row a.incident-return-action .material-symbols-outlined {
+  font-size: 20px;
+}
+/* Status filters remain grouped on the left; search is an independent action. */
+.maintenance-page .maintenance-filters.history-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+.maintenance-page .maintenance-filters.history-toolbar .history-search-trigger {
+  margin-inline-start: auto;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #bfd1e4;
+  border-radius: 9px;
+  background: #f7fafd;
+  color: #235484;
+  font-size: 13px;
+  font-weight: 650;
+  box-shadow: 0 1px 1px rgba(21, 55, 95, 0.04);
+}
+.maintenance-page .maintenance-filters.history-toolbar .history-search-trigger:hover {
+  background: #edf4fc;
+  border-color: #9eb9d7;
+}
+.maintenance-page .maintenance-filters.history-toolbar .history-search-trigger-active {
+  background: #e9f1fb;
+  border-color: #8baed5;
+}
+.maintenance-page .maintenance-filters.history-toolbar .history-search-trigger:focus-visible {
+  outline: 2px solid #245e96;
+  outline-offset: 3px;
+}
+@media (max-width: 520px) {
+  .maintenance-page .maintenance-filters.history-toolbar .history-search-trigger {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+}
+
+/* MaquiGest Subscriptions: safe management action & immediate-cancellation confirmation. */
+.plans-page .subscription-management-actions { display:flex; justify-content:flex-start; padding:12px 20px 18px; }
+.plans-page .subscription-manage-link { background:transparent; border:0; color:#215586; font-size:14px; font-weight:750; text-decoration:underline; text-underline-offset:3px; cursor:pointer; padding:8px 4px; }
+.plans-page .subscription-manage-link:hover { color:#123d69; }
+.plans-page .subscription-manage-link:focus-visible { outline:2px solid #2765a3; outline-offset:3px; }
+.plans-page .subscription-manage-link:disabled { opacity:.55; cursor:wait; }
+.plans-page .cancel-subscription-backdrop { position:fixed; z-index:1500; inset:0; display:grid; place-items:center; padding:20px; background:rgba(18,31,51,.55); }
+.plans-page .cancel-subscription-dialog { width:min(100%,560px); max-height:calc(100vh - 40px); overflow-y:auto; padding:clamp(20px,3vw,32px); border-radius:16px; box-sizing:border-box; background:#fff; color:#24334b; box-shadow:0 22px 68px rgba(15,32,57,.22); }
+.plans-page .cancel-subscription-dialog h2 { margin:7px 0 10px; color:#1d304c; font-size:clamp(21px,2.5vw,29px); line-height:1.25; }
+.plans-page .cancel-subscription-dialog p { font-size:14px; line-height:1.6; color:#697b94; }
+.plans-page .cancel-subscription-warning { background:#fff6ed; color:#794222!important; border:1px solid #f6d7b5; padding:14px; border-radius:10px; }
+.plans-page .cancel-subscription-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; flex-wrap:wrap; }
+.plans-page .cancel-subscription-actions button { min-height:44px; border-radius:9px; padding:10px 16px; font-weight:750; font-size:14px; cursor:pointer; }
+.plans-page .cancel-keep-button { background:#fff; border:1px solid #cdd9e8; color:#244c78; }
+.plans-page .cancel-confirm-button { background:#a52b2b; border:1px solid #a52b2b; color:#fff; }
+.plans-page .cancel-subscription-actions button:disabled { opacity:.55; cursor:wait; }
+@media(max-width:540px) { .plans-page .cancel-subscription-actions { flex-direction:column-reverse; } .plans-page .cancel-subscription-actions button { width:100%; } }
+
+/* MAQUIGEST RESPONSIVE F9 START
+   Mobile/tablet-only presentation of existing Angular Material tables.
+   No data, event, state, API, or action changes. */
+@media screen and (max-width: 1024px) {
+  /* Keep the five workspaces inside the real viewport. */
+  app-maintenance-list .maintenance-page,
+  app-active-rentals .rentals-page,
+  app-rental-requests .requests-page,
+  app-equipment-list .equipment-page,
+  app-my-requests .requests-page {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-inline: clamp(12px, 3vw, 22px) !important;
+  }
+
+  app-maintenance-list .maintenance-workspace-grid,
+  app-maintenance-list .list-panel,
+  app-active-rentals .rentals-content,
+  app-rental-requests .requests-content,
+  app-equipment-list .equipment-panel,
+  app-my-requests .requests-content {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Critical: all table wrappers and tables stop using desktop min-widths. */
+  app-maintenance-list .table-wrapper,
+  app-active-rentals .table-wrapper,
+  app-rental-requests .table-wrapper,
+  app-equipment-list .equipment-table-container,
+  app-my-requests .table-wrapper {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+  }
+
+  app-maintenance-list .records-table,
+  app-active-rentals .rentals-table,
+  app-rental-requests .requests-content table.mat-mdc-table,
+  app-equipment-list .equipment-table-container table.mat-mdc-table,
+  app-my-requests .requests-content table.mat-mdc-table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    table-layout: auto !important;
+    border: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  app-maintenance-list .records-table thead,
+  app-active-rentals .rentals-table thead,
+  app-rental-requests .requests-content table.mat-mdc-table thead,
+  app-equipment-list .equipment-table-container table.mat-mdc-table thead,
+  app-my-requests .requests-content table.mat-mdc-table thead,
+  app-maintenance-list .records-table tr.mat-mdc-header-row,
+  app-active-rentals .rentals-table tr.mat-mdc-header-row,
+  app-rental-requests .requests-content tr.mat-mdc-header-row,
+  app-equipment-list .equipment-table-container tr.mat-mdc-header-row,
+  app-my-requests .requests-content tr.mat-mdc-header-row {
+    display: none !important;
+  }
+
+  app-maintenance-list .records-table tbody,
+  app-active-rentals .rentals-table tbody,
+  app-rental-requests .requests-content table.mat-mdc-table tbody,
+  app-equipment-list .equipment-table-container table.mat-mdc-table tbody,
+  app-my-requests .requests-content table.mat-mdc-table tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Reflow one row into one complete vertical card. No clipped status/action cells. */
+  app-maintenance-list .records-table tr.mat-mdc-row,
+  app-active-rentals .rentals-table tr.mat-mdc-row,
+  app-rental-requests .requests-content tr.mat-mdc-row,
+  app-equipment-list .equipment-table-container tr.mat-mdc-row,
+  app-my-requests .requests-content tr.mat-mdc-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    grid-template-columns: none !important;
+    grid-template-areas: none !important;
+    padding: 16px !important;
+    margin: 0 !important;
+    border: 1px solid #dbe5f1 !important;
+    border-radius: 13px !important;
+    background: #fff !important;
+    box-shadow: 0 2px 10px rgba(19, 45, 80, .035) !important;
+  }
+
+  app-maintenance-list .records-table td.mat-mdc-cell,
+  app-active-rentals .rentals-table td.mat-mdc-cell,
+  app-rental-requests .requests-content td.mat-mdc-cell,
+  app-equipment-list .equipment-table-container td.mat-mdc-cell,
+  app-my-requests .requests-content td.mat-mdc-cell {
+    display: block !important;
+    flex: none !important;
+    position: static !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    grid-area: auto !important;
+    align-self: stretch !important;
+    justify-self: stretch !important;
+    margin: 0 !important;
+    padding: 11px 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #304663 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  app-maintenance-list .records-table td.mat-mdc-cell:not(:last-child),
+  app-active-rentals .rentals-table td.mat-mdc-cell:not(:last-child),
+  app-rental-requests .requests-content td.mat-mdc-cell:not(:last-child),
+  app-equipment-list .equipment-table-container td.mat-mdc-cell:not(:last-child),
+  app-my-requests .requests-content td.mat-mdc-cell:not(:last-child) {
+    border-bottom: 1px solid #edf1f7 !important;
+  }
+
+  app-maintenance-list .records-table td.mat-mdc-cell::before,
+  app-active-rentals .rentals-table td.mat-mdc-cell::before,
+  app-rental-requests .requests-content td.mat-mdc-cell::before,
+  app-equipment-list .equipment-table-container td.mat-mdc-cell::before,
+  app-my-requests .requests-content td.mat-mdc-cell::before {
+    content: attr(data-label) !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 5px !important;
+    color: #71849e !important;
+    font-size: 10px !important;
+    line-height: 1.45 !important;
+    font-weight: 800 !important;
+    letter-spacing: .04em !important;
+    text-align: left !important;
+    text-transform: uppercase !important;
+  }
+
+  /* The existing action widgets remain interactive and inside their card. */
+  app-rental-requests .request-actions,
+  app-active-rentals .delivery-action,
+  app-equipment-list .equipment-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+  }
+  app-active-rentals .delivery-action,
+  app-active-rentals .return-cell {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  app-active-rentals .delivery-disabled-hint { max-width: 100% !important; }
+  app-my-requests .request-equipment-cell { min-width: 0 !important; max-width: 100% !important; }
+  app-my-requests .request-equipment-thumbnail { flex-shrink: 0 !important; }
+  app-my-requests .requests-content td.mat-column-period span { white-space: nowrap !important; }
+  app-my-requests .requests-content td.mat-column-period { white-space: normal !important; }
+
+  /* More readable filters and controls without changing filter state/handlers. */
+  app-active-rentals .operation-tabs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 8px !important;
+  }
+  app-active-rentals .operation-tab {
+    display: flex !important;
+    flex: 1 1 175px !important;
+    min-width: 0 !important;
+    width: auto !important;
+    justify-content: space-between !important;
+  }
+  app-maintenance-list .maintenance-workspace-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  app-maintenance-list .maintenance-filters { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; }
+  app-maintenance-list .history-search-panel,
+  app-maintenance-list .history-search-form { max-width: 100% !important; box-sizing: border-box !important; }
+  app-equipment-list mat-paginator { max-width: 100% !important; overflow-x: auto; }
+}
+
+@media screen and (max-width: 480px) {
+  app-active-rentals .operation-tab { flex-basis: 100% !important; }
+  app-maintenance-list .records-table tr.mat-mdc-row,
+  app-active-rentals .rentals-table tr.mat-mdc-row,
+  app-rental-requests .requests-content tr.mat-mdc-row,
+  app-equipment-list .equipment-table-container tr.mat-mdc-row,
+  app-my-requests .requests-content tr.mat-mdc-row { padding: 13px !important; }
+  app-my-requests .requests-content .request-equipment-thumbnail { width: 65px !important; height: 45px !important; }
+}
+/* MAQUIGEST RESPONSIVE F9 END */
