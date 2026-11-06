@@ -2,7 +2,7 @@ import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
 
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
@@ -35,6 +35,7 @@ import { RentalRate } from '../../../domain/value-object/rental-rate.value-objec
     MatSelectModule,
     MatButtonModule,
     MatInput,
+    RouterLink,
     TranslatePipe,
   ],
 
