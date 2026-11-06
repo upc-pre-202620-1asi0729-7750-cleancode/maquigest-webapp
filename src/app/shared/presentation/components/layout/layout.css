@@ -405,3 +405,22 @@
     max-height: 42px;
   }
 }
+
+/* UI-only alignment with MaquiGest's desktop/mobile mockups. */
+.workspace-shell, .workspace-content { background: #f6f8fb; }
+.workspace-sidebar { border-right-color: #e2e8f0; }
+.sidebar-logo { width: 156px; max-width: 100%; }
+.company-card { border-color: #dce5f0; border-radius: 12px; }
+.sidebar-section-label { color: #667994; letter-spacing: .07em; }
+.workspace-topbar { border-bottom-color: #e2e8f0; }
+.topbar-breadcrumb strong, .topbar-user-information strong { color: #1c3555; }
+.topbar-avatar, .company-avatar { color: #183b67; background: #eef3f9; }
+@media (max-width: 900px) {
+  .workspace-topbar { min-height: 64px; }
+  .workspace-sidebar { box-shadow: 12px 0 34px rgba(20, 41, 68, .13); }
+}
+
+/* F2: opaque sticky header. Prevents content showing faintly through it. */
+.workspace-topbar {
+  background: #ffffff;
+}

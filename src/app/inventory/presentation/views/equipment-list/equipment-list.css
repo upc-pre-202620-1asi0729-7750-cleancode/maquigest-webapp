@@ -1,23 +1,79 @@
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.title {
-  margin: 0;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-}
-
-.empty-state {
-  margin-top: 24px;
+/* Equipment list F3 — mockup-aligned presentation */
+:host { display: block; }
+.equipment-page { max-width: 1640px; min-height: calc(100vh - 80px); margin: auto; padding: 34px clamp(18px, 2.4vw, 38px) 48px; background: #f6f8fb; color: #202f47; font-family: Inter, Roboto, Arial, sans-serif; }
+.equipment-page-header { margin-bottom: 21px; }
+.section-label { display: block; margin-bottom: 5px; color: #71809a; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.equipment-page-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.equipment-page h1 { margin: 0 0 5px; font-size: clamp(30px, 3vw, 39px); line-height: 1.15; letter-spacing: -.04em; font-weight: 800; }
+.equipment-page-heading p { margin: 0; font-size: 14px; line-height: 1.45; color: #73839d; }
+.create-equipment-button { min-height: 43px; padding-inline: 20px !important; background: #f59e0b !important; color: #102b49 !important; border-radius: 10px !important; font-size: 13px !important; font-weight: 800 !important; box-shadow: none !important; white-space: nowrap; }
+.create-equipment-button .material-symbols-outlined { vertical-align: middle; font-size: 20px; margin-right: 6px; }
+.equipment-summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin-bottom: 20px; }
+.equipment-summary-card { position: relative; min-height: 119px; padding: 18px 21px; background: white; border: 1px solid #dce5f0; border-radius: 14px; overflow: hidden; box-sizing: border-box; }
+.equipment-summary-card > span:first-child { color: #667892; font-size: 13px; }
+.equipment-summary-accent::before { content: ''; width: 3px; height: 24px; background: #f59e0b; position: absolute; top: 18px; left: 0; border-radius: 0 3px 3px 0; }
+.metric-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 9px 0 5px; }
+.metric-row strong { color: #1c385d; font-size: 30px; font-weight: 800; line-height: 1; }
+.metric-row .material-symbols-outlined { color: #1f4678; font-size: 22px; }
+.equipment-summary-card small { display: block; color: #7c8ba1; font-size: 11px; }
+.equipment-panel { padding: 21px; border: 1px solid #dce5f0; border-radius: 15px; background: white; }
+.equipment-panel-heading h2 { margin: 0 0 3px; font-size: 19px; letter-spacing: -.02em; font-weight: 800; }
+.equipment-panel-heading p { color: #71809a; font-size: 12px; margin: 0 0 17px; }
+.equipment-toolbar { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 15px; }
+.equipment-search { display: flex; align-items: center; gap: 10px; flex: 1; border: 1px solid #d6e0ec; height: 42px; padding: 0 12px; border-radius: 10px; min-width: 0; }
+.equipment-search .material-symbols-outlined { font-size: 21px; color: #7790ad; }
+.equipment-search input { width: 100%; height: 100%; min-width: 0; background: transparent; border: 0; outline: 0; color: #243651; font: inherit; font-size: 13px; }
+.equipment-search:focus-within { border-color: #3b73bc; outline: 2px solid #eaf1fb; }
+.equipment-filter-disclosure { position: relative; flex-shrink: 0; }
+.equipment-filter-disclosure summary { display: flex; align-items: center; justify-content: center; gap: 6px; height: 42px; padding: 0 17px; border: 1px solid #d5e0ec; border-radius: 10px; cursor: pointer; list-style: none; color: #1d436b; background: #fff; font-weight: 700; font-size: 12px; }
+.equipment-filter-disclosure summary::-webkit-details-marker { display: none; }
+.equipment-filter-disclosure summary .material-symbols-outlined { font-size: 19px; }
+.equipment-filter-fields { position: absolute; top: 48px; right: 0; display: grid; gap: 12px; z-index: 4; padding: 15px; width: min(310px, 80vw); background: #fff; border: 1px solid #d5e0ec; border-radius: 12px; box-shadow: 0 10px 30px #132f531b; }
+.equipment-filter-fields label { display: grid; gap: 5px; font-size: 12px; font-weight: 700; color: #526984; }
+.equipment-filter-fields select { width: 100%; padding: 9px 11px; font: inherit; font-size: 13px; color: #243651; border: 1px solid #d6e0ec; border-radius: 8px; background: white; }
+.clear-equipment-filters { border: 1px solid #d6e0ec; border-radius: 8px; padding: 9px; background: #f7f9fd; color: #1b4e89; cursor: pointer; font-size: 12px; font-weight: 700; }
+.equipment-table-container { overflow-x: auto; border: 1px solid #e2e8f1; border-radius: 10px; }
+.equipment-table-container table { width: 100%; min-width: 840px; background: #fff; }
+.equipment-table-container th.mat-mdc-header-cell { background: #f7f9fc; color: #70819a; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.equipment-table-container td.mat-mdc-cell { color: #465875; font-size: 12px; border-color: #e9eef5; }
+.equipment-table-container td.mat-column-name strong { font-size: 13px; color: #23344e; font-weight: 800; }
+.equipment-table-container td.mat-column-code { font-weight: 700; color: #284775; }
+.equipment-status-badge { display: inline-block; padding: 5px 9px; border-radius: 6px; background: #edf2f8; color: #2a4b70; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.equipment-status-badge.is-available { background: #e9f8ef; color: #156b3d; }
+.equipment-status-badge.is-rented { background: #ebf1fa; color: #244777; }
+.equipment-status-badge.is-maintenance { background: #fff3d9; color: #8c5607; }
+.equipment-actions { display: flex; align-items: center; justify-content: flex-start; gap: 3px; }
+.equipment-actions button { color: #1e5aa8; }
+.equipment-actions mat-icon { font-size: 19px; }
+.equipment-feedback { display: flex; min-height: 140px; align-items: center; justify-content: center; color: #70819a; font-size: 13px; }
+.equipment-error { color: #a51c2c; }
+@media (max-width: 1024px) { .equipment-page { padding: 24px 20px 36px; } }
+@media (max-width: 720px) {
+  .equipment-page { padding: 26px 20px 44px; }
+  .equipment-page-heading { display: block; }
+  .equipment-page-heading p { margin-bottom: 15px; }
+  .create-equipment-button { display: flex !important; width: 100%; justify-content: center; }
+  .equipment-summary { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; margin-bottom: 15px; }
+  .equipment-summary-card { padding: 15px 17px; min-height: 130px; }
+  .equipment-summary-card > span:first-child { font-size: 12px; }
+  .equipment-panel { padding: 16px; }
+  .equipment-toolbar { gap: 8px; }
+  .equipment-search { padding: 0 10px; }
+  .equipment-search input { font-size: 12px; }
+  .equipment-filter-disclosure summary { padding: 0 12px; font-size: 12px; }
+  .equipment-table-container { border: 0; overflow: visible; }
+  .equipment-table-container table { min-width: 0; width: 100%; display: block; background: transparent; }
+  .equipment-table-container thead { display: none; }
+  .equipment-table-container tbody { display: grid; gap: 11px; }
+  .equipment-table-container tr.mat-mdc-row { display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-areas: 'name status' 'code category' 'location availability' 'actions actions'; column-gap: 9px; row-gap: 9px; min-height: 0; height: auto; padding: 15px; border: 1px solid #dce5f0; border-radius: 13px; background: #fff; }
+  .equipment-table-container td.mat-mdc-cell { display: block; width: auto; height: auto; min-height: 0; padding: 0; border: 0; font-size: 12px; white-space: normal; overflow-wrap: anywhere; }
+  .equipment-table-container td.mat-column-name { grid-area: name; }
+  .equipment-table-container td.mat-column-status { grid-area: status; text-align: right; }
+  .equipment-table-container td.mat-column-code { grid-area: code; color: #71819b; }
+  .equipment-table-container td.mat-column-category { grid-area: category; text-align: right; color: #71819b; font-size: 11px; }
+  .equipment-table-container td.mat-column-location { grid-area: location; color: #71819b; }
+  .equipment-table-container td.mat-column-availability { grid-area: availability; text-align: right; }
+  .equipment-table-container td.mat-column-actions { grid-area: actions; justify-self: end; }
+  .equipment-actions { gap: 5px; }
+  .equipment-table-container mat-paginator { width: 100%; }
 }

@@ -1,4 +1,4 @@
-﻿:host {
+:host {
   display: block;
 }
 
@@ -249,4 +249,66 @@ td.mat-mdc-cell {
   .summary-grid {
     grid-template-columns: 1fr;
   }
+}
+/* F7.1 construction company visual alignment; table bindings and navigation untouched. */
+.requests-page { box-sizing: border-box; max-width: 1660px; margin: 0 auto; padding: 35px clamp(18px,2.5vw,40px) 58px; }
+.requests-header { max-width: 950px; margin-bottom: 24px; }
+.requests-header h1 { color: #23334c; font-size: clamp(30px,3vw,42px); font-weight: 800; letter-spacing: -.045em; line-height: 1.17; }
+.requests-header p { color: #71849f; font-size: 14px; }
+.section-label { color: #6b80a0; }
+.summary-grid { gap: 16px; margin-bottom: 22px; }
+.summary-card { position: relative; min-width: 0; min-height: 120px; box-sizing: border-box; padding: 21px 24px; border-color: #dbe5f1; border-radius: 15px; }
+.summary-card:first-child::before { content: ''; position: absolute; left: 0; top: 18px; height: 27px; width: 3px; background: #f59e0b; border-radius: 0 3px 3px 0; }
+.summary-card span { font-size: 12px; color: #70839e; }
+.summary-card strong { font-size: 32px; color: #1c3d66; font-weight: 800; }
+.requests-content { border-color: #dbe5f0; border-radius: 16px; }
+.content-heading { padding: 22px 24px; }
+.content-heading h2 { font-weight: 800; color: #243750; }
+.table-wrapper { padding: 0 20px 19px; }
+table { border: 1px solid #e1e8f1; border-radius: 10px; overflow: hidden; }
+th.mat-mdc-header-cell { color: #72839b; background: #f6f8fb; font-size: 11px; }
+td.mat-mdc-cell { color: #344b69; }
+.detail-link { color: #185b9f; }
+@media(max-width:800px) {
+ .requests-page { padding: 24px 16px 38px; }
+ .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+ .summary-card { min-height: 108px; padding: 16px 12px; }
+ .summary-card span { font-size: 11px; }
+ .summary-card strong { font-size: 26px; }
+ .content-heading { padding: 19px 17px; }
+ .table-wrapper { padding: 13px; overflow: visible; }
+ table { display: block; min-width: 0; width: 100%; border: 0; border-radius: 0; background: transparent; }
+ table thead { display: none; }
+ table tbody { display: grid; gap: 12px; }
+ tr.mat-mdc-row { display: grid; gap: 12px; height: auto; padding: 16px; border: 1px solid #dce5ef; border-radius: 12px; background: white; }
+ td.mat-mdc-cell { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 0; border: 0; min-height: 0; height: auto; overflow-wrap: anywhere; font-size: 12px; }
+ td.mat-mdc-cell::before { content: attr(data-label); display: block; flex: 0 0 100%; color: #788aa2; font-weight: 800; font-size: 10px; text-transform: uppercase; }
+ .date-separator { margin: 0; }
+ .detail-link { display: inline-flex; padding: 8px 12px; border: 1px solid #cfdeef; border-radius: 8px; font-size: 12px; }
+}
+@media(max-width:500px){ .summary-grid { grid-template-columns: 1fr; } .summary-card { min-height: 88px; } }
+/* F7.4: category reference thumbnails in My Requests, without modifying data. */
+.request-equipment-cell { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.request-equipment-thumbnail { display: block; flex: 0 0 78px; width: 78px; height: 52px; object-fit: contain; background: #fff; border: 1px solid #e0e7f0; border-radius: 8px; }
+.request-equipment-cell .primary-cell { min-width: 0; }
+@media (max-width: 800px) { .request-equipment-thumbnail { flex-basis: 70px; width: 70px; height: 47px; } }
+/* F7.5: same white-background artwork for machinery thumbnails. */
+.request-equipment-thumbnail { box-sizing: border-box; padding: 3px; background: #fff; object-fit: contain; object-position: center; }
+/* F7.6 — Keep request period dates intact on desktop and mobile. */
+.requests-content table { min-width: 980px; }
+.requests-content td.mat-column-period {
+  white-space: nowrap;
+  min-width: 235px;
+}
+.requests-content td.mat-column-period span { white-space: nowrap; }
+.requests-content td.mat-column-requestedAt {
+  min-width: 132px;
+  white-space: nowrap;
+}
+.requests-content td.mat-column-actions { white-space: nowrap; }
+@media (max-width: 800px) {
+  .requests-content table { min-width: 0; }
+  .requests-content td.mat-column-period { min-width: 0; gap: 5px; }
+  .requests-content td.mat-column-period span { white-space: nowrap; }
+  .requests-content td.mat-column-requestedAt { min-width: 0; }
 }

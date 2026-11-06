@@ -51,6 +51,7 @@
       [formGroup]="form"
       (ngSubmit)="submit()">
 
+      <div class="dialog-fields">
       <mat-form-field appearance="outline">
 
         <mat-label>
@@ -92,7 +93,7 @@
 
         <textarea
           matInput
-          rows="5"
+          rows="3"
           maxlength="1000"
           formControlName="description"
           [placeholder]="
@@ -132,6 +133,7 @@
               | translate
           }}
         </p>
+      </div>
       </div>
 
       @if (error()) {

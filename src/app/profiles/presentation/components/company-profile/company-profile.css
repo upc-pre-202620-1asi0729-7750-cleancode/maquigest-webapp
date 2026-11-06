@@ -75,3 +75,14 @@ mat-card-content {
     gap: 8px;
   }
 }
+/* F8: visual-only alignment with MaquiGest cards. */
+:host { display:block; min-width:0; }
+.profile-grid { gap:18px; }
+.profile-card { min-width:0; border:1px solid #dbe5f1; border-radius:15px; box-shadow:none; }
+.profile-card mat-card-header { padding:22px 23px 14px; }
+.profile-card mat-card-title { font-size:17px; font-weight:800; color:#243750; }
+.profile-card mat-card-content { padding:6px 23px 23px; gap:0; }
+.information-row { grid-template-columns:minmax(105px,32%) minmax(0,1fr); gap:12px; padding:12px 0; border-color:#eaf0f6; }
+.information-row .label { color:#71849f; font-weight:650; font-size:12px; }
+.information-row .value { color:#263c59; font-weight:650; overflow-wrap:anywhere; }
+@media(max-width:700px) { .profile-grid { grid-template-columns:1fr; gap:12px; } .profile-card mat-card-header { padding:18px 17px 10px; } .profile-card mat-card-content { padding:6px 17px 18px; } .information-row { grid-template-columns:1fr; gap:5px; } }

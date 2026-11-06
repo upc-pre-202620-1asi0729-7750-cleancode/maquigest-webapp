@@ -38,9 +38,28 @@
     as equipment
     ) {
 
+    @let illustrativeCategory = ((equipment.category?.name ?? '') + ' ' + equipment.name).toLowerCase();
+
     <mat-card
       class="detail-card"
       appearance="outlined">
+
+      <!-- F7.4: decorative reference graphic by category, not a photo of the real equipment. -->
+      <div class="detail-equipment-visual" aria-hidden="true">
+        <img
+          class="detail-equipment-image"
+          [src]="illustrativeCategory.includes('excav') || illustrativeCategory.includes('retroexc') ? '/equipment-visuals/excavator-reference.webp' :
+      illustrativeCategory.includes('cargad') || illustrativeCategory.includes('loader') ? '/equipment-visuals/loader-reference.webp' :
+      illustrativeCategory.includes('bulldoz') || illustrativeCategory.includes('topador') ? '/equipment-visuals/bulldozer.svg' :
+      illustrativeCategory.includes('crane') || illustrativeCategory.includes('grua') || illustrativeCategory.includes('grúa') ? '/equipment-visuals/crane-reference.webp' :
+      illustrativeCategory.includes('volquet') || illustrativeCategory.includes('dump') || illustrativeCategory.includes('truck') ? '/equipment-visuals/dump-truck.svg' :
+      illustrativeCategory.includes('montacarg') || illustrativeCategory.includes('forklift') ? '/equipment-visuals/forklift.svg' :
+      illustrativeCategory.includes('mezclad') || illustrativeCategory.includes('mixer') || illustrativeCategory.includes('concreto') ? '/equipment-visuals/mixer.svg' :
+      illustrativeCategory.includes('compactad') || illustrativeCategory.includes('rodillo') || illustrativeCategory.includes('roller') ? '/equipment-visuals/roller.svg' :
+      '/equipment-visuals/generic.svg'"
+          alt=""
+          decoding="async">
+      </div>
 
       <mat-card-header>
 

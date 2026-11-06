@@ -63,9 +63,24 @@ export class ActiveRentals {
     'actions',
   ];
 
+  // F4: filtro exclusivamente visual. Conserva todos los registros por defecto.
+  protected readonly selectedView = signal<'ALL' | 'CONFIRMED' | 'ACTIVE'>('ALL');
+
+  protected readonly visibleRentals = computed(() => {
+    const rentals = this.store.rentals();
+    const view = this.selectedView();
+    if (view === 'CONFIRMED') return rentals.filter((rental) => rental.isConfirmed);
+    if (view === 'ACTIVE') return rentals.filter((rental) => rental.isActive);
+    return rentals;
+  });
+
   protected readonly dataSource = computed(
-    () => new MatTableDataSource<Rental>(this.store.rentals()),
+    () => new MatTableDataSource<Rental>(this.visibleRentals()),
   );
+
+  protected selectView(view: 'ALL' | 'CONFIRMED' | 'ACTIVE'): void {
+    this.selectedView.set(view);
+  }
 
   protected readonly deliveryRental = signal<Rental | null>(null);
 

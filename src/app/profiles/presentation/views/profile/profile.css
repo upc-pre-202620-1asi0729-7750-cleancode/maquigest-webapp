@@ -1,0 +1,12 @@
+/* F8 — Visual alignment only: profile data and actions are unchanged. */
+:host { display:block; min-width:0; }
+.profile-page { box-sizing:border-box; min-height:calc(100vh - 72px); max-width:1660px; padding:35px clamp(18px,2.5vw,40px) 58px; margin:0 auto; background:#f6f8fb; color:#22334c; font-family:Inter,Roboto,Arial,sans-serif; }
+.profile-header { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+.profile-heading { min-width:0; }
+.profile-header h1 { margin:0; color:#23334c; font-weight:800; font-size:clamp(30px,3vw,42px); letter-spacing:-.04em; }
+.profile-header-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.profile-header-actions button { min-height:44px; border-radius:10px; font-weight:750; }
+.profile-header-actions .mat-mdc-raised-button { background:#f59e0b; color:#152f50; box-shadow:none; }
+.profile-state { display:flex; align-items:center; justify-content:center; min-height:160px; background:#fff; border:1px solid #dce5ef; border-radius:14px; padding:20px; }
+.profile-error { color:#ad2626; }
+@media(max-width:700px) { .profile-page { padding:24px 16px 36px; } .profile-header { align-items:stretch; } .profile-header-actions, .profile-header-actions button { width:100%; } }

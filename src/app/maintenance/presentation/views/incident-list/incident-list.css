@@ -4,8 +4,8 @@
 
 .incidents-page {
   min-height: 100%;
-  /* The workspace header overlays the top of the routed view. */
-  padding: 136px 36px 48px;
+  /* F6: the workspace header is sticky in normal document flow. */
+  padding: 34px clamp(18px, 2.4vw, 38px) 48px;
   background: #f6f8fb;
 }
 
@@ -25,7 +25,7 @@
 .section-label {
   display: inline-block;
   margin-bottom: 9px;
-  color: #2563eb;
+  color: #70819a;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.065em;
@@ -35,7 +35,7 @@
 .page-header h1 {
   margin: 0;
   color: #152b47 !important;
-  font-size: clamp(1.65rem, 2.2vw, 2.1rem);
+  font-size: clamp(1.85rem, 3vw, 2.45rem);
   font-weight: 800;
   line-height: 1.25;
 }
@@ -63,8 +63,8 @@
 }
 
 .primary-button {
-  background: #f97316 !important;
-  color: #ffffff !important;
+  background: #f59e0b !important;
+  color: #142f4f !important;
 }
 
 .summary-grid {
@@ -335,7 +335,7 @@
 }
 
 @media (max-width: 850px) {
-  .incidents-page { padding: 128px 20px 40px; }
+  .incidents-page { padding: 24px 20px 40px; }
   .incident-top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .summary-grid { gap: 10px; }
   .summary-card { padding: 16px; }
@@ -368,3 +368,15 @@
 .reactivation-confirmation p { margin: 0 0 10px; color: #173b68; }
 .inspection-check { display: flex; align-items: center; gap: 10px; color: #183456; cursor: pointer; }
 .inspection-check input { width: 17px; height: 17px; accent-color: #1d4ed8; }
+
+/* F6: consistent card system for incidence history; action handlers unchanged. */
+.incidents-page { box-sizing: border-box; max-width: 1660px; margin: 0 auto; font-family: Inter, Roboto, Arial, sans-serif; }
+.page-header { align-items: flex-end; }
+.summary-card { position: relative; border-color: #dbe4f1; border-radius: 15px; min-height: 117px; }
+.summary-card:first-child::before { content: ''; position: absolute; top: 18px; left: 0; height: 25px; width: 3px; border-radius: 0 3px 3px 0; background: #f59e0b; }
+.list-panel,.reactivation-panel { border-color: #dbe4f1; border-radius: 15px; }
+.incident-card { border-color: #dce5f0; box-shadow: none; }
+.incident-card:focus-within { border-color: #aac2e2; }
+.page-actions button,.page-actions a,.incident-actions button,.confirmation-actions button { border-radius: 9px !important; }
+.description-block p { max-width: 100%; overflow-wrap: anywhere; }
+@media(max-width:600px){.incidents-page{padding:22px 17px 40px;} .page-actions{display:flex; flex-direction:column;align-items:stretch;} .page-actions a,.page-actions button{width:100%;flex:none;} .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .summary-card:last-child{grid-column:1/-1;} .incident-footer{align-items:flex-start;} }

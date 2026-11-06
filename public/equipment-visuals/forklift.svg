@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-label="Ilustracion decorativa de maquinaria">
+<defs>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="13"/></filter>
+</defs>
+<rect width="1200" height="500" fill="#ffffff"/>
+<ellipse cx="603" cy="421" rx="395" ry="18" fill="#7e8b91" opacity=".20" filter="url(#shadow)"/>
+<g><g transform="translate(145,0)"><circle cx="468" cy="355" r="45" fill="#192c46"/><circle cx="468" cy="355" r="36" fill="#294763" stroke="#182a43" stroke-width="8"/><circle cx="468" cy="355" r="17" fill="#a0b6c6" stroke="#dde8eb" stroke-width="6"/><circle cx="468" cy="355" r="6" fill="#5a748e"/><circle cx="694" cy="355" r="45" fill="#192c46"/><circle cx="694" cy="355" r="36" fill="#294763" stroke="#182a43" stroke-width="8"/><circle cx="694" cy="355" r="17" fill="#a0b6c6" stroke="#dde8eb" stroke-width="6"/><circle cx="694" cy="355" r="6" fill="#5a748e"/><path d="M393 336 V284 Q397 244 436 234 H600 L678 284 L715 333Z" fill="#efaa21" stroke="#233a56" stroke-width="11"/><path d="M466 236 L497 134 H623 L655 245" fill="none" stroke="#263d56" stroke-width="18"/><path d="M517 145 H609 V236 H489 Z" fill="#7cc0d3" stroke="#223952" stroke-width="11"/><path d="M376 227 H389 V370 H374 Z M355 371 H378 V420 H245" fill="none" stroke="#243b55" stroke-width="14"/><path d="M348 368 L290 368" stroke="#f3aa24" stroke-width="14"/><rect x="641" y="271" width="48" height="29" rx="8" fill="#ffd46a"/></g></g>
+
+</svg>

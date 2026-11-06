@@ -327,3 +327,18 @@
   .reschedule-form { padding: 18px; }
   .reschedule-fields { grid-template-columns: 1fr; }
 }
+/* F7.1 construction request detail visual consistency. */
+.detail-page { box-sizing: border-box; max-width: 1660px; margin: 0 auto; padding: 35px clamp(18px,2.5vw,40px) 55px; }
+.back-link { color: #275b8a; font-size: 13px; }
+.detail-header h1 { font-size: clamp(28px,2.8vw,40px); font-weight: 800; color: #23354c; letter-spacing: -.035em; }
+.detail-header p { font-size: 14px; color: #7486a0; }
+.section-label { color: #6c81a2; }
+.detail-grid { max-width: 1100px; gap: 14px; }
+.detail-card { box-sizing: border-box; border-radius: 14px; border-color: #dbe5f0; padding: 22px 23px; min-height: 118px; }
+.card-label { color: #70839b; }
+.detail-card strong { color: #263c58; }
+.reschedule-form { max-width: 1100px; border-color: #dbe5f0; border-radius: 14px; }
+.reschedule-primary-button { background: #f59e0b; color: #173b5e; }
+.reschedule-primary-button:hover { background: #e89008; }
+.reschedule-secondary-button { border-color: #cbdaea; color: #245480; }
+@media(max-width:800px){ .detail-page { padding: 24px 16px 40px; } .detail-grid { grid-template-columns: 1fr; } .reschedule-fields { grid-template-columns: 1fr; } .reschedule-form { padding: 18px; } }

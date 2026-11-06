@@ -214,3 +214,37 @@
     width: 100%;
   }
 }
+/* F7.1: presentation only; existing equipment selection and rental checks remain unchanged. */
+:host { display: block; min-width: 0; background: #f6f8fb; }
+.equipment-detail-page { box-sizing: border-box; max-width: 1350px; padding: 34px clamp(18px,2.5vw,40px) 52px; }
+.back-button { margin-bottom: 19px; color: #245585 !important; font-size: 13px !important; font-weight: 800 !important; }
+.detail-card { display: block; overflow: hidden; box-sizing: border-box; border: 1px solid #dce6f0 !important; border-radius: 16px !important; background: white; box-shadow: none !important; }
+.detail-equipment-visual { height: 190px; display: flex; align-items: center; justify-content: center; background: #edf3fa; color: #204775; }
+.detail-equipment-visual .material-symbols-outlined { font-size: 64px; font-weight: 300; }
+.detail-card mat-card-header { padding: 25px 26px 8px; }
+.detail-card mat-card-title { color: #243650; font-size: clamp(23px, 2.4vw, 32px); font-weight: 800; line-height: 1.25; }
+.detail-card mat-card-subtitle { color: #7386a0; font-size: 13px; margin-top: 6px; }
+.detail-card mat-card-content { padding: 4px 26px 28px; }
+.detail-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #edf1f6; }
+.detail-section h2 { margin: 0 0 12px; color: #203a5c; font-size: 18px; font-weight: 800; }
+.detail-section > p { color: #677c97; font-size: 13px; line-height: 1.6; }
+.detail-grid { gap: 12px; }
+.detail-item { box-sizing: border-box; min-width: 0; gap: 6px; padding: 15px 17px; background: #f7f9fc; border: 1px solid #e0e8f2; border-radius: 11px; overflow-wrap: anywhere; color: #263d59; font-size: 13px; font-weight: 700; }
+.detail-item .label { color: #7588a1; font-size: 11px; font-weight: 700; }
+.availability-form { gap: 13px; }
+.availability-form button[type="submit"] { min-height: 43px; border-radius: 10px; padding-inline: 22px; background: #f59e0b !important; color: #193653 !important; font-size: 12px; font-weight: 800; }
+.rental-request-action button { min-height: 43px; padding-inline: 22px; border-radius: 10px; background: #f59e0b !important; color: #193653 !important; font-weight: 800; }
+.availability-result { border-radius: 10px; padding: 14px; }
+.availability-result.available { background: #edf9f1; color: #206b40; border-color: #bfe7cd; }
+.availability-result.unavailable { background: #fff4ed; color: #97471e; border-color: #f0d2c2; }
+.rental-request-success { color: #176b41; background: #f1fcf4; border-color: #bde6ca; }
+@media(max-width:700px){ .equipment-detail-page { padding: 22px 15px 42px; } .detail-equipment-visual { height: 135px; } .detail-card mat-card-header { padding: 22px 17px 8px; } .detail-card mat-card-content { padding: 0 17px 22px; } .detail-grid { grid-template-columns: 1fr; } .availability-form { grid-template-columns: 1fr; } }
+/* F7.2 local decorative image: no photo storage. */
+.detail-equipment-image { display:block; width:100%; height:100%; object-fit:cover; }
+/* F7.4: align the detail reference graphic with the search cards. */
+.detail-equipment-visual { background: #fff; }
+.detail-equipment-image { object-fit: contain; background: #fff; }
+/* F7.5: category illustration on a uniform white image stage. */
+.detail-equipment-visual { box-sizing: border-box; background: #fff; padding: 14px 18px; }
+.detail-equipment-image { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; background: #fff; }
+@media (max-width: 700px) { .detail-equipment-visual { padding: 10px 14px; } }

@@ -64,7 +64,48 @@
     "rental-company": "Rental Company",
     "construction-company": "Construction Company",
     "welcome": "Welcome,",
-    "sign-out": "Sign out"
+    "sign-out": "Sign out",
+    "rental-overview": "Keep your equipment and rentals organized.",
+    "construction-overview": "Keep your requests, reservations and rentals in view.",
+    "overview-label": "Operations overview",
+    "available-equipment": "Available equipment",
+    "equipment-on-rent": "Equipment on rent",
+    "under-maintenance": "Under maintenance",
+    "upcoming-reservations": "Upcoming reservations",
+    "pending-requests": "Pending requests",
+    "active-rentals": "Active rentals",
+    "my-requests": "My requests",
+    "equipment-care": "Equipment care",
+    "recent-activity": "Recent activity",
+    "equipment-area": "Open the Equipment section",
+    "rentals-area": "Open the Rentals section",
+    "maintenance-area": "Open the Maintenance section",
+    "reservations-area": "Check requests and rentals",
+    "requests-area": "Open My Requests",
+    "reservations-subtitle": "Prepare equipment for the next delivery.",
+    "active-rentals-subtitle": "Review upcoming deliveries and returns.",
+    "equipment-care-subtitle": "Maintenance and inspections to follow up.",
+    "construction-reservations-subtitle": "Equipment confirmed for your projects.",
+    "construction-active-subtitle": "Track your equipment return dates.",
+    "my-requests-subtitle": "Your latest rental requests.",
+    "panel-information-note": "View details in the corresponding section of the navigation menu.",
+    "visual-only-note": "Visual layout based on mockups. No simulated counts or business-logic changes.",
+    "loading-data": "Loading current data…",
+    "unavailable-data": "These records could not be retrieved.",
+    "no-records": "No records to display.",
+    "no-upcoming": "No upcoming reservations.",
+    "no-active": "No active rentals.",
+    "no-pending": "No recent requests.",
+    "no-care": "No scheduled maintenance or open incidents.",
+    "in-progress": "In progress",
+    "scheduled": "Scheduled",
+    "open-incident": "Open incident",
+    "recent-request": "Request",
+    "view-requests": "View requests",
+    "view-rentals": "View rentals",
+    "view-equipment": "View equipment",
+    "search-equipment": "Search equipment",
+    "active-summary": "Current rental records"
   },
   "sign-up": {
     "workspace-badge": "Create your workspace",
@@ -119,6 +160,17 @@
     }
   },
   "equipment": {
+    "form": {
+      "back": "Back to equipment",
+      "subtitle-create": "Complete the details to add equipment to your inventory.",
+      "subtitle-edit": "Update this equipment without changing its history.",
+      "details": "Equipment information",
+      "details-note": "Identification, general details and location.",
+      "rates": "Rental rates",
+      "rates-note": "Enter the daily and weekly rental prices.",
+      "required-note": "* Required fields",
+      "cancel": "Cancel"
+    },
     "list-title": "Equipment",
     "new-title": "Register equipment",
     "edit-title": "Edit equipment",
@@ -212,6 +264,23 @@
       },
       "availability-checking": "Checking current availability...",
       "availability-check-failed": "Could not check current availability. Please try again."
+    },
+    "ui": {
+      "section": "Inventory",
+      "subtitle": "Manage your machinery, availability and operating condition.",
+      "overview": "Equipment overview",
+      "total": "Total equipment",
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "registered": "Registered units",
+      "ready": "Ready for a new rental",
+      "unavailable-description": "On rent or in maintenance",
+      "inventory": "Equipment inventory",
+      "search-placeholder": "Search by name, code, category or location",
+      "filters": "Filters",
+      "all-statuses": "All statuses",
+      "clear-filters": "Clear filters",
+      "no-results": "No equipment matches the selected filters."
     }
   },
   "rentals": {
@@ -252,7 +321,11 @@
       "empty-title": "No rental requests yet",
       "empty-description": "Your company has not received any rental requests yet.",
       "no-filter-results": "No matching requests",
-      "no-filter-results-description": "No rental requests match the selected filters."
+      "no-filter-results-description": "No rental requests match the selected filters.",
+      "ui": {
+        "search-placeholder": "Search by request, client or equipment",
+        "filters": "Filters"
+      }
     },
     "active": {
       "section": "Rental operations",
@@ -311,7 +384,16 @@
       "load-error": "The rentals could not be loaded.",
       "operation-error": "The delivery or return operation could not be completed.",
       "empty-title": "No rental operations",
-      "empty-description": "Your company does not currently have confirmed or active rentals."
+      "empty-description": "Your company does not currently have confirmed or active rentals.",
+      "ui": {
+        "list-description": "Review confirmed reservations and ongoing rentals while keeping delivery and return actions accessible.",
+        "views-label": "Filter operations by stage",
+        "all": "All operations",
+        "reservations": "Confirmed reservations",
+        "active-rentals": "Active rentals",
+        "no-filter-results": "No records in this stage",
+        "no-filter-description": "Choose another view to see your company operations."
+      }
     },
     "my-requests": {
       "section": "Rental operations",
@@ -385,6 +467,12 @@
       "change-confirmation-label": "Plan change",
       "change-confirmation-title": "Confirm plan change",
       "change-confirmation-description": "Review the selected plan before updating your subscription.",
+      "manage-subscription": "Manage subscription",
+      "cancel-plan-title": "Cancel your current subscription?",
+      "cancel-plan-description": "Cancellation takes effect immediately. Your company will lose access to modules requiring an active plan.",
+      "cancel-plan-warning": "Existing records will not be deleted. You can subscribe again and regain the modules included in the selected plan. This operation does not automatically refund payments.",
+      "keep-plan": "Keep my plan",
+      "cancel-plan-action": "Confirm cancellation",
       "selected-plan": "Selected plan",
       "new-plan": "New plan",
       "cancel": "Cancel",
@@ -434,8 +522,18 @@
         "section": "Incident management",
         "title": "Equipment incidents",
         "subtitle": "Register and review problems reported with your company equipment.",
-        "view-maintenance": "View maintenance",
-        "register": "Report incident",
+        "view-incidents": "Manage incidents",
+        "shortcut-title": "Equipment incidents",
+        "shortcut-description": "Review issues that need attention and manage equipment restrictions.",
+        "shortcut-open-title": "Open incidents",
+        "shortcut-open-description": "Identify reports that still require attention.",
+        "shortcut-restriction-title": "Rental restrictions",
+        "shortcut-restriction-description": "Check which equipment has been temporarily withdrawn.",
+        "shortcut-return-title": "Safe reactivation",
+        "shortcut-return-description": "Confirm inspection after resolving blocking incidents.",
+        "shortcut-cta": "View incidents",
+        "view-maintenance": "Back to maintenance",
+        "register": "Report new incident",
         "total": "Reported incidents",
         "affected-equipment": "Affected equipment",
         "last-report": "Latest report",
@@ -492,7 +590,7 @@
         "saving": "Saving...",
         "save": "Save incident",
         "block-rental": "Temporarily withdraw from rental",
-        "block-rental-hint": "Enable this when equipment cannot operate safely. It will be marked as under maintenance and unavailable for new rentals. Currently rented equipment requires separate handling."
+        "block-rental-hint": "If equipment is unsafe, it will enter maintenance and stop accepting new rentals. Existing rentals are not cancelled."
       }
     },
     "schedule": {
@@ -589,6 +687,21 @@
         "open": "Open",
         "resolved": "Resolved"
       }
+    },
+    "history-filters": {
+      "title": "History filters",
+      "equipment": "Search equipment",
+      "placeholder": "Equipment name or code",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear filters",
+      "results": "Matching records",
+      "empty": "No records match these filters.",
+      "invalid-range": "The start date cannot be later than the end date.",
+      "show-history": "Show history",
+      "hide-history": "Hide history",
+      "search-toggle": "Search",
+      "apply": "Apply"
     }
   }
 }

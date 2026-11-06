@@ -1,4 +1,4 @@
-﻿<div class="requests-page">
+<div class="requests-page">
 
   <header class="requests-header">
 
@@ -167,9 +167,28 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request"
+              [attr.data-label]="'rentals.my-requests.equipment' | translate">
 
-              <div class="primary-cell">
+              <div class="request-equipment-cell">
+
+                <!-- Decorative reference: derived from the existing equipment name. -->
+                <img
+                  class="request-equipment-thumbnail"
+                  [src]="equipmentName(request.equipmentId).toLowerCase().includes('excav') || equipmentName(request.equipmentId).toLowerCase().includes('retroexc') ? '/equipment-visuals/excavator-reference.webp' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('cargad') || equipmentName(request.equipmentId).toLowerCase().includes('loader') ? '/equipment-visuals/loader-reference.webp' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('grua') || equipmentName(request.equipmentId).toLowerCase().includes('grúa') || equipmentName(request.equipmentId).toLowerCase().includes('crane') ? '/equipment-visuals/crane-reference.webp' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('bulldoz') || equipmentName(request.equipmentId).toLowerCase().includes('topador') || equipmentName(request.equipmentId).toLowerCase().includes('tractor oruga') ? '/equipment-visuals/bulldozer.svg' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('volquet') || equipmentName(request.equipmentId).toLowerCase().includes('dump') || equipmentName(request.equipmentId).toLowerCase().includes('camión') || equipmentName(request.equipmentId).toLowerCase().includes('camion') ? '/equipment-visuals/dump-truck.svg' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('montacarg') || equipmentName(request.equipmentId).toLowerCase().includes('forklift') ? '/equipment-visuals/forklift.svg' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('mezclad') || equipmentName(request.equipmentId).toLowerCase().includes('mixer') || equipmentName(request.equipmentId).toLowerCase().includes('concreto') ? '/equipment-visuals/mixer.svg' :
+                    equipmentName(request.equipmentId).toLowerCase().includes('compactad') || equipmentName(request.equipmentId).toLowerCase().includes('rodillo') || equipmentName(request.equipmentId).toLowerCase().includes('roller') ? '/equipment-visuals/roller.svg' :
+                    '/equipment-visuals/generic.svg'"
+                  alt=""
+                  loading="lazy"
+                  decoding="async">
+
+                <div class="primary-cell">
 
                 <strong>
                   {{
@@ -186,6 +205,8 @@
                     )
                   }}
                 </span>
+
+                </div>
 
               </div>
 
@@ -207,7 +228,8 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request"
+              [attr.data-label]="'rentals.my-requests.period' | translate">
 
               <span>
                 {{
@@ -247,7 +269,8 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request"
+              [attr.data-label]="'rentals.my-requests.requested-at' | translate">
               {{
                 formatDate(
                   request.createdAt
@@ -271,7 +294,8 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request"
+              [attr.data-label]="'rentals.my-requests.status-label' | translate">
 
               <span
                 class="status-badge"
@@ -309,7 +333,8 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request"
+              [attr.data-label]="'rentals.my-requests.actions' | translate">
 
               <a
                 class="detail-link"

@@ -1,4 +1,4 @@
-﻿
+
 <div class="maintenance-page">
 
   <header class="page-header">
@@ -20,8 +20,10 @@
 
       <a
         mat-stroked-button
+        class="incidents-nav-action"
         routerLink="/maintenance/incidents">
-        {{ 'maintenance.incidents.list.title' | translate }}
+        <span class="material-symbols-outlined" aria-hidden="true">report_problem</span>
+        {{ 'maintenance.incidents.list.view-incidents' | translate }}
       </a>
 
       <button
@@ -52,16 +54,17 @@
     </div>
   </header>
 
-  <section class="summary-grid">
+  <section class="summary-grid" aria-label="Maintenance overview">
 
     <article class="summary-card">
       <span>
         {{ 'maintenance.list.total' | translate }}
       </span>
 
-      <strong>
-        {{ store.maintenances().length }}
-      </strong>
+      <div class="summary-metric">
+        <strong>{{ store.maintenances().length }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">build</span>
+      </div>
     </article>
 
     <article class="summary-card">
@@ -69,9 +72,10 @@
         {{ 'maintenance.list.completed' | translate }}
       </span>
 
-      <strong>
-        {{ completedCount() }}
-      </strong>
+      <div class="summary-metric">
+        <strong>{{ completedCount() }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+      </div>
     </article>
 
     <article class="summary-card">
@@ -79,9 +83,10 @@
         {{ 'maintenance.schedule.list.pending' | translate }}
       </span>
 
-      <strong>
-        {{ scheduledCount() }}
-      </strong>
+      <div class="summary-metric">
+        <strong>{{ scheduledCount() }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">event</span>
+      </div>
     </article>
 
     <article class="summary-card">
@@ -89,9 +94,10 @@
         {{ 'maintenance.list.equipment-with-records' | translate }}
       </span>
 
-      <strong>
-        {{ equipmentWithRecordsCount() }}
-      </strong>
+      <div class="summary-metric">
+        <strong>{{ equipmentWithRecordsCount() }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      </div>
     </article>
 
   </section>
@@ -108,18 +114,18 @@
     </div>
   }
 
+  <div class="maintenance-workspace-grid">
   <section class="list-panel">
 
-    <div class="panel-header">
-      <span class="section-label">
-        {{ 'maintenance.list.history' | translate }}
-      </span>
-
-      <h2>
-        {{ 'maintenance.list.records' | translate }}
-      </h2>
+    <div class="panel-header history-panel-heading">
+      <div class="history-panel-heading-text">
+        <span class="section-label">
+          {{ 'maintenance.list.history' | translate }}
+        </span>
+        <h2>{{ 'maintenance.list.records' | translate }}</h2>
+      </div>
     </div>
-
+    <div id="maintenance-history-body" class="history-panel-body">
     @if (store.loading()) {
 
       <div class="empty-state">
@@ -163,31 +169,72 @@
 
     } @else {
 
-      <div class="maintenance-filters">
+      <div class="maintenance-filters history-toolbar">
         <mat-button-toggle-group
           [value]="recordFilter()"
-          [attr.aria-label]="
-            'maintenance.schedule.list.filter-label'
-              | translate
-          "
+          [attr.aria-label]="'maintenance.schedule.list.filter-label' | translate"
           (change)="changeRecordFilter($event.value)">
-
           <mat-button-toggle value="all">
             {{ 'maintenance.schedule.list.filter-all' | translate }}
           </mat-button-toggle>
-
           <mat-button-toggle value="scheduled">
             {{ 'maintenance.schedule.list.filter-pending' | translate }}
           </mat-button-toggle>
-
         </mat-button-toggle-group>
+        <button type="button" class="history-search-trigger"
+          [class.history-search-trigger-active]="searchPanelOpen() || hasActiveSearch()"
+          [attr.aria-expanded]="searchPanelOpen()"
+          aria-controls="maintenance-search-panel" (click)="toggleSearchPanel()">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          {{ 'maintenance.history-filters.search-toggle' | translate }}
+          @if (hasActiveSearch()) { <span class="history-filter-dot" aria-hidden="true"></span> }
+        </button>
+      </div>
+      @if (searchPanelOpen()) {
+        <div id="maintenance-search-panel" class="history-search-panel history-search-panel-collapsible"
+          role="search" [attr.aria-label]="'maintenance.history-filters.title' | translate">
+          <div class="history-search-field">
+            <label for="maintenance-search">{{ 'maintenance.history-filters.equipment' | translate }}</label>
+            <div class="history-search-input">
+              <span class="material-symbols-outlined" aria-hidden="true">search</span>
+              <input id="maintenance-search" type="search" autocomplete="off"
+                [placeholder]="'maintenance.history-filters.placeholder' | translate"
+                [value]="searchQuery()"
+                (input)="searchQuery.set($any($event.target).value)" />
+            </div>
+          </div>
+          <div class="history-date-field">
+            <label for="maintenance-from">{{ 'maintenance.history-filters.from' | translate }}</label>
+            <input id="maintenance-from" type="date" [value]="startDate()"
+              (input)="startDate.set($any($event.target).value)" />
+          </div>
+          <div class="history-date-field">
+            <label for="maintenance-to">{{ 'maintenance.history-filters.to' | translate }}</label>
+            <input id="maintenance-to" type="date" [value]="endDate()"
+              (input)="endDate.set($any($event.target).value)" />
+          </div>
+          @if (hasActiveSearch()) {
+            <div class="history-search-actions">
+              <button type="button" class="history-clear-button" (click)="clearHistoryFilters()">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                {{ 'maintenance.history-filters.clear' | translate }}
+              </button>
+            </div>
+          }
+        </div>
+      }
+      <div class="history-result-line" role="status" aria-live="polite">
+        <span>{{ 'maintenance.history-filters.results' | translate }}: <strong>{{ filteredCount() }}</strong> / {{ store.maintenances().length }}</span>
+        @if (invalidDateRange()) {
+          <span class="history-filter-warning">{{ 'maintenance.history-filters.invalid-range' | translate }}</span>
+        }
       </div>
 
       @if (filteredMaintenances().length === 0) {
 
         <div class="empty-state">
           <h3>
-            {{ 'maintenance.schedule.list.no-pending' | translate }}
+            {{ (hasActiveSearch() || recordFilter() === 'scheduled' ? 'maintenance.history-filters.empty' : 'maintenance.schedule.list.no-pending') | translate }}
           </h3>
         </div>
 
@@ -205,7 +252,7 @@
                 {{ 'maintenance.list.equipment' | translate }}
               </th>
 
-              <td mat-cell *matCellDef="let record">
+              <td mat-cell *matCellDef="let record" [attr.data-label]="'maintenance.list.equipment' | translate">
                 <strong>
                   {{ equipmentName(record.equipmentId) }}
                 </strong>
@@ -221,7 +268,7 @@
                 {{ 'maintenance.list.date' | translate }}
               </th>
 
-              <td mat-cell *matCellDef="let record">
+              <td mat-cell *matCellDef="let record" [attr.data-label]="'maintenance.list.date' | translate">
                 {{ record.performedAt | date:'dd/MM/yyyy' }}
               </td>
             </ng-container>
@@ -231,7 +278,7 @@
                 {{ 'maintenance.list.type' | translate }}
               </th>
 
-              <td mat-cell *matCellDef="let record">
+              <td mat-cell *matCellDef="let record" [attr.data-label]="'maintenance.list.type' | translate">
                 {{ record.type }}
               </td>
             </ng-container>
@@ -241,7 +288,7 @@
                 {{ 'maintenance.list.status' | translate }}
               </th>
 
-              <td mat-cell *matCellDef="let record">
+              <td mat-cell *matCellDef="let record" [attr.data-label]="'maintenance.list.status' | translate">
                 <span
                   class="status-badge"
                   [class.completed]="
@@ -270,8 +317,53 @@
         </div>
       }
     }
+    </div>
 
   </section>
+
+  <aside class="incidents-shortcut-panel" aria-labelledby="incident-shortcut-heading">
+    <div class="shortcut-heading">
+      <div class="shortcut-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">report_problem</span>
+      </div>
+      <div>
+        <h2 id="incident-shortcut-heading">
+          {{ 'maintenance.incidents.list.shortcut-title' | translate }}
+        </h2>
+        <p>{{ 'maintenance.incidents.list.shortcut-description' | translate }}</p>
+      </div>
+    </div>
+
+    <ul class="shortcut-benefits">
+      <li>
+        <span class="material-symbols-outlined" aria-hidden="true">pending_actions</span>
+        <div>
+          <strong>{{ 'maintenance.incidents.list.shortcut-open-title' | translate }}</strong>
+          <p>{{ 'maintenance.incidents.list.shortcut-open-description' | translate }}</p>
+        </div>
+      </li>
+      <li>
+        <span class="material-symbols-outlined" aria-hidden="true">block</span>
+        <div>
+          <strong>{{ 'maintenance.incidents.list.shortcut-restriction-title' | translate }}</strong>
+          <p>{{ 'maintenance.incidents.list.shortcut-restriction-description' | translate }}</p>
+        </div>
+      </li>
+      <li>
+        <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+        <div>
+          <strong>{{ 'maintenance.incidents.list.shortcut-return-title' | translate }}</strong>
+          <p>{{ 'maintenance.incidents.list.shortcut-return-description' | translate }}</p>
+        </div>
+      </li>
+    </ul>
+
+    <a class="incidents-shortcut-link" routerLink="/maintenance/incidents">
+      {{ 'maintenance.incidents.list.shortcut-cta' | translate }}
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+    </a>
+  </aside>
+  </div>
 
   @if (formOpen()) {
     <app-maintenance-form
