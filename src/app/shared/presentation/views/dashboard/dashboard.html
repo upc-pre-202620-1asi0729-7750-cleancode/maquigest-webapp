@@ -1,29 +1,285 @@
 <main class="dashboard-page">
   <section class="dashboard-header">
-
     <div class="dashboard-heading">
-      <div>
-        <span class="company-type">
-          {{ companyType | translate }}
-        </span>
-
-        <h1>
-          {{ dashboardTitle | translate }}
-        </h1>
-
-        <p>
-          {{ 'dashboard.welcome' | translate }}
-          {{ store.currentEmail() }}
+      <div class="dashboard-introduction">
+        <span class="company-type">{{ companyType | translate }}</span>
+        <h1>{{ 'navigation.dashboard' | translate }}</h1>
+        <p class="dashboard-subtitle">
+          @if (isRentalCompany()) {
+            {{ 'dashboard.rental-overview' | translate }}
+          } @else {
+            {{ 'dashboard.construction-overview' | translate }}
+          }
+        </p>
+        <p class="dashboard-greeting">
+          {{ 'dashboard.welcome' | translate }} <strong>{{ store.currentEmail() }}</strong>
         </p>
       </div>
-
-      <button
-        mat-stroked-button
-        type="button"
-        (click)="performSignOut()">
+      <button mat-stroked-button type="button" class="dashboard-signout" (click)="performSignOut()">
         {{ 'dashboard.sign-out' | translate }}
       </button>
     </div>
-
+    <nav class="dashboard-quicklinks" [attr.aria-label]="'dashboard.overview-label' | translate">
+      @if (isRentalCompany()) {
+        <a routerLink="/inventory/equipment" class="dashboard-action dashboard-action-primary">
+          <span class="material-symbols-outlined" aria-hidden="true">add</span>
+          {{ 'dashboard.view-equipment' | translate }}
+        </a>
+        <a routerLink="/rentals/requests" class="dashboard-action dashboard-action-secondary">
+          <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+          {{ 'dashboard.view-requests' | translate }}
+        </a>
+      } @else {
+        <a routerLink="/inventory/search" class="dashboard-action dashboard-action-primary">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          {{ 'dashboard.search-equipment' | translate }}
+        </a>
+        <a routerLink="/rentals/my-requests" class="dashboard-action dashboard-action-secondary">
+          <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+          {{ 'dashboard.my-requests' | translate }}
+        </a>
+      }
+    </nav>
   </section>
+
+  @if (isRentalCompany()) {
+    <section class="dashboard-summary dashboard-summary-rental" [attr.aria-label]="'dashboard.overview-label' | translate">
+      <article class="summary-card">
+        <span class="summary-label">{{ 'dashboard.available-equipment' | translate }}</span>
+        <div class="summary-figure">
+          <strong>{{ availableCount() ?? '—' }}</strong>
+          <span class="material-symbols-outlined" aria-hidden="true">construction</span>
+        </div>
+        <span class="summary-detail">{{ 'dashboard.equipment-area' | translate }}</span>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">{{ 'dashboard.equipment-on-rent' | translate }}</span>
+        <div class="summary-figure">
+          <strong>{{ rentedEquipmentCount() ?? '—' }}</strong>
+          <span class="material-symbols-outlined" aria-hidden="true">work_outline</span>
+        </div>
+        <span class="summary-detail">{{ 'dashboard.rentals-area' | translate }}</span>
+      </article>
+      <article class="summary-card summary-card-accent">
+        <span class="summary-label">{{ 'dashboard.under-maintenance' | translate }}</span>
+        <div class="summary-figure">
+          <strong>{{ maintenanceEquipmentCount() ?? '—' }}</strong>
+          <span class="material-symbols-outlined" aria-hidden="true">build</span>
+        </div>
+        <span class="summary-detail">{{ 'dashboard.maintenance-area' | translate }}</span>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">{{ 'dashboard.upcoming-reservations' | translate }}</span>
+        <div class="summary-figure">
+          <strong>{{ upcomingReservationCount() ?? '—' }}</strong>
+          <span class="material-symbols-outlined" aria-hidden="true">event</span>
+        </div>
+        <span class="summary-detail">{{ 'dashboard.reservations-area' | translate }}</span>
+      </article>
+    </section>
+
+    <div class="dashboard-columns">
+      <div class="dashboard-column">
+        <section class="overview-panel">
+          <header class="overview-panel-header">
+            <h2>{{ 'dashboard.upcoming-reservations' | translate }}</h2>
+            <p>{{ 'dashboard.reservations-subtitle' | translate }}</p>
+          </header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (rentals() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (upcomingReservations().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-upcoming' | translate }}</p>
+            } @else {
+              @for (rental of upcomingReservations().slice(0, 3); track rental.id) {
+                <div class="dashboard-record">
+                  <span class="dashboard-record-icon material-symbols-outlined" aria-hidden="true">event_available</span>
+                  <div class="dashboard-record-main">
+                    <strong>{{ equipmentName(rental.equipmentId) }}</strong>
+                    <small>#{{ rental.id }} · {{ formatDate(rental.period.startDate) }} – {{ formatDate(rental.period.endDate) }}</small>
+                  </div>
+                  <span class="dashboard-status">{{ 'dashboard.scheduled' | translate }}</span>
+                </div>
+              }
+            }
+          </div>
+        </section>
+        <section class="overview-panel">
+          <header class="overview-panel-header">
+            <h2>{{ 'dashboard.active-rentals' | translate }}</h2>
+            <p>{{ 'dashboard.active-rentals-subtitle' | translate }}</p>
+          </header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (rentals() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (activeRentals().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-active' | translate }}</p>
+            } @else {
+              @for (rental of activeRentals().slice(0, 3); track rental.id) {
+                <div class="dashboard-record">
+                  <span class="dashboard-record-icon material-symbols-outlined" aria-hidden="true">handyman</span>
+                  <div class="dashboard-record-main">
+                    <strong>{{ equipmentName(rental.equipmentId) }}</strong>
+                    <small>#{{ rental.id }} · {{ formatDate(rental.period.endDate) }}</small>
+                  </div>
+                  <span class="dashboard-status">{{ 'dashboard.active-rentals' | translate }}</span>
+                </div>
+              }
+            }
+          </div>
+        </section>
+      </div>
+      <div class="dashboard-column">
+        <section class="overview-panel">
+          <header class="overview-panel-header">
+            <h2>{{ 'dashboard.equipment-care' | translate }}</h2>
+            <p>{{ 'dashboard.equipment-care-subtitle' | translate }}</p>
+          </header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (maintenance() === null || incidents() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (careItems().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-care' | translate }}</p>
+            } @else {
+              @for (item of careItems().slice(0, 3); track item.id) {
+                <div class="dashboard-record dashboard-record-stacked">
+                  <div class="dashboard-record-main">
+                    <strong>{{ equipmentName(item.equipmentId) }}</strong>
+                    <small>{{ item.title }}</small>
+                    <span class="dashboard-status dashboard-status-warning">{{ item.status | translate }}</span>
+                  </div>
+                  <small class="dashboard-record-date">{{ formatDate(item.date) }}</small>
+                </div>
+              }
+            }
+          </div>
+        </section>
+        <section class="overview-panel">
+          <header class="overview-panel-header"><h2>{{ 'dashboard.recent-activity' | translate }}</h2></header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (rentalRequests() === null || maintenance() === null || incidents() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (recentActivities().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-records' | translate }}</p>
+            } @else {
+              @for (activity of recentActivities(); track activity.id) {
+                <div class="dashboard-record dashboard-record-activity">
+                  <span class="dashboard-activity-dot" aria-hidden="true"></span>
+                  <div class="dashboard-record-main">
+                    <strong>{{ activity.title }}</strong>
+                    <small>{{ activity.description }} · {{ formatDate(activity.date) }}</small>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  } @else {
+    <section class="dashboard-summary dashboard-summary-construction" [attr.aria-label]="'dashboard.overview-label' | translate">
+      <article class="summary-card summary-card-accent">
+        <span class="summary-label">{{ 'dashboard.pending-requests' | translate }}</span>
+        <div class="summary-figure"><strong>{{ pendingRequestCount() ?? '—' }}</strong><span class="material-symbols-outlined" aria-hidden="true">description</span></div>
+        <span class="summary-detail">{{ 'dashboard.requests-area' | translate }}</span>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">{{ 'dashboard.upcoming-reservations' | translate }}</span>
+        <div class="summary-figure"><strong>{{ upcomingReservationCount() ?? '—' }}</strong><span class="material-symbols-outlined" aria-hidden="true">event</span></div>
+        <span class="summary-detail">{{ 'dashboard.reservations-area' | translate }}</span>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">{{ 'dashboard.active-rentals' | translate }}</span>
+        <div class="summary-figure"><strong>{{ activeRentalCount() ?? '—' }}</strong><span class="material-symbols-outlined" aria-hidden="true">work_outline</span></div>
+        <span class="summary-detail">{{ 'dashboard.rentals-area' | translate }}</span>
+      </article>
+    </section>
+    <div class="dashboard-columns dashboard-columns-construction">
+      <div class="dashboard-column">
+        <section class="overview-panel">
+          <header class="overview-panel-header">
+            <h2>{{ 'dashboard.upcoming-reservations' | translate }}</h2>
+            <p>{{ 'dashboard.construction-reservations-subtitle' | translate }}</p>
+          </header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (rentals() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (upcomingReservations().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-upcoming' | translate }}</p>
+            } @else {
+              @for (rental of upcomingReservations().slice(0,3); track rental.id) {
+                <div class="dashboard-record">
+                  <span class="dashboard-record-icon material-symbols-outlined" aria-hidden="true">event_available</span>
+                  <div class="dashboard-record-main">
+                    <strong>{{ equipmentName(rental.equipmentId) }}</strong>
+                    <small>{{ formatDate(rental.period.startDate) }} – {{ formatDate(rental.period.endDate) }}</small>
+                  </div>
+                  <span class="dashboard-status">{{ 'dashboard.scheduled' | translate }}</span>
+                </div>
+              }
+            }
+          </div>
+        </section>
+        <section class="overview-panel">
+          <header class="overview-panel-header">
+            <h2>{{ 'dashboard.active-rentals' | translate }}</h2>
+            <p>{{ 'dashboard.construction-active-subtitle' | translate }}</p>
+          </header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (rentals() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (activeRentals().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-active' | translate }}</p>
+            } @else {
+              @for (rental of activeRentals().slice(0,3); track rental.id) {
+                <div class="dashboard-record">
+                  <div class="dashboard-record-main">
+                    <strong>{{ equipmentName(rental.equipmentId) }}</strong>
+                    <small>{{ formatDate(rental.period.endDate) }}</small>
+                  </div>
+                  <span class="dashboard-status">{{ 'dashboard.active-rentals' | translate }}</span>
+                </div>
+              }
+            }
+          </div>
+        </section>
+      </div>
+      <div class="dashboard-column">
+        <section class="overview-panel">
+          <header class="overview-panel-header"><h2>{{ 'dashboard.my-requests' | translate }}</h2><p>{{ 'dashboard.my-requests-subtitle' | translate }}</p></header>
+          <div class="overview-panel-content">
+            @if (loading()) {
+              <p class="dashboard-state">{{ 'dashboard.loading-data' | translate }}</p>
+            } @else if (rentalRequests() === null) {
+              <p class="dashboard-state">{{ 'dashboard.unavailable-data' | translate }}</p>
+            } @else if (recentRequests().length === 0) {
+              <p class="dashboard-state">{{ 'dashboard.no-pending' | translate }}</p>
+            } @else {
+              @for (request of recentRequests().slice(0,3); track request.id) {
+                <a class="dashboard-record dashboard-record-link" [routerLink]="['/rentals/my-requests',request.id]">
+                  <div class="dashboard-record-main">
+                    <strong>{{ equipmentName(request.equipmentId) }}</strong>
+                    <small>#{{ request.id }} · {{ formatDate(request.period.startDate) }} – {{ formatDate(request.period.endDate) }}</small>
+                  </div>
+                  <span class="dashboard-status">{{ requestStatusKey(request.status) | translate }}</span>
+                </a>
+              }
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  }
 </main>
