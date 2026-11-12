@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
@@ -29,6 +30,10 @@ import { MaintenanceStore } from '../../../application/maintenance.store';
 import { Maintenance } from '../../../domain/model/maintenance.entity';
 
 import { MaintenanceStatus } from '../../../domain/model/maintenance-status.enum';
+import {
+  MaintenanceCompletionDialog,
+  MaintenanceCompletionResult,
+} from '../../components/maintenance-completion-dialog/maintenance-completion-dialog';
 
 import {
   MaintenanceForm,
@@ -59,9 +64,11 @@ export class MaintenanceList {
 
   readonly #iamStore = inject(IamStore);
 
+  readonly #dialog = inject(MatDialog);
+
   protected readonly maintenanceStatus = MaintenanceStatus;
 
-  protected readonly displayedColumns = ['equipment', 'date', 'type', 'status'];
+  protected readonly displayedColumns = ['equipment', 'date', 'type', 'status', 'actions'];
 
   protected readonly formOpen = signal(false);
 
@@ -186,6 +193,52 @@ export class MaintenanceList {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  protected isPendingMaintenance(record: Maintenance): boolean {
+    return (
+      record.status === MaintenanceStatus.SCHEDULED ||
+      record.status === MaintenanceStatus.IN_PROGRESS
+    );
+  }
+
+  protected canCompleteMaintenance(record: Maintenance): boolean {
+    if (!this.isPendingMaintenance(record)) return false;
+    if (record.status === MaintenanceStatus.IN_PROGRESS) return true;
+    // Mirrors the server's calendar-day rule in America/Lima; the aggregate remains authoritative.
+    return this.#limaCalendarDay(new Date()) >= this.#limaCalendarDay(record.performedAt);
+  }
+
+  #limaCalendarDay(date: Date): string {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Lima',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(date);
+    const part = (name: string): string => parts.find((item) => item.type === name)?.value ?? '';
+    return `${part('year')}-${part('month')}-${part('day')}`;
+  }
+
+  protected openCompletion(record: Maintenance): void {
+    if (this.store.loading() || this.store.saving() || !this.canCompleteMaintenance(record)) return;
+
+    const userId = this.#iamStore.currentUserId();
+    if (userId === null) return;
+
+    this.store.clearSaveState();
+    this.#dialog.open<MaintenanceCompletionDialog, { equipmentName: string; type: string }, MaintenanceCompletionResult>(
+      MaintenanceCompletionDialog,
+      {
+        width: '520px',
+        maxWidth: '95vw',
+        data: { equipmentName: this.equipmentName(record.equipmentId), type: record.type },
+      },
+    ).afterClosed().subscribe((result) => {
+      if (!result || this.store.saving()) return;
+      this.successMessageKey.set('maintenance.advance.success');
+      this.store.completeMaintenance(userId, record, result.technician, result.notes);
+    });
   }
 
   protected openForm(mode: MaintenanceFormMode): void {
