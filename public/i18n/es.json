@@ -517,6 +517,19 @@
     }
   },
   "maintenance": {
+      "advance": {
+          "actions": "Acciones",
+          "complete-button": "Completar",
+          "not-due": "Disponible a partir de la fecha programada",
+          "dialog-title": "Completar mantenimiento existente",
+          "dialog-description": "Confirma la intervención programada realizada: registra al técnico y las observaciones. Se actualizará el MISMO mantenimiento sin crear otra fila.",
+          "technician": "Técnico responsable",
+          "notes": "Observaciones del trabajo realizado",
+          "confirm-performed": "Confirmo que el trabajo de mantenimiento fue realizado.",
+          "cancel": "Cancelar",
+          "submit": "Marcar como completado",
+          "success": "Mantenimiento completado. Se actualizó el mismo registro."
+      },
     "incidents": {
       "list": {
         "section": "Gestión de incidencias",
@@ -568,12 +581,12 @@
         "restriction-success": "La incidencia ahora es bloqueante. La maquinaria permanece en mantenimiento y no admite nuevos alquileres.",
         "resolve-short": "Resolver",
         "no-actions": "Sin acciones",
-        "reactivation-title": "Reactivación de maquinaria",
-        "reactivation-description": "Puedes reactivar equipos en mantenimiento una vez resueltas sus incidencias bloqueantes y confirmada su inspección técnica.",
-        "reactivate": "Reactivar maquinaria",
-        "reactivate-warning": "La maquinaria volverá a estar disponible para nuevas solicitudes. Comprueba que no haya alquileres activos ni otras causas de mantenimiento pendientes.",
+        "reactivation-title": "Solicitud de reactivación segura",
+        "reactivation-description": "Solicita la reactivación de maquinaria en mantenimiento. El servidor verificará inspección, incidencias bloqueantes, alquileres activos y mantenimiento posterior a la devolución.",
+        "reactivate": "Solicitar reactivación",
+        "reactivate-warning": "Confirma la inspección técnica. La operación solo continuará si se cumplen las condiciones de seguridad y disponibilidad.",
         "inspection-confirmed": "Confirmo que inspeccioné la maquinaria, está apta para operar y no tiene alquileres activos.",
-        "confirm-reactivation": "Confirmar reactivación",
+        "confirm-reactivation": "Confirmar solicitud de reactivación",
         "reactivating": "Reactivando...",
         "reactivation-success": "Maquinaria reactivada. Su estado ahora es Disponible; el historial de incidencias se conserva."
       },
@@ -595,7 +608,7 @@
     },
     "schedule": {
       "list": {
-        "subtitle": "Registra mantenimientos realizados y programa nuevas intervenciones para tu maquinaria.",
+        "subtitle": "Programa una intervención y, cuando el trabajo se haya realizado, utiliza «Completar» en ese mismo registro. No lo registres otra vez.",
         "button": "Programar mantenimiento",
         "pending": "Pendientes",
         "success": "Mantenimiento programado correctamente.",
@@ -608,7 +621,7 @@
       "form": {
         "section": "Programación de mantenimiento",
         "title": "Programar mantenimiento",
-        "subtitle": "Selecciona una maquinaria y una fecha igual o posterior a hoy.",
+        "subtitle": "Selecciona la maquinaria y la fecha para programar la intervención. Cuando el trabajo se realice, utiliza «Completar» sobre el mismo mantenimiento; no generes un segundo registro.",
         "date": "Fecha programada",
         "date-invalid": "La fecha programada no puede ser anterior a hoy.",
         "saving": "Programando...",
@@ -619,7 +632,7 @@
       "section": "Gestión de mantenimiento",
       "title": "Mantenimiento",
       "subtitle": "Registra los mantenimientos realizados y consulta las intervenciones de tu maquinaria.",
-      "register": "Registrar mantenimiento",
+      "register": "Registrar mantenimiento no programado",
       "total": "Registros totales",
       "completed": "Completados",
       "equipment-with-records": "Maquinarias con mantenimiento",
@@ -637,9 +650,9 @@
       "status": "Estado"
     },
     "form": {
-      "section": "Registro de mantenimiento",
-      "title": "Registrar mantenimiento",
-      "subtitle": "Registra una intervención ya realizada sobre una maquinaria.",
+      "section": "REGISTRO DE MANTENIMIENTO NO PROGRAMADO",
+      "title": "Registrar mantenimiento no programado",
+      "subtitle": "Registra una intervención técnica que ya fue realizada sin programación previa, como una reparación urgente. Si ya estaba programada, usa «Completar» en el historial para evitar duplicados.",
       "equipment": "Maquinaria",
       "equipment-required": "Selecciona una maquinaria.",
       "date": "Fecha del mantenimiento",

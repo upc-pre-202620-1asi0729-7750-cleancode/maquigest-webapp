@@ -73,6 +73,18 @@ export class IncidentStore {
     ),
   );
 
+  // Candidates are displayed for a REQUEST, never treated as automatically eligible.
+  // Spring Boot remains the authority for maintenance, incidents and Rentals ACL evidence.
+  readonly reactivationCandidates = computed(() =>
+    this.#equipmentInformationSignal().filter(equipment =>
+      equipment.status === 'MAINTENANCE' &&
+      !this.#incidentsSignal().some(incident =>
+        incident.equipmentId === equipment.id &&
+        incident.blocksRental && incident.status === IncidentStatus.OPEN,
+      ),
+    ),
+  );
+
   readonly #errorSignal = signal<string | null>(null);
   readonly error = this.#errorSignal.asReadonly();
 
@@ -397,8 +409,11 @@ export class IncidentStore {
       return;
     }
 
-    if (!IncidentReactivationPolicy.canReactivate(equipmentId, this.#incidentsSignal())) {
-      this.#errorSignal.set('There are unresolved blocking incidents or no blocking incident history');
+    if (this.#incidentsSignal().some(incident =>
+      incident.equipmentId === equipmentId &&
+      incident.blocksRental && incident.status === IncidentStatus.OPEN
+    )) {
+      this.#errorSignal.set('Unresolved blocking incidents prevent reactivation');
       return;
     }
 

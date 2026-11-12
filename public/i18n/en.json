@@ -517,6 +517,19 @@
     }
   },
   "maintenance": {
+      "advance": {
+          "actions": "Actions",
+          "complete-button": "Complete",
+          "not-due": "Available on or after the scheduled date",
+          "dialog-title": "Complete existing maintenance",
+          "dialog-description": "Confirm the scheduled intervention was performed: enter the technician and notes. The SAME maintenance entry will be updated.",
+          "technician": "Responsible technician",
+          "notes": "Work notes",
+          "confirm-performed": "I confirm the maintenance work has been performed.",
+          "cancel": "Cancel",
+          "submit": "Mark as completed",
+          "success": "Maintenance completed. The same record was updated."
+      },
     "incidents": {
       "list": {
         "section": "Incident management",
@@ -568,12 +581,12 @@
         "restriction-success": "The incident is now blocking. The equipment remains under maintenance and cannot receive new rentals.",
         "resolve-short": "Resolve",
         "no-actions": "No actions",
-        "reactivation-title": "Equipment reactivation",
-        "reactivation-description": "Reactivate equipment under maintenance once all blocking incidents are resolved and a technical inspection is confirmed.",
-        "reactivate": "Reactivate equipment",
-        "reactivate-warning": "The equipment will become available for new requests. Check that no active rentals or other maintenance reasons remain.",
+        "reactivation-title": "Safe equipment reactivation request",
+        "reactivation-description": "Request reactivation of equipment under maintenance. The server checks inspection, blocking incidents, active rentals and maintenance after return.",
+        "reactivate": "Request reactivation",
+        "reactivate-warning": "Confirm the technical inspection. The operation proceeds only if safety and availability requirements are met.",
         "inspection-confirmed": "I confirm the equipment was inspected, is fit to operate, and has no active rentals.",
-        "confirm-reactivation": "Confirm reactivation",
+        "confirm-reactivation": "Confirm reactivation request",
         "reactivating": "Reactivating...",
         "reactivation-success": "Equipment reactivated and available again. Incident history was preserved."
       },
@@ -595,7 +608,7 @@
     },
     "schedule": {
       "list": {
-        "subtitle": "Register completed maintenance and schedule upcoming equipment maintenance.",
+        "subtitle": "Schedule work and, once performed, use Complete on that same record. Do not log it again.",
         "button": "Schedule maintenance",
         "pending": "Pending",
         "success": "Maintenance scheduled successfully.",
@@ -608,7 +621,7 @@
       "form": {
         "section": "Maintenance scheduling",
         "title": "Schedule maintenance",
-        "subtitle": "Select equipment and a date on or after today.",
+        "subtitle": "Choose equipment and a date to schedule the intervention. Once the work is performed, use Complete on the same maintenance entry; do not create a second record.",
         "date": "Scheduled date",
         "date-invalid": "The scheduled date cannot be in the past.",
         "saving": "Scheduling...",
@@ -619,7 +632,7 @@
       "section": "Maintenance management",
       "title": "Maintenance",
       "subtitle": "Register completed maintenance activities and track equipment history.",
-      "register": "Register maintenance",
+      "register": "Log unplanned maintenance",
       "total": "Total records",
       "completed": "Completed",
       "equipment-with-records": "Equipment with maintenance",
@@ -637,9 +650,9 @@
       "status": "Status"
     },
     "form": {
-      "section": "Maintenance record",
-      "title": "Register maintenance",
-      "subtitle": "Record maintenance work already performed on equipment.",
+      "section": "UNPLANNED MAINTENANCE",
+      "title": "Log unplanned maintenance",
+      "subtitle": "Log technical work already completed without prior scheduling, such as an urgent repair. If it was scheduled, use Complete in the history to avoid duplicates.",
       "equipment": "Equipment",
       "equipment-required": "Select equipment.",
       "date": "Maintenance date",

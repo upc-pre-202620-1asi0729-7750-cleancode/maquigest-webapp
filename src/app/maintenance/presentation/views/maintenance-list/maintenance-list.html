@@ -302,6 +302,24 @@
               </td>
             </ng-container>
 
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ 'maintenance.advance.actions' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let record" [attr.data-label]="'maintenance.advance.actions' | translate">
+                @if (isPendingMaintenance(record)) {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [disabled]="store.saving() || store.loading() || !canCompleteMaintenance(record)"
+                    [attr.title]="!canCompleteMaintenance(record) ? ('maintenance.advance.not-due' | translate) : null"
+                    (click)="openCompletion(record)">
+                    {{ 'maintenance.advance.complete-button' | translate }}
+                  </button>
+                }
+              </td>
+            </ng-container>
+
             <tr
               mat-header-row
               *matHeaderRowDef="displayedColumns">

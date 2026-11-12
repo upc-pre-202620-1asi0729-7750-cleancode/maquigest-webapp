@@ -251,7 +251,7 @@ export class IncidentList {
   protected requestReactivation(equipmentId: number): void {
     if (
       this.busy() ||
-      !this.store.reactivatableEquipment().some((equipment) => equipment.id === equipmentId)
+      !this.store.reactivationCandidates().some((equipment) => equipment.id === equipmentId)
     ) {
       return;
     }

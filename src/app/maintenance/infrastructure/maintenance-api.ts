@@ -1,10 +1,11 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
 import { BaseApi } from '../../shared/infrastructure/base-api';
 
 import { Maintenance } from '../domain/model/maintenance.entity';
+import { MaintenanceStatus } from '../domain/model/maintenance-status.enum';
 
 import { MaintenanceApiEndpoint } from './maintenance-api-endpoint';
 
@@ -21,4 +22,14 @@ export class MaintenanceApi extends BaseApi {
   createMaintenance(maintenance: Maintenance): Observable<Maintenance> {
     return this.#maintenanceEndpoint.create(maintenance);
   }
+
+  advanceMaintenance(
+    maintenanceId: number,
+    status: MaintenanceStatus,
+    technician: string,
+    notes: string,
+  ): Observable<Maintenance> {
+    return this.#maintenanceEndpoint.advanceMaintenance(maintenanceId, status, technician, notes);
+  }
+
 }

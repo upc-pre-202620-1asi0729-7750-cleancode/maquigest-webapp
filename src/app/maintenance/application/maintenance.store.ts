@@ -221,6 +221,55 @@ export class MaintenanceStore {
       });
   }
 
+  // Advance the existing aggregate through the established PATCH command (never POST).
+  completeMaintenance(userId: number, record: Maintenance, technician: string, notes: string): void {
+    if (this.#savingSignal()) return;
+
+    this.#saveSucceededSignal.set(false);
+    this.#errorSignal.set(null);
+
+    const equipment = this.#equipmentInformationSignal().find(
+      (current) => current.id === record.equipmentId && current.ownerUserId === userId,
+    );
+    const current = this.#maintenancesSignal().find((item) => item.id === record.id);
+    if (!equipment || !current || current.equipmentId !== record.equipmentId) {
+      this.#errorSignal.set('Maintenance does not belong to this company');
+      return;
+    }
+    if (
+      current.status !== MaintenanceStatus.SCHEDULED &&
+      current.status !== MaintenanceStatus.IN_PROGRESS
+    ) {
+      this.#errorSignal.set('Only pending maintenance can be completed');
+      return;
+    }
+    if (!technician.trim()) {
+      this.#errorSignal.set('Technician is required to document the completed work');
+      return;
+    }
+
+    this.#savingSignal.set(true);
+    this.#maintenanceApi
+      .advanceMaintenance(record.id, MaintenanceStatus.COMPLETED, technician.trim(), notes.trim())
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (updated) => {
+          // Preserve the aggregate identity and replace, rather than append, its read model.
+          this.#maintenancesSignal.update((items) =>
+            items.map((item) => item.id === updated.id ? updated : item),
+          );
+          this.#savingSignal.set(false);
+          this.#saveSucceededSignal.set(true);
+          this.#errorSignal.set(null);
+        },
+        error: (error) => {
+          this.#savingSignal.set(false);
+          this.#saveSucceededSignal.set(false);
+          this.#errorSignal.set(this.#formatError(error, 'Failed to complete maintenance'));
+        },
+      });
+  }
+
   clearSaveState(): void {
     this.#saveSucceededSignal.set(false);
 
