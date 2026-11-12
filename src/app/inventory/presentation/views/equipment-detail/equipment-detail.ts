@@ -42,6 +42,19 @@ const RENTAL_REQUEST_ERROR_KEYS: Readonly<Record<string, string>> = {
   'Unable to verify maintenance incidents': 'equipment.detail.request-errors.incidents-check-failed',
   'Invalid equipment, company or rental period': 'equipment.detail.request-errors.invalid-request',
   'Invalid equipment identifier': 'equipment.detail.request-errors.invalid-request',
+  'Equipment is unavailable for this period': 'equipment.detail.request-errors.not-available',
+  'You already have a pending or approved request for this equipment and an overlapping period': 'equipment.detail.request-errors.duplicate-request',
+  'Rental start date cannot be in the past': 'equipment.detail.request-errors.past-date',
+  'A construction company cannot rent equipment from itself': 'equipment.detail.request-errors.same-company',
+  'Rental company needs an active subscription': 'equipment.detail.request-errors.subscription-inactive',
+  'Equipment does not belong to the designated rental company': 'equipment.detail.request-errors.company-mismatch',
+  'RENTALS_UNKNOWN_CONFLICT': 'equipment.detail.request-errors.conflict',
+  'RENTALS_UNKNOWN_VALIDATION': 'equipment.detail.request-errors.invalid-request',
+  'RENTALS_UNAUTHORIZED': 'equipment.detail.request-errors.unauthorized',
+  'RENTALS_FORBIDDEN': 'equipment.detail.request-errors.requester-role',
+  'RENTALS_NOT_FOUND': 'equipment.detail.request-errors.not-found',
+  'RENTALS_NETWORK_ERROR': 'equipment.detail.request-errors.network',
+  'RENTALS_SERVER_ERROR': 'equipment.detail.request-errors.server-error',
 };
 
 @Component({

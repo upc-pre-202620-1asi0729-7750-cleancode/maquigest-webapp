@@ -643,7 +643,7 @@ export class RentalsStore {
         },
 
         error: (error) => {
-          this.#errorSignal.set(this.#formatError(error, 'Failed to create rental request'));
+          this.#errorSignal.set(this.#formatCreateRentalRequestError(error));
 
           this.#subscriptionRequiredSignal.set(false);
 
@@ -965,6 +965,54 @@ export class RentalsStore {
           this.#errorSignal.set(this.#formatError(error, 'Failed to update rental request'));
         },
       });
+  }
+
+  /**
+   * Presentation feedback only. Does not change request validation or its outcome.
+   * A generic RFC 7807 code (e.g. RENTALS_CONFLICT) does NOT establish whether
+   * a prior rental, an overlap, maintenance, or another restriction caused it.
+   */
+  #formatCreateRentalRequestError(error: unknown): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      // The existing Rentals API may turn HTTP 409 into a plain Error.
+      // Preserve the status meaning without inventing a specific business cause.
+      if (error instanceof Error && /^Failed to create entity:\s*409\s*$/.test(error.message)) {
+        return 'RENTALS_UNKNOWN_CONFLICT';
+      }
+      return this.#formatError(error, 'Failed to create rental request');
+    }
+
+    const payload: unknown = error.error;
+    const body = payload !== null && typeof payload === 'object'
+      ? payload as Record<string, unknown> : null;
+    const detail = typeof body?.['detail'] === 'string' ? body['detail']
+      : typeof body?.['message'] === 'string' ? body['message']
+      : typeof payload === 'string' ? payload : '';
+
+    // Specific messages are used only when that exact reason was supplied.
+    const explicitReasons = new Set([
+      'Equipment is unavailable for this period',
+      'Equipment already has a confirmed or active rental for the selected period',
+      'Equipment is already reserved for the selected period',
+      'You already have a pending or approved request for this equipment and an overlapping period',
+      'Rental start date cannot be in the past',
+      'Rental company needs an active subscription',
+      'A construction company cannot rent equipment from itself',
+      'Equipment does not belong to the designated rental company',
+      'Equipment not found',
+    ]);
+    if (explicitReasons.has(detail)) return detail;
+
+    // Spring's localized ProblemDetail can have a general error description
+    // for every 409. Never mislabel that response as a historic-rental overlap.
+    if (error.status === 0) return 'RENTALS_NETWORK_ERROR';
+    if (error.status === 401) return 'RENTALS_UNAUTHORIZED';
+    if (error.status === 403) return 'RENTALS_FORBIDDEN';
+    if (error.status === 404) return 'RENTALS_NOT_FOUND';
+    if (error.status === 409) return 'RENTALS_UNKNOWN_CONFLICT';
+    if (error.status === 400 || error.status === 422) return 'RENTALS_UNKNOWN_VALIDATION';
+    if (error.status >= 500) return 'RENTALS_SERVER_ERROR';
+    return 'RENTALS_SERVER_ERROR';
   }
 
   #formatError(error: unknown, fallbackMessage: string): string {
