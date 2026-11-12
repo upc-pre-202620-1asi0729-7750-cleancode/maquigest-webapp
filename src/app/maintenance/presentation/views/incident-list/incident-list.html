@@ -76,14 +76,14 @@
     <div class="error-banner" role="alert">{{ store.error() }}</div>
   }
 
-  @if (store.reactivatableEquipment().length > 0) {
+  @if (store.reactivationCandidates().length > 0) {
     <section class="reactivation-panel">
       <div class="reactivation-heading">
         <h2>{{ 'maintenance.incidents.list.reactivation-title' | translate }}</h2>
         <p>{{ 'maintenance.incidents.list.reactivation-description' | translate }}</p>
       </div>
 
-      @for (equipment of store.reactivatableEquipment(); track equipment.id) {
+      @for (equipment of store.reactivationCandidates(); track equipment.id) {
         <div class="reactivation-row">
           <div>
             <strong>{{ equipment.name }}</strong>
