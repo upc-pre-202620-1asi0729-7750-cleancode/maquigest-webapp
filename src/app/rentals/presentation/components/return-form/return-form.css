@@ -1,4 +1,4 @@
-﻿:host {
+:host {
   display: contents;
 }
 
@@ -156,4 +156,11 @@ mat-form-field {
     padding-left: 20px;
     padding-right: 20px;
   }
+}
+
+.date-validation-warning {
+  margin: -8px 0 10px;
+  color: #9a3412;
+  font-size: 0.82rem;
+  line-height: 1.5;
 }

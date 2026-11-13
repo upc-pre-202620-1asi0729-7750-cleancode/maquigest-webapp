@@ -245,6 +245,35 @@ export class SubscriptionsStore {
       });
   }
 
+  cancelCurrentSubscription(): void {
+    const current = this.#currentSubscriptionSignal();
+    if (!current || this.#subscriptionLoadingSignal()) return;
+
+    this.#subscriptionLoadingSignal.set(true);
+    this.#subscriptionErrorSignal.set(null);
+    this.#subscriptionsApi.cancelUserSubscription(current.id)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (cancelled) => {
+          if (cancelled.status !== SubscriptionStatus.CANCELLED) {
+            this.#subscriptionErrorSignal.set('The server did not confirm cancellation');
+          } else {
+            ++this.#subscriptionRequestVersion;
+            // Navigation and route access depend on this signal, so revoke entitlement immediately.
+            this.#currentSubscriptionSignal.set(null);
+            this.#subscriptionErrorSignal.set(null);
+          }
+          this.#subscriptionLoadingSignal.set(false);
+        },
+        error: (error) => {
+          this.#subscriptionErrorSignal.set(
+            this.#formatError(error, 'Failed to cancel subscription'),
+          );
+          this.#subscriptionLoadingSignal.set(false);
+        },
+      });
+  }
+
   #calculateMonthlyEndDate(startDate: Date): Date {
     const result = new Date(startDate);
 

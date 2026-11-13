@@ -1,4 +1,4 @@
-﻿<div class="requests-page">
+<div class="requests-page">
 
   <header class="requests-header">
 
@@ -104,6 +104,18 @@
 
     </div>
 
+    <div class="requests-toolbar">
+      <label class="request-search">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <input type="search" [value]="searchFilter()" (input)="setSearchFilter($event)"
+          [placeholder]="'rentals.requests.ui.search-placeholder' | translate"
+          [attr.aria-label]="'rentals.requests.ui.search-placeholder' | translate">
+      </label>
+      <details class="request-filter-disclosure">
+        <summary>
+          <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
+          {{ 'rentals.requests.ui.filters' | translate }}
+        </summary>
     <div class="filters">
 
       <mat-form-field
@@ -187,6 +199,9 @@
 
       </button>
 
+    </div>
+
+      </details>
     </div>
 
     @if (
@@ -284,10 +299,10 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request" [attr.data-label]="'rentals.requests.requester' | translate">
 
               <div class="primary-cell">
-
+                <span class="request-code">#{{ request.id }}</span>
                 <strong>
                   {{
                     requesterName(
@@ -328,7 +343,7 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request" [attr.data-label]="'rentals.requests.equipment' | translate">
 
               <div class="primary-cell">
 
@@ -370,7 +385,7 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request" [attr.data-label]="'rentals.requests.period' | translate">
 
               {{
                 formatDate(
@@ -412,7 +427,7 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request" [attr.data-label]="'rentals.requests.requested-at' | translate">
 
               {{
                 formatDate(
@@ -440,7 +455,7 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request" [attr.data-label]="'rentals.requests.status-label' | translate">
 
               <span
                 class="status-badge"
@@ -489,7 +504,7 @@
 
             <td
               mat-cell
-              *matCellDef="let request">
+              *matCellDef="let request" [attr.data-label]="'rentals.requests.actions' | translate">
 
               @if (
                 request.isPending

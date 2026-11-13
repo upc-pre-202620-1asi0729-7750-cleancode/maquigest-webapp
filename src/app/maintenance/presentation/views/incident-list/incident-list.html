@@ -1,4 +1,10 @@
 <div class="incidents-page">
+  <nav class="incident-return-row" [attr.aria-label]="'maintenance.incidents.list.view-maintenance' | translate">
+    <a routerLink="/maintenance" class="incident-return-action">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      {{ 'maintenance.incidents.list.view-maintenance' | translate }}
+    </a>
+  </nav>
   <header class="page-header">
     <div class="page-heading">
       <span class="section-label">
@@ -9,15 +15,13 @@
     </div>
 
     <div class="page-actions">
-      <a mat-stroked-button routerLink="/maintenance" class="back-button">
-        {{ 'maintenance.incidents.list.view-maintenance' | translate }}
-      </a>
       <button
         mat-flat-button
         type="button"
-        class="primary-button"
+        class="primary-button incident-create-action"
         [disabled]="busy() || store.equipmentInformation().length === 0"
         (click)="openForm()">
+        <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>
         {{ 'maintenance.incidents.list.register' | translate }}
       </button>
     </div>
@@ -72,14 +76,14 @@
     <div class="error-banner" role="alert">{{ store.error() }}</div>
   }
 
-  @if (store.reactivatableEquipment().length > 0) {
+  @if (store.reactivationCandidates().length > 0) {
     <section class="reactivation-panel">
       <div class="reactivation-heading">
         <h2>{{ 'maintenance.incidents.list.reactivation-title' | translate }}</h2>
         <p>{{ 'maintenance.incidents.list.reactivation-description' | translate }}</p>
       </div>
 
-      @for (equipment of store.reactivatableEquipment(); track equipment.id) {
+      @for (equipment of store.reactivationCandidates(); track equipment.id) {
         <div class="reactivation-row">
           <div>
             <strong>{{ equipment.name }}</strong>
@@ -125,13 +129,15 @@
   }
 
   <section class="list-panel">
-    <div class="panel-header">
-      <span class="section-label">
-        {{ 'maintenance.incidents.list.history' | translate }}
-      </span>
-      <h2>{{ 'maintenance.incidents.list.records' | translate }}</h2>
+    <div class="panel-header history-panel-heading">
+      <div class="history-panel-heading-text">
+        <span class="section-label">
+          {{ 'maintenance.incidents.list.history' | translate }}
+        </span>
+        <h2>{{ 'maintenance.incidents.list.records' | translate }}</h2>
+      </div>
     </div>
-
+    <div id="incident-history-body" class="history-panel-body">
     @if (store.loading()) {
       <div class="empty-state">
         <mat-spinner [diameter]="34"></mat-spinner>
@@ -154,8 +160,46 @@
         }
       </div>
     } @else {
+      <div class="history-search-panel" role="search" [attr.aria-label]="'maintenance.history-filters.title' | translate">
+        <div class="history-search-field">
+          <label for="incident-search">{{ 'maintenance.history-filters.equipment' | translate }}</label>
+          <div class="history-search-input">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <input id="incident-search" type="search" autocomplete="off"
+              [placeholder]="'maintenance.history-filters.placeholder' | translate"
+              [value]="searchQuery()"
+              (input)="searchQuery.set($any($event.target).value)" />
+          </div>
+        </div>
+        <div class="history-date-field">
+          <label for="incident-from">{{ 'maintenance.history-filters.from' | translate }}</label>
+          <input id="incident-from" type="date" [value]="startDate()"
+            (input)="startDate.set($any($event.target).value)" />
+        </div>
+        <div class="history-date-field">
+          <label for="incident-to">{{ 'maintenance.history-filters.to' | translate }}</label>
+          <input id="incident-to" type="date" [value]="endDate()"
+            (input)="endDate.set($any($event.target).value)" />
+        </div>
+        <button type="button" class="history-clear-button" (click)="clearHistoryFilters()"
+          [disabled]="!hasActiveSearch()">
+          <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+          {{ 'maintenance.history-filters.clear' | translate }}
+        </button>
+      </div>
+      <div class="history-result-line" role="status" aria-live="polite">
+        <span>{{ 'maintenance.history-filters.results' | translate }}: <strong>{{ filteredIncidents().length }}</strong> / {{ store.incidents().length }}</span>
+        @if (invalidDateRange()) {
+          <span class="history-filter-warning">{{ 'maintenance.history-filters.invalid-range' | translate }}</span>
+        }
+      </div>
+      @if (filteredIncidents().length === 0) {
+        <div class="empty-state history-no-results">
+          <h3>{{ 'maintenance.history-filters.empty' | translate }}</h3>
+        </div>
+      }
       <div class="incident-grid">
-        @for (incident of store.incidents(); track incident.id) {
+        @for (incident of filteredIncidents(); track incident.id) {
           <article class="incident-card">
             <div class="incident-top">
               <div class="equipment-block">
@@ -296,6 +340,7 @@
         }
       </div>
     }
+    </div>
   </section>
 
   @if (formOpen()) {

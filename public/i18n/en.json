@@ -45,6 +45,17 @@
       "new-to-maquigest": "New to MaquiGest?",
       "create-account": "Create an account",
       "registration-success": "Your account was created successfully. You can now sign in."
+    },
+    "recovery": {
+      "title": "Recover your password",
+      "subtitle": "Enter your email to request password recovery instructions.",
+      "submit": "Request recovery",
+      "sending": "Sending request…",
+      "invalid-email": "Enter a valid email address.",
+      "success": "If this account exists, instructions will be sent once email delivery is configured.",
+      "unavailable": "Password recovery is not yet supported by this server. It will be enabled with the MaquiGest backend.",
+      "error": "We could not process the request. Please try again later.",
+      "back-to-sign-in": "Back to sign in"
     }
   },
   "dashboard": {
@@ -53,7 +64,48 @@
     "rental-company": "Rental Company",
     "construction-company": "Construction Company",
     "welcome": "Welcome,",
-    "sign-out": "Sign out"
+    "sign-out": "Sign out",
+    "rental-overview": "Keep your equipment and rentals organized.",
+    "construction-overview": "Keep your requests, reservations and rentals in view.",
+    "overview-label": "Operations overview",
+    "available-equipment": "Available equipment",
+    "equipment-on-rent": "Equipment on rent",
+    "under-maintenance": "Under maintenance",
+    "upcoming-reservations": "Upcoming reservations",
+    "pending-requests": "Pending requests",
+    "active-rentals": "Active rentals",
+    "my-requests": "My requests",
+    "equipment-care": "Equipment care",
+    "recent-activity": "Recent activity",
+    "equipment-area": "Open the Equipment section",
+    "rentals-area": "Open the Rentals section",
+    "maintenance-area": "Open the Maintenance section",
+    "reservations-area": "Check requests and rentals",
+    "requests-area": "Open My Requests",
+    "reservations-subtitle": "Prepare equipment for the next delivery.",
+    "active-rentals-subtitle": "Review upcoming deliveries and returns.",
+    "equipment-care-subtitle": "Maintenance and inspections to follow up.",
+    "construction-reservations-subtitle": "Equipment confirmed for your projects.",
+    "construction-active-subtitle": "Track your equipment return dates.",
+    "my-requests-subtitle": "Your latest rental requests.",
+    "panel-information-note": "View details in the corresponding section of the navigation menu.",
+    "visual-only-note": "Visual layout based on mockups. No simulated counts or business-logic changes.",
+    "loading-data": "Loading current data…",
+    "unavailable-data": "These records could not be retrieved.",
+    "no-records": "No records to display.",
+    "no-upcoming": "No upcoming reservations.",
+    "no-active": "No active rentals.",
+    "no-pending": "No recent requests.",
+    "no-care": "No scheduled maintenance or open incidents.",
+    "in-progress": "In progress",
+    "scheduled": "Scheduled",
+    "open-incident": "Open incident",
+    "recent-request": "Request",
+    "view-requests": "View requests",
+    "view-rentals": "View rentals",
+    "view-equipment": "View equipment",
+    "search-equipment": "Search equipment",
+    "active-summary": "Current rental records"
   },
   "sign-up": {
     "workspace-badge": "Create your workspace",
@@ -108,6 +160,17 @@
     }
   },
   "equipment": {
+    "form": {
+      "back": "Back to equipment",
+      "subtitle-create": "Complete the details to add equipment to your inventory.",
+      "subtitle-edit": "Update this equipment without changing its history.",
+      "details": "Equipment information",
+      "details-note": "Identification, general details and location.",
+      "rates": "Rental rates",
+      "rates-note": "Enter the daily and weekly rental prices.",
+      "required-note": "* Required fields",
+      "cancel": "Cancel"
+    },
     "list-title": "Equipment",
     "new-title": "Register equipment",
     "edit-title": "Edit equipment",
@@ -173,7 +236,7 @@
       "end-date": "End date",
       "date-required": "The date is required.",
       "check-availability": "Check availability",
-      "available-for-period": "The equipment is available during the selected period.",
+      "available-for-period": "The availability check shows this equipment is operationally available for the selected dates. Your request will be validated again when submitted and may be rejected if another restriction applies.",
       "not-available-for-period": "The equipment is not available during the selected period.",
       "invalid-period": "The start date must be before or equal to the end date.",
       "request-rental": "Request rental",
@@ -183,16 +246,25 @@
       "request-errors": {
         "status-changed": "The rental request could not be submitted because the equipment is no longer available. Check its availability again.",
         "blocking-incident": "You cannot request this equipment because it has an unresolved blocking maintenance incident.",
-        "reserved": "The equipment is already reserved for the selected period.",
-        "rental-overlap": "The equipment has a confirmed or active rental that overlaps the selected dates.",
+        "reserved": "This equipment has a reservation overlapping your selected dates. Choose another period.",
+        "rental-overlap": "This equipment already has a recorded rental that overlaps your selected dates. Even if the earlier check showed availability, this period cannot be requested. Choose different dates.",
         "company-mismatch": "The equipment does not belong to the selected rental company.",
-        "not-found": "The requested equipment could not be found.",
+        "not-found": "The equipment or requested resource was not found. Refresh the page and try again.",
         "reservations-check-failed": "The equipment reservations could not be verified. Please try again.",
         "incidents-check-failed": "The maintenance restrictions could not be verified. Please try again.",
-        "invalid-request": "The equipment or rental dates are invalid.",
+        "invalid-request": "The request details are invalid. Check the dates, equipment, and rental information.",
         "availability-check-failed": "The current availability could not be checked. Please try again.",
         "generic": "The rental request could not be submitted. Please try again.",
-        "requester-role": "Only construction companies can submit rental requests."
+        "requester-role": "Your account does not have permission to request this rental.",
+        "not-available": "This equipment is unavailable for the requested period. There may be a reservation or operational restriction. Choose different dates.",
+        "duplicate-request": "You already have a pending or approved request for this equipment with overlapping dates. Check My Requests before trying again.",
+        "past-date": "You cannot submit a rental request with a start date in the past. Select a valid period beginning today or later.",
+        "same-company": "A construction company cannot rent equipment from itself.",
+        "subscription-inactive": "The rental company needs an active subscription to accept new requests.",
+        "conflict": "The request could not be created because it conflicts with the current rental conditions. Review the dates and your existing requests. Contact the rental company if the issue persists.",
+        "unauthorized": "Your session has expired or could not be verified. Please sign in again.",
+        "network": "We could not connect to the server. Check your connection and try again.",
+        "server-error": "Something went wrong while processing your request. Please try again later."
       },
       "request-status-values": {
         "pending": "Pending",
@@ -201,6 +273,23 @@
       },
       "availability-checking": "Checking current availability...",
       "availability-check-failed": "Could not check current availability. Please try again."
+    },
+    "ui": {
+      "section": "Inventory",
+      "subtitle": "Manage your machinery, availability and operating condition.",
+      "overview": "Equipment overview",
+      "total": "Total equipment",
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "registered": "Registered units",
+      "ready": "Ready for a new rental",
+      "unavailable-description": "On rent or in maintenance",
+      "inventory": "Equipment inventory",
+      "search-placeholder": "Search by name, code, category or location",
+      "filters": "Filters",
+      "all-statuses": "All statuses",
+      "clear-filters": "Clear filters",
+      "no-results": "No equipment matches the selected filters."
     }
   },
   "rentals": {
@@ -241,7 +330,11 @@
       "empty-title": "No rental requests yet",
       "empty-description": "Your company has not received any rental requests yet.",
       "no-filter-results": "No matching requests",
-      "no-filter-results-description": "No rental requests match the selected filters."
+      "no-filter-results-description": "No rental requests match the selected filters.",
+      "ui": {
+        "search-placeholder": "Search by request, client or equipment",
+        "filters": "Filters"
+      }
     },
     "active": {
       "section": "Rental operations",
@@ -300,7 +393,16 @@
       "load-error": "The rentals could not be loaded.",
       "operation-error": "The delivery or return operation could not be completed.",
       "empty-title": "No rental operations",
-      "empty-description": "Your company does not currently have confirmed or active rentals."
+      "empty-description": "Your company does not currently have confirmed or active rentals.",
+      "ui": {
+        "list-description": "Review confirmed reservations and ongoing rentals while keeping delivery and return actions accessible.",
+        "views-label": "Filter operations by stage",
+        "all": "All operations",
+        "reservations": "Confirmed reservations",
+        "active-rentals": "Active rentals",
+        "no-filter-results": "No records in this stage",
+        "no-filter-description": "Choose another view to see your company operations."
+      }
     },
     "my-requests": {
       "section": "Rental operations",
@@ -374,6 +476,12 @@
       "change-confirmation-label": "Plan change",
       "change-confirmation-title": "Confirm plan change",
       "change-confirmation-description": "Review the selected plan before updating your subscription.",
+      "manage-subscription": "Manage subscription",
+      "cancel-plan-title": "Cancel your current subscription?",
+      "cancel-plan-description": "Cancellation takes effect immediately. Your company will lose access to modules requiring an active plan.",
+      "cancel-plan-warning": "Existing records will not be deleted. You can subscribe again and regain the modules included in the selected plan. This operation does not automatically refund payments.",
+      "keep-plan": "Keep my plan",
+      "cancel-plan-action": "Confirm cancellation",
       "selected-plan": "Selected plan",
       "new-plan": "New plan",
       "cancel": "Cancel",
@@ -418,13 +526,36 @@
     }
   },
   "maintenance": {
+      "advance": {
+          "actions": "Actions",
+          "complete-button": "Complete",
+          "not-due": "Available on or after the scheduled date",
+          "dialog-title": "Complete existing maintenance",
+          "dialog-description": "Confirm the scheduled intervention was performed: enter the technician and notes. The SAME maintenance entry will be updated.",
+          "technician": "Responsible technician",
+          "notes": "Work notes",
+          "confirm-performed": "I confirm the maintenance work has been performed.",
+          "cancel": "Cancel",
+          "submit": "Mark as completed",
+          "success": "Maintenance completed. The same record was updated."
+      },
     "incidents": {
       "list": {
         "section": "Incident management",
         "title": "Equipment incidents",
         "subtitle": "Register and review problems reported with your company equipment.",
-        "view-maintenance": "View maintenance",
-        "register": "Report incident",
+        "view-incidents": "Manage incidents",
+        "shortcut-title": "Equipment incidents",
+        "shortcut-description": "Review issues that need attention and manage equipment restrictions.",
+        "shortcut-open-title": "Open incidents",
+        "shortcut-open-description": "Identify reports that still require attention.",
+        "shortcut-restriction-title": "Rental restrictions",
+        "shortcut-restriction-description": "Check which equipment has been temporarily withdrawn.",
+        "shortcut-return-title": "Safe reactivation",
+        "shortcut-return-description": "Confirm inspection after resolving blocking incidents.",
+        "shortcut-cta": "View incidents",
+        "view-maintenance": "Back to maintenance",
+        "register": "Report new incident",
         "total": "Reported incidents",
         "affected-equipment": "Affected equipment",
         "last-report": "Latest report",
@@ -459,12 +590,12 @@
         "restriction-success": "The incident is now blocking. The equipment remains under maintenance and cannot receive new rentals.",
         "resolve-short": "Resolve",
         "no-actions": "No actions",
-        "reactivation-title": "Equipment reactivation",
-        "reactivation-description": "Reactivate equipment under maintenance once all blocking incidents are resolved and a technical inspection is confirmed.",
-        "reactivate": "Reactivate equipment",
-        "reactivate-warning": "The equipment will become available for new requests. Check that no active rentals or other maintenance reasons remain.",
+        "reactivation-title": "Safe equipment reactivation request",
+        "reactivation-description": "Request reactivation of equipment under maintenance. The server checks inspection, blocking incidents, active rentals and maintenance after return.",
+        "reactivate": "Request reactivation",
+        "reactivate-warning": "Confirm the technical inspection. The operation proceeds only if safety and availability requirements are met.",
         "inspection-confirmed": "I confirm the equipment was inspected, is fit to operate, and has no active rentals.",
-        "confirm-reactivation": "Confirm reactivation",
+        "confirm-reactivation": "Confirm reactivation request",
         "reactivating": "Reactivating...",
         "reactivation-success": "Equipment reactivated and available again. Incident history was preserved."
       },
@@ -481,12 +612,12 @@
         "saving": "Saving...",
         "save": "Save incident",
         "block-rental": "Temporarily withdraw from rental",
-        "block-rental-hint": "Enable this when equipment cannot operate safely. It will be marked as under maintenance and unavailable for new rentals. Currently rented equipment requires separate handling."
+        "block-rental-hint": "If equipment is unsafe, it will enter maintenance and stop accepting new rentals. Existing rentals are not cancelled."
       }
     },
     "schedule": {
       "list": {
-        "subtitle": "Register completed maintenance and schedule upcoming equipment maintenance.",
+        "subtitle": "Schedule work and, once performed, use Complete on that same record. Do not log it again.",
         "button": "Schedule maintenance",
         "pending": "Pending",
         "success": "Maintenance scheduled successfully.",
@@ -499,7 +630,7 @@
       "form": {
         "section": "Maintenance scheduling",
         "title": "Schedule maintenance",
-        "subtitle": "Select equipment and a date on or after today.",
+        "subtitle": "Choose equipment and a date to schedule the intervention. Once the work is performed, use Complete on the same maintenance entry; do not create a second record.",
         "date": "Scheduled date",
         "date-invalid": "The scheduled date cannot be in the past.",
         "saving": "Scheduling...",
@@ -510,7 +641,7 @@
       "section": "Maintenance management",
       "title": "Maintenance",
       "subtitle": "Register completed maintenance activities and track equipment history.",
-      "register": "Register maintenance",
+      "register": "Log unplanned maintenance",
       "total": "Total records",
       "completed": "Completed",
       "equipment-with-records": "Equipment with maintenance",
@@ -528,9 +659,9 @@
       "status": "Status"
     },
     "form": {
-      "section": "Maintenance record",
-      "title": "Register maintenance",
-      "subtitle": "Record maintenance work already performed on equipment.",
+      "section": "UNPLANNED MAINTENANCE",
+      "title": "Log unplanned maintenance",
+      "subtitle": "Log technical work already completed without prior scheduling, such as an urgent repair. If it was scheduled, use Complete in the history to avoid duplicates.",
       "equipment": "Equipment",
       "equipment-required": "Select equipment.",
       "date": "Maintenance date",
@@ -547,6 +678,52 @@
       "scheduled": "Scheduled",
       "in_progress": "In progress",
       "completed": "Completed"
+    },
+    "history": {
+      "section": "Operational history",
+      "title": "Equipment history",
+      "description": "Review rentals, incidents and maintenance associated with this equipment.",
+      "back": "Back to equipment",
+      "equipment": "Equipment",
+      "code": "Code",
+      "records": "records",
+      "loading": "Loading history…",
+      "invalid-id": "The equipment identifier is invalid.",
+      "not-found": "Equipment history was not found.",
+      "forbidden": "You are not authorized to view this history.",
+      "load-error": "Unable to load history. Check the connection to MaquiGest Platform.",
+      "empty": "No operations have been recorded for this equipment yet.",
+      "view": "View history",
+      "status-label": "Status",
+      "kind": {
+        "rental": "Rental",
+        "incident": "Incident",
+        "maintenance": "Maintenance"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "active": "Active",
+        "completed": "Completed",
+        "scheduled": "Scheduled",
+        "in_progress": "In progress",
+        "open": "Open",
+        "resolved": "Resolved"
+      }
+    },
+    "history-filters": {
+      "title": "History filters",
+      "equipment": "Search equipment",
+      "placeholder": "Equipment name or code",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear filters",
+      "results": "Matching records",
+      "empty": "No records match these filters.",
+      "invalid-range": "The start date cannot be later than the end date.",
+      "show-history": "Show history",
+      "hide-history": "Hide history",
+      "search-toggle": "Search",
+      "apply": "Apply"
     }
   }
 }

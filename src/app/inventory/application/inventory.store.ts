@@ -99,11 +99,11 @@ export class InventoryStore {
     );
   }
 
-  /** Never infer present-day availability from an earlier cached Equipment entity. */
+  /** Refresh the detail, then ask Inventory for authoritative calendar-day availability. */
   verifyEquipmentAvailability(id: number, period: import('../../shared/domain/value-object/date-range.value-object').DateRange): Observable<boolean> {
     return this.#inventoryApi.getEquipmentById(id).pipe(
       tap((equipment) => this.#upsertEquipment(equipment)),
-      map((equipment) => equipment.isAvailableFor(period)),
+      switchMap(() => this.#inventoryApi.getEquipmentAvailability(id, period)),
     );
   }
 

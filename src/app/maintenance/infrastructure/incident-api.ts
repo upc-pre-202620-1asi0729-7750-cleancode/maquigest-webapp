@@ -29,4 +29,8 @@ export class IncidentApi extends BaseApi {
   requireRentalRestriction(incident: Incident): Observable<Incident> {
     return this.#incidentEndpoint.requireRentalRestriction(incident);
   }
+
+  reactivateEquipment(equipmentId: number, inspectionConfirmed: boolean): Observable<void> {
+    return this.#incidentEndpoint.reactivateEquipment(equipmentId, inspectionConfirmed);
+  }
 }

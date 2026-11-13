@@ -70,31 +70,14 @@ export class InventoryEquipmentOperationAclAdapter
           throw new Error('Equipment is not available');
         }
 
-        const availabilityBlocks = equipment.availabilityBlocks ?? [];
-
-        const overlaps = availabilityBlocks.some((block) =>
-          this.#periodsOverlap(
-            startDate,
-            endDate,
-            new Date(block.startDate),
-            new Date(block.endDate),
-          ),
-        );
-
-        if (overlaps) {
-          throw new Error('Equipment is not available for the selected period');
-        }
-
-        const nextBlockId =
-          availabilityBlocks.reduce((highestId, block) => Math.max(highestId, block.id), 0) + 1;
-
-        // Write only the reservation field; do not overwrite Maintenance status or editable data.
-        return this.#http.patch<ExternalEquipmentResource>(
-          `${this.#endpointUrl}/${equipmentId}`,
-          { availabilityBlocks: [
-            ...availabilityBlocks,
-            { id: nextBlockId, startDate: startDate.toISOString(), endDate: endDate.toISOString() },
-          ] },
+        // Inventory server validates the period under an exclusive aggregate lock.
+        // The browser must never allocate reservation IDs or replace the whole block list.
+        return this.#http.post<ExternalEquipmentResource>(
+          `${this.#endpointUrl}/${equipmentId}/availability-blocks`,
+          {
+            startDate: startDate.toISOString().slice(0, 10),
+            endDate: endDate.toISOString().slice(0, 10),
+          },
         );
       }),
 
@@ -129,14 +112,14 @@ export class InventoryEquipmentOperationAclAdapter
           // A return must not erase a restriction reported while the equipment was rented.
           return this.#incidentRestriction.hasOpenBlockingIncident(equipmentId).pipe(
             switchMap((blocked) => this.#http.patch<ExternalEquipmentResource>(
-              `${this.#endpointUrl}/${equipmentId}`,
+              `${this.#endpointUrl}/${equipmentId}/operational-status`,
               { status: blocked ? 'MAINTENANCE' : 'AVAILABLE' },
             )),
           );
         }
         // A status-only PATCH cannot erase a separate reservation update.
         return this.#http.patch<ExternalEquipmentResource>(
-          `${this.#endpointUrl}/${equipmentId}`,
+          `${this.#endpointUrl}/${equipmentId}/operational-status`,
           { status },
         );
       }),
@@ -145,7 +128,4 @@ export class InventoryEquipmentOperationAclAdapter
     );
   }
 
-  #periodsOverlap(firstStart: Date, firstEnd: Date, secondStart: Date, secondEnd: Date): boolean {
-    return firstStart <= secondEnd && secondStart <= firstEnd;
-  }
 }

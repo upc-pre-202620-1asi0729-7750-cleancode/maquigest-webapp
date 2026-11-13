@@ -254,6 +254,14 @@
 
         </div>
 
+        <div class="subscription-management-actions">
+          <button type="button" class="subscription-manage-link"
+            [disabled]="store.subscriptionLoading()"
+            (click)="openSubscriptionManagement()">
+            {{ 'subscriptions.plans.manage-subscription' | translate }}
+          </button>
+        </div>
+
       </article>
 
     } @else {
@@ -564,6 +572,31 @@
     }
 
   </section>
+
+  @if (showCancelConfirmation()) {
+    <div class="cancel-subscription-backdrop">
+      <section class="cancel-subscription-dialog" role="dialog" aria-modal="true"
+        aria-labelledby="cancel-plan-heading">
+        <span class="section-label">{{ 'subscriptions.plans.manage-subscription' | translate }}</span>
+        <h2 id="cancel-plan-heading">{{ 'subscriptions.plans.cancel-plan-title' | translate }}</h2>
+        <p>{{ 'subscriptions.plans.cancel-plan-description' | translate }}</p>
+        <p class="cancel-subscription-warning">{{ 'subscriptions.plans.cancel-plan-warning' | translate }}</p>
+        @if (store.subscriptionError()) {
+          <div class="subscription-error" role="alert">{{ store.subscriptionError() }}</div>
+        }
+        <div class="cancel-subscription-actions">
+          <button type="button" class="cancel-keep-button"
+            [disabled]="store.subscriptionLoading()" (click)="closeCancelConfirmation()">
+            {{ 'subscriptions.plans.keep-plan' | translate }}
+          </button>
+          <button type="button" class="cancel-confirm-button"
+            [disabled]="store.subscriptionLoading()" (click)="confirmSubscriptionCancellation()">
+            {{ 'subscriptions.plans.cancel-plan-action' | translate }}
+          </button>
+        </div>
+      </section>
+    </div>
+  }
 
   @if (
     selectedPlan();

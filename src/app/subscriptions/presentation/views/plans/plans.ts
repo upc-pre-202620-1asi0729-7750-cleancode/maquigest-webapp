@@ -36,6 +36,7 @@ export class Plans {
   readonly #iamStore = inject(IamStore);
 
   protected readonly selectedPlan = signal<SubscriptionPlan | null>(null);
+  protected readonly showCancelConfirmation = signal(false);
 
   protected readonly currentPlan = computed(() => {
     const currentSubscription = this.store.currentSubscription();
@@ -49,6 +50,15 @@ export class Plans {
 
   constructor() {
     this.store.loadPlans();
+
+    effect(() => {
+      if (this.showCancelConfirmation() &&
+          !this.store.currentSubscription() &&
+          !this.store.subscriptionLoading() &&
+          !this.store.subscriptionError()) {
+        this.showCancelConfirmation.set(false);
+      }
+    });
 
     effect(() => {
       const userId = this.#iamStore.currentUserId();
@@ -77,6 +87,21 @@ export class Plans {
         this.selectedPlan.set(null);
       }
     });
+  }
+
+  protected openSubscriptionManagement(): void {
+    if (!this.store.currentSubscription() || this.store.subscriptionLoading()) return;
+    this.selectedPlan.set(null);
+    this.showCancelConfirmation.set(true);
+  }
+
+  protected closeCancelConfirmation(): void {
+    if (!this.store.subscriptionLoading()) this.showCancelConfirmation.set(false);
+  }
+
+  protected confirmSubscriptionCancellation(): void {
+    if (!this.store.currentSubscription() || this.store.subscriptionLoading()) return;
+    this.store.cancelCurrentSubscription();
   }
 
   protected isRecommended(plan: SubscriptionPlan): boolean {

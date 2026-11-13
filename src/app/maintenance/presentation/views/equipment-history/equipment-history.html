@@ -1,0 +1,59 @@
+<main class="history-page">
+  <header class="history-header">
+    <div>
+      <span class="eyebrow">{{ 'maintenance.history.section' | translate }}</span>
+      <h1>{{ 'maintenance.history.title' | translate }}</h1>
+      <p>{{ 'maintenance.history.description' | translate }}</p>
+    </div>
+    <a class="back-link" routerLink="/inventory/equipment">
+      {{ 'maintenance.history.back' | translate }}
+    </a>
+  </header>
+
+  @if (store.loading()) {
+    <div class="state-panel" role="status" aria-live="polite">
+      {{ 'maintenance.history.loading' | translate }}
+    </div>
+  } @else if (store.errorKey(); as errorKey) {
+    <div class="state-panel error" role="alert">{{ errorKey | translate }}</div>
+  } @else if (store.history(); as history) {
+    <section class="equipment-card" aria-label="{{ 'maintenance.history.equipment' | translate }}">
+      <div>
+        <span class="eyebrow">{{ 'maintenance.history.equipment' | translate }}</span>
+        <h2>{{ history.equipmentName }}</h2>
+        <p>{{ 'maintenance.history.code' | translate }}: {{ history.equipmentCode }}</p>
+      </div>
+      <strong class="total">{{ history.entries.length }} {{ 'maintenance.history.records' | translate }}</strong>
+    </section>
+
+    @if (history.entries.length === 0) {
+      <div class="state-panel">{{ 'maintenance.history.empty' | translate }}</div>
+    } @else {
+      <section class="timeline" aria-label="{{ 'maintenance.history.title' | translate }}">
+        @for (entry of history.entries; track entry.kind + '-' + entry.id) {
+          <article class="event-card">
+            <div class="event-heading">
+              <span class="kind" [class.rental]="entry.kind === 'RENTAL'"
+                    [class.incident]="entry.kind === 'INCIDENT'"
+                    [class.maintenance]="entry.kind === 'MAINTENANCE'">
+                {{ kindKey(entry.kind) | translate }}
+              </span>
+              <time>{{ entry.occurredAt | date:'dd/MM/yyyy HH:mm' }}</time>
+            </div>
+            <p class="event-description">{{ entry.description }}</p>
+            @if (entry.status) {
+              <div class="event-status">
+                {{ 'maintenance.history.status-label' | translate }}:
+                @if (statusKey(entry.status); as key) {
+                  {{ key | translate }}
+                } @else {
+                  {{ entry.status }}
+                }
+              </div>
+            }
+          </article>
+        }
+      </section>
+    }
+  }
+</main>

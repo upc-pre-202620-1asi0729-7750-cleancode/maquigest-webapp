@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, signal, viewChild } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -71,11 +71,48 @@ export class EquipmentList {
     'actions',
   ];
 
+  // Presentation-only selectors. No API/store mutations or new backend requests.
+  readonly searchTerm = signal('');
+  readonly statusFilter = signal('ALL');
+  readonly categoryFilter = signal('ALL');
+
+  readonly availableCount = computed(() =>
+    this.store.equipment().filter((equipment) => equipment.status === 'AVAILABLE').length,
+  );
+  readonly unavailableCount = computed(() => this.store.equipment().length - this.availableCount());
+  readonly filteredEquipment = computed(() => {
+    const term = this.searchTerm().trim().toLocaleLowerCase();
+    const status = this.statusFilter();
+    const category = this.categoryFilter();
+    return this.store.equipment().filter((equipment) => {
+      if (status !== 'ALL' && equipment.status !== status) return false;
+      if (category !== 'ALL' && equipment.categoryId !== Number(category)) return false;
+      if (!term) return true;
+      return [equipment.code, equipment.name, equipment.location, equipment.category?.name ?? '']
+        .some((value) => value.toLocaleLowerCase().includes(term));
+    });
+  });
+
+  updateSearch(event: Event): void {
+    this.searchTerm.set((event.target as HTMLInputElement).value);
+  }
+  updateStatusFilter(event: Event): void {
+    this.statusFilter.set((event.target as HTMLSelectElement).value);
+  }
+  updateCategoryFilter(event: Event): void {
+    this.categoryFilter.set((event.target as HTMLSelectElement).value);
+  }
+  clearFilters(): void {
+    this.searchTerm.set('');
+    this.statusFilter.set('ALL');
+    this.categoryFilter.set('ALL');
+  }
+
   readonly sort = viewChild(MatSort);
   readonly paginator = viewChild(MatPaginator);
 
   readonly dataSource = computed(() => {
-    const source = new MatTableDataSource(this.store.equipment());
+    const source = new MatTableDataSource(this.filteredEquipment());
 
     const sort = this.sort();
 
@@ -103,6 +140,10 @@ export class EquipmentList {
 
       this.store.loadEquipmentByUserId(userId);
     });
+  }
+
+  openHistory(id: number): void {
+    this.#router.navigate(['/maintenance/equipment', id, 'history']).then();
   }
 
   editEquipment(id: number): void {

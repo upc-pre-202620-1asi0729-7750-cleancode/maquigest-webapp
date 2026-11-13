@@ -1,10 +1,12 @@
 export const environment = {
   production: true,
 
-  platformProviderApiBaseUrl: 'https://maquigest-demo-api.onrender.com/api/v1',
+  platformProviderApiBaseUrl: '/api/v1',
 
   platformProviderSignInEndpointPath: '/authentication/sign-in',
   platformProviderSignUpEndpointPath: '/authentication/sign-up',
+
+  platformProviderPasswordRecoveryEndpointPath: '/authentication/password-recovery',
   platformProviderProfilesEndpointPath: '/profiles',
   platformProviderEquipmentEndpointPath: '/equipment',
   platformProviderRentalRequestsEndpointPath: '/rental-requests',

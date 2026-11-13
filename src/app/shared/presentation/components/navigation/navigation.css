@@ -116,3 +116,63 @@
 
   background: currentColor;
 }
+
+/* 4.4.3 mockup alignment: visual emphasis only. */
+.navigation-link {
+  position: relative;
+  min-height: 44px;
+  border-radius: 9px;
+  color: #71829b;
+  font-family: Inter, Roboto, Arial, sans-serif;
+  font-size: 13px;
+}
+.navigation-link:hover { background: #f4f7fc; color: #1f416d; }
+.navigation-link.active { background: #edf3fa; color: #1c3d68; }
+.navigation-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #1c3d68;
+}
+.navigation-marker { border-radius: 3px; }
+.navigation-link:focus-visible { outline: 2px solid #2465ae; outline-offset: 2px; }
+
+/* F2: visual-only icons. Existing routes, permissions and click handling unchanged. */
+.navigation-marker {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 0;
+  opacity: 1;
+}
+.navigation-marker::before {
+  content: 'apps';
+  font-family: 'Material Symbols Outlined';
+  font-size: 21px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+.navigation-link.active .navigation-marker::after { content: none; }
+.navigation-link[href='/dashboard'] .navigation-marker::before { content: 'dashboard'; }
+.navigation-link[href='/inventory/equipment'] .navigation-marker::before { content: 'construction'; }
+.navigation-link[href='/rentals/requests'] .navigation-marker::before { content: 'assignment'; }
+.navigation-link[href='/rentals/active'] .navigation-marker::before { content: 'handshake'; }
+.navigation-link[href='/maintenance'] .navigation-marker::before { content: 'build'; }
+.navigation-link[href='/inventory/search'] .navigation-marker::before { content: 'search'; }
+.navigation-link[href='/rentals/my-requests'] .navigation-marker::before { content: 'assignment_turned_in'; }
+.navigation-link[href='/subscriptions/plans'] .navigation-marker::before { content: 'workspace_premium'; }
+.navigation-link[href='/profiles/profile'] .navigation-marker::before { content: 'person'; }

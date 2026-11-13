@@ -1,39 +1,13 @@
-.equipment-filter {
-  display: grid;
-  grid-template-columns:
-    minmax(220px, 2fr)
-    minmax(180px, 1fr)
-    minmax(180px, 1fr)
-    minmax(180px, 1fr);
-  gap: 16px;
-  align-items: start;
-  margin-bottom: 24px;
-}
-
-mat-form-field {
-  width: 100%;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  grid-column: 1 / -1;
-}
-
-@media (max-width: 900px) {
-  .equipment-filter {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .equipment-filter {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
+:host { display: block; min-width: 0; }
+.equipment-filter { display: grid; grid-template-columns: minmax(240px, 2fr) repeat(3, minmax(155px, 1fr)); gap: 12px; align-items: start; margin-bottom: 23px; padding: 17px 18px; border: 1px solid #dbe5f0; border-radius: 14px; background: #fff; box-sizing: border-box; }
+mat-form-field { width: 100%; min-width: 0; }
+.filter-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; grid-column: 1 / -1; }
+.filter-actions button { min-height: 40px; font-size: 12px; font-weight: 800; border-radius: 9px; }
+.filter-actions button[type="submit"] { background: #f59e0b; color: #183655; padding-inline: 24px; }
+.filter-actions button[type="button"] { color: #295c8c; }
+@media(max-width: 1050px) { .equipment-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media(max-width: 640px) {
+  .equipment-filter { grid-template-columns: 1fr; padding: 15px; gap: 3px; }
+  .filter-actions { justify-content: stretch; }
+  .filter-actions button { flex: 1; }
 }

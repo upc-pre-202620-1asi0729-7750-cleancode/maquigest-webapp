@@ -1,4 +1,4 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -74,10 +74,14 @@ export class RentalRequests {
 
   protected readonly dateFilter = signal<string>('');
 
+  protected readonly searchFilter = signal('');
+
   protected readonly filteredRequests = computed(() => {
     const status = this.statusFilter();
 
     const date = this.dateFilter();
+
+    const search = this.searchFilter().trim().toLocaleLowerCase();
 
     return this.store.rentalRequests().filter((request) => {
       if (status !== 'ALL' && request.status !== status) {
@@ -88,6 +92,16 @@ export class RentalRequests {
         return false;
       }
 
+      if (search) {
+        const label = [
+          String(request.id),
+          this.requesterName(request.constructionUserId),
+          this.requesterContact(request.constructionUserId),
+          this.equipmentName(request.equipmentId),
+          this.equipmentCode(request.equipmentId),
+        ].join(' ').toLocaleLowerCase();
+        if (!label.includes(search)) return false;
+      }
       return true;
     });
   });
@@ -114,6 +128,10 @@ export class RentalRequests {
     this.statusFilter.set(value);
   }
 
+  protected setSearchFilter(event: Event): void {
+    this.searchFilter.set((event.target as HTMLInputElement).value);
+  }
+
   protected setDateFilter(event: Event): void {
     const input = event.target as HTMLInputElement;
 
@@ -124,6 +142,8 @@ export class RentalRequests {
     this.statusFilter.set('ALL');
 
     this.dateFilter.set('');
+
+    this.searchFilter.set('');
   }
 
   protected approveRequest(request: RentalRequest): void {
@@ -183,6 +203,6 @@ export class RentalRequests {
   }
 
   protected formatDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    return new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
   }
 }

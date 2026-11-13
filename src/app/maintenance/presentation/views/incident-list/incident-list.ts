@@ -51,6 +51,35 @@ export class IncidentList {
   protected readonly confirmingReactivationEquipmentId = signal<number | null>(null);
   protected readonly inspectionConfirmed = signal(false);
 
+  // F6.2: local history search; store and incident operations remain unchanged.
+  protected readonly searchQuery = signal('');
+  protected readonly startDate = signal('');
+  protected readonly endDate = signal('');
+  protected readonly hasActiveSearch = computed(() =>
+    !!this.searchQuery().trim() || !!this.startDate() || !!this.endDate(),
+  );
+  protected readonly invalidDateRange = computed(() =>
+    !!this.startDate() && !!this.endDate() && this.startDate() > this.endDate(),
+  );
+  protected readonly filteredIncidents = computed(() => {
+    const query = this.#normalizeSearch(this.searchQuery());
+    const from = this.startDate();
+    const to = this.endDate();
+    if (from && to && from > to) return [];
+
+    return this.store.incidents().filter((incident) => {
+      const equipment = this.store.getEquipmentInformation(incident.equipmentId);
+      const haystack = this.#normalizeSearch(
+        `${equipment?.name ?? ''} ${equipment?.code ?? ''}`,
+      );
+      if (query && !haystack.includes(query)) return false;
+
+      const day = this.#dateKey(incident.reportedAt);
+      return (!from || day >= from) && (!to || day <= to);
+    });
+  });
+
+
   protected readonly busy = computed(
     () =>
       this.store.loading() ||
@@ -114,6 +143,23 @@ export class IncidentList {
 
   protected equipmentCode(equipmentId: number): string {
     return this.store.getEquipmentInformation(equipmentId)?.code ?? '-';
+  }
+
+  protected clearHistoryFilters(): void {
+    this.searchQuery.set('');
+    this.startDate.set('');
+    this.endDate.set('');
+  }
+
+  #normalizeSearch(value: string): string {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  }
+
+  #dateKey(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   protected openForm(): void {
@@ -205,7 +251,7 @@ export class IncidentList {
   protected requestReactivation(equipmentId: number): void {
     if (
       this.busy() ||
-      !this.store.reactivatableEquipment().some((equipment) => equipment.id === equipmentId)
+      !this.store.reactivationCandidates().some((equipment) => equipment.id === equipmentId)
     ) {
       return;
     }

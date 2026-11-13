@@ -1,4 +1,4 @@
-﻿
+
 :host {
   display: block;
 }
@@ -13,7 +13,7 @@
   justify-content: center;
 
   padding: 20px;
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 35, 62, 0.54);
 }
 
 .dialog {
@@ -21,7 +21,8 @@
   max-height: calc(100vh - 40px);
   overflow-y: auto;
 
-  border-radius: 17px;
+  border: 1px solid #dbe5f1;
+  border-radius: 16px;
   background: #ffffff;
 
   box-shadow: 0 25px 65px rgba(15, 23, 42, 0.28);
@@ -37,7 +38,7 @@
 }
 
 .section-label {
-  color: #2563eb;
+  color: #7184a0;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.07em;
@@ -98,8 +99,8 @@ mat-form-field {
 }
 
 .primary-button {
-  background: #f97316 !important;
-  color: #ffffff !important;
+  background: #f59e0b !important;
+  color: #163452 !important;
 }
 
 @media (max-width: 640px) {
@@ -115,3 +116,16 @@ mat-form-field {
     padding: 13px 20px 23px;
   }
 }
+
+/* F6: visual treatment for existing reactive form; no event/validator changes. */
+.dialog { font-family: Inter,Roboto,Arial,sans-serif; }
+.dialog-header { border-bottom: 1px solid #edf1f7; padding-bottom: 18px; }
+.dialog-header h2 { color: #223650; font-size: 23px; font-weight: 800; letter-spacing: -.025em; }
+.dialog-header p { color: #7888a0; }
+.dialog form { padding-top: 23px; gap: 9px; }
+.dialog mat-form-field { --mdc-outlined-text-field-outline-color:#d9e3ef; --mdc-outlined-text-field-focus-outline-color:#2f6ca5; --mdc-outlined-text-field-container-shape:9px; }
+.dialog-actions { padding-top: 12px; border-top: 1px solid #edf1f7; }
+.dialog-actions button { min-height: 42px; border-radius: 9px !important; font-weight: 750 !important; }
+.dialog-actions button[type='submit'] { padding-inline: 22px; }
+.close-button:focus-visible { outline: 2px solid #2f6ca5; outline-offset: 2px; }
+@media(max-width:640px){.dialog-actions{flex-wrap:wrap}.dialog-actions button{flex:1 1 auto;}}

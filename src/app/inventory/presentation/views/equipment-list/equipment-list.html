@@ -1,237 +1,156 @@
-<div class="container-with-spacing">
-
-  <div class="header">
-
-    <h1 class="title">
-      {{ 'equipment.list-title' | translate }}
-    </h1>
-
-    <button
-      mat-raised-button
-      color="primary"
-      type="button"
-      (click)="navigateToNew()">
-
-      {{ 'equipment.new' | translate }}
-
-    </button>
-
-  </div>
-
-  @if (store.loading()) {
-    <mat-spinner diameter="40">
-    </mat-spinner>
-  }
-
-  @if (store.error()) {
-    <mat-error>
-      {{ store.error() }}
-    </mat-error>
-  }
-
-  @if (
-    !store.loading() &&
-    store.equipment().length === 0
-    ) {
-
-    <p class="empty-state">
-      {{ 'equipment.empty' | translate }}
-    </p>
-
-  } @else {
-
-    <div class="table-container">
-
-      <table
-        mat-table
-        [dataSource]="dataSource()"
-        class="mat-elevation-z8"
-        matSort
-        matSortActive="code"
-        matSortDirection="asc"
-        matSortDisableClear>
-
-        <ng-container matColumnDef="code">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header>
-
-            {{ 'equipment.code' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            {{ equipment.code }}
-
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="name">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header>
-
-            {{ 'equipment.name' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            {{ equipment.name }}
-
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="category">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header>
-
-            {{ 'equipment.category' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            {{
-              equipment.category?.name ?? '-'
-            }}
-
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="location">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header>
-
-            {{ 'equipment.location' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            {{ equipment.location }}
-
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="availability">
-
-          <th
-            mat-header-cell
-            *matHeaderCellDef>
-
-            {{ 'equipment.availability' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            <app-availability-badge
-              [equipment]="equipment">
-            </app-availability-badge>
-
-          </td>
-
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header>
-
-            {{ 'equipment.status' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            {{
-              (
-                'equipment.status-values.' +
-                equipment.status.toLowerCase()
-              ) | translate
-            }}
-
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-
-          <th
-            mat-header-cell
-            *matHeaderCellDef>
-
-            {{ 'equipment.actions' | translate }}
-
-          </th>
-
-          <td
-            mat-cell
-            *matCellDef="let equipment">
-
-            <button
-              mat-icon-button
-              type="button"
-              [attr.aria-label]="
-                'equipment.edit' | translate
-              "
-              (click)="
-                editEquipment(equipment.id)
-              ">
-
-              <mat-icon>
-                edit
-              </mat-icon>
-
-            </button>
-
-          </td>
-
-        </ng-container>
-
-        <tr
-          mat-header-row
-          *matHeaderRowDef="displayedColumns">
-        </tr>
-
-        <tr
-          mat-row
-          *matRowDef="
-            let row;
-            columns: displayedColumns
-          ">
-        </tr>
-
-      </table>
-
-      <mat-paginator
-        [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 20]"
-        showFirstLastButtons>
-      </mat-paginator>
-
+<main class="equipment-page">
+  <header class="equipment-page-header">
+    <span class="section-label">{{ 'equipment.ui.section' | translate }}</span>
+    <div class="equipment-page-heading">
+      <div>
+        <h1>{{ 'equipment.list-title' | translate }}</h1>
+        <p>{{ 'equipment.ui.subtitle' | translate }}</p>
+      </div>
+      <button mat-raised-button type="button" class="create-equipment-button" (click)="navigateToNew()">
+        <span class="material-symbols-outlined" aria-hidden="true">add</span>
+        {{ 'equipment.new' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <section class="equipment-summary" [attr.aria-label]="'equipment.ui.overview' | translate">
+    <article class="equipment-summary-card">
+      <span>{{ 'equipment.ui.total' | translate }}</span>
+      <div class="metric-row">
+        <strong>{{ store.loading() || store.error() ? '—' : store.equipment().length }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      </div>
+      <small>{{ 'equipment.ui.registered' | translate }}</small>
+    </article>
+    <article class="equipment-summary-card">
+      <span>{{ 'equipment.ui.available' | translate }}</span>
+      <div class="metric-row">
+        <strong>{{ store.loading() || store.error() ? '—' : availableCount() }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+      </div>
+      <small>{{ 'equipment.ui.ready' | translate }}</small>
+    </article>
+    <article class="equipment-summary-card equipment-summary-accent">
+      <span>{{ 'equipment.ui.unavailable' | translate }}</span>
+      <div class="metric-row">
+        <strong>{{ store.loading() || store.error() ? '—' : unavailableCount() }}</strong>
+        <span class="material-symbols-outlined" aria-hidden="true">build</span>
+      </div>
+      <small>{{ 'equipment.ui.unavailable-description' | translate }}</small>
+    </article>
+  </section>
+
+  <section class="equipment-panel">
+    <div class="equipment-panel-heading">
+      <div>
+        <h2>{{ 'equipment.ui.inventory' | translate }}</h2>
+        <p>{{ store.equipment().length }} {{ 'equipment.ui.registered' | translate }}</p>
+      </div>
     </div>
 
-  }
+    <div class="equipment-toolbar">
+      <label class="equipment-search">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <input type="search" [value]="searchTerm()" (input)="updateSearch($event)"
+          [placeholder]="'equipment.ui.search-placeholder' | translate"
+          [attr.aria-label]="'equipment.ui.search-placeholder' | translate">
+      </label>
+      <details class="equipment-filter-disclosure">
+        <summary>
+          <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
+          {{ 'equipment.ui.filters' | translate }}
+        </summary>
+        <div class="equipment-filter-fields">
+          <label>
+            {{ 'equipment.status' | translate }}
+            <select [value]="statusFilter()" (change)="updateStatusFilter($event)">
+              <option value="ALL">{{ 'equipment.ui.all-statuses' | translate }}</option>
+              <option value="AVAILABLE">{{ 'equipment.status-values.available' | translate }}</option>
+              <option value="RENTED">{{ 'equipment.status-values.rented' | translate }}</option>
+              <option value="MAINTENANCE">{{ 'equipment.status-values.maintenance' | translate }}</option>
+            </select>
+          </label>
+          <label>
+            {{ 'equipment.category' | translate }}
+            <select [value]="categoryFilter()" (change)="updateCategoryFilter($event)">
+              <option value="ALL">{{ 'equipment.search.all-categories' | translate }}</option>
+              @for (category of store.categories(); track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+              }
+            </select>
+          </label>
+          <button type="button" class="clear-equipment-filters" (click)="clearFilters()">
+            {{ 'equipment.ui.clear-filters' | translate }}
+          </button>
+        </div>
+      </details>
+    </div>
 
-</div>
+    @if (store.loading()) {
+      <div class="equipment-feedback"><mat-spinner diameter="36"></mat-spinner></div>
+    } @else if (store.error()) {
+      <div class="equipment-feedback equipment-error" role="alert">{{ store.error() }}</div>
+    } @else if (store.equipment().length === 0) {
+      <p class="equipment-feedback">{{ 'equipment.empty' | translate }}</p>
+    } @else if (filteredEquipment().length === 0) {
+      <p class="equipment-feedback">{{ 'equipment.ui.no-results' | translate }}</p>
+    } @else {
+      <div class="equipment-table-container">
+        <table mat-table [dataSource]="dataSource()" matSort
+          matSortActive="code" matSortDirection="asc" matSortDisableClear>
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'equipment.code' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" class="equipment-code" [attr.data-label]="'equipment.code' | translate">{{ equipment.code }}</td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'equipment.name' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" class="equipment-name" [attr.data-label]="'equipment.name' | translate"><strong>{{ equipment.name }}</strong></td>
+          </ng-container>
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'equipment.category' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" [attr.data-label]="'equipment.category' | translate">{{ equipment.category?.name ?? '-' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'equipment.location' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" [attr.data-label]="'equipment.location' | translate">{{ equipment.location }}</td>
+          </ng-container>
+          <ng-container matColumnDef="availability">
+            <th mat-header-cell *matHeaderCellDef>{{ 'equipment.availability' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" [attr.data-label]="'equipment.availability' | translate">
+              <app-availability-badge [equipment]="equipment"></app-availability-badge>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'equipment.status' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" [attr.data-label]="'equipment.status' | translate">
+              <span class="equipment-status-badge"
+                [class.is-available]="equipment.status === 'AVAILABLE'"
+                [class.is-rented]="equipment.status === 'RENTED'"
+                [class.is-maintenance]="equipment.status === 'MAINTENANCE'">
+                {{ ('equipment.status-values.' + equipment.status.toLowerCase()) | translate }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>{{ 'equipment.actions' | translate }}</th>
+            <td mat-cell *matCellDef="let equipment" [attr.data-label]="'equipment.actions' | translate">
+              <div class="equipment-actions">
+                <button mat-icon-button type="button"
+                  [attr.aria-label]="'maintenance.history.view' | translate"
+                  [attr.title]="'maintenance.history.view' | translate"
+                  (click)="openHistory(equipment.id)"><mat-icon>history</mat-icon></button>
+                <button mat-icon-button type="button"
+                  [attr.aria-label]="'equipment.edit' | translate"
+                  [attr.title]="'equipment.edit' | translate"
+                  (click)="editEquipment(equipment.id)"><mat-icon>edit</mat-icon></button>
+              </div>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    }
+  </section>
+</main>

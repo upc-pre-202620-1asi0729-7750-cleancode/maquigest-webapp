@@ -66,8 +66,8 @@ export class InventoryEquipmentRequestAvailabilityAclAdapter
         }
 
         const reserved = (equipment.availabilityBlocks ?? []).some((block) => {
-          const blockedStart = new Date(block.startDate);
-          const blockedEnd = new Date(block.endDate);
+          const blockedStart = new Date(`${block.startDate.slice(0, 10)}T00:00:00.000Z`);
+          const blockedEnd = new Date(`${block.endDate.slice(0, 10)}T00:00:00.000Z`);
 
           // Invalid stored reservations must fail closed.
           if (

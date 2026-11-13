@@ -1,4 +1,4 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -13,13 +13,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { IamStore } from '../../../../iam/application/iam.store';
 
 import { RentalOperationSuccess, RentalsStore } from '../../../application/rentals.store';
 
 import { Rental } from '../../../domain/model/rental.entity';
+
+import { RentalLifecycleDatePolicy } from '../../../domain/policy/rental-lifecycle-date.policy';
 
 import { RentalStatus } from '../../../domain/model/rental-status.enum';
 
@@ -50,6 +52,8 @@ export class ActiveRentals {
 
   readonly #iamStore = inject(IamStore);
 
+  readonly #translate = inject(TranslateService);
+
   protected readonly displayedColumns = [
     'equipment',
     'customer',
@@ -59,9 +63,24 @@ export class ActiveRentals {
     'actions',
   ];
 
+  // F4: filtro exclusivamente visual. Conserva todos los registros por defecto.
+  protected readonly selectedView = signal<'ALL' | 'CONFIRMED' | 'ACTIVE'>('ALL');
+
+  protected readonly visibleRentals = computed(() => {
+    const rentals = this.store.rentals();
+    const view = this.selectedView();
+    if (view === 'CONFIRMED') return rentals.filter((rental) => rental.isConfirmed);
+    if (view === 'ACTIVE') return rentals.filter((rental) => rental.isActive);
+    return rentals;
+  });
+
   protected readonly dataSource = computed(
-    () => new MatTableDataSource<Rental>(this.store.rentals()),
+    () => new MatTableDataSource<Rental>(this.visibleRentals()),
   );
+
+  protected selectView(view: 'ALL' | 'CONFIRMED' | 'ACTIVE'): void {
+    this.selectedView.set(view);
+  }
 
   protected readonly deliveryRental = signal<Rental | null>(null);
 
@@ -175,7 +194,42 @@ export class ActiveRentals {
       : 'rentals.active.return.success';
   }
 
+  protected canRegisterDelivery(rental: Rental): boolean {
+    return RentalLifecycleDatePolicy.canDeliverNow(rental);
+  }
+
+  protected deliveryUnavailableReason(rental: Rental): string {
+    const today = RentalLifecycleDatePolicy.limaDay(new Date());
+    const start = RentalLifecycleDatePolicy.limaDay(rental.period.startDate);
+    const end = RentalLifecycleDatePolicy.limaDay(rental.period.endDate);
+    const spanish = (this.#translate.currentLang() ?? 'es')
+      .toLowerCase()
+      .startsWith('es');
+
+    const displayDate = (date: string): string => {
+      const [year, month, day] = date.split('-');
+      return `${day}/${month}/${year}`;
+    };
+
+    if (today < start) {
+      return spanish
+        ? `Entrega disponible desde el ${displayDate(start)}.`
+        : `Delivery available from ${displayDate(start)}.`;
+    }
+
+    if (today > end) {
+      return spanish
+        ? `El plazo de entrega terminó el ${displayDate(end)}.`
+        : `Delivery period ended on ${displayDate(end)}.`;
+    }
+
+    return spanish
+      ? 'La entrega todavía no está disponible.'
+      : 'Delivery is not available yet.';
+  }
+
   protected openDelivery(rental: Rental): void {
+    if (!this.canRegisterDelivery(rental)) return;
     this.store.clearOperationFeedback();
 
     this.returnRental.set(null);
@@ -224,6 +278,6 @@ export class ActiveRentals {
   }
 
   protected formatDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    return new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
   }
 }
