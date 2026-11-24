@@ -1,14 +1,26 @@
 {
-  "rental-notifications": {
+  "notifications": {
     "title": "Notificaciones",
-    "category": "Alquileres",
     "refresh": "Actualizar",
     "close": "Cerrar notificaciones",
     "loading": "Cargando notificaciones...",
     "empty": "Aún no tienes notificaciones.",
     "error": "No se pudieron actualizar las notificaciones. Inténtalo nuevamente.",
     "mark-read": "Marcar como leída",
-    "view-operation": "Ver operación"
+    "view-operation": "Ver operación",
+    "filter": "Contexto",
+    "all": "Todos",
+    "unread": "Solo no leídas",
+    "partial": "Algunas fuentes no están disponibles; el contador puede estar incompleto.",
+    "no-matches": "No hay notificaciones con estos filtros.",
+    "sources": {
+      "iam": "Cuenta",
+      "profiles": "Perfiles",
+      "inventory": "Inventario",
+      "rentals": "Alquileres",
+      "maintenance": "Mantenimiento",
+      "subscriptions": "Suscripciones"
+    }
   },
   "app": {
     "name": "MaquiGest"

@@ -1,14 +1,26 @@
 {
-  "rental-notifications": {
+  "notifications": {
     "title": "Notifications",
-    "category": "Rentals",
     "refresh": "Refresh",
     "close": "Close notifications",
     "loading": "Loading notifications...",
     "empty": "No notifications yet.",
     "error": "Unable to update notifications. Please try again.",
     "mark-read": "Mark as read",
-    "view-operation": "View operation"
+    "view-operation": "View operation",
+    "filter": "Context",
+    "all": "All",
+    "unread": "Unread only",
+    "partial": "Some sources are unavailable; the unread count may be incomplete.",
+    "no-matches": "No notifications match these filters.",
+    "sources": {
+      "iam": "Account",
+      "profiles": "Profiles",
+      "inventory": "Inventory",
+      "rentals": "Rentals",
+      "maintenance": "Maintenance",
+      "subscriptions": "Subscriptions"
+    }
   },
   "app": {
     "name": "MaquiGest"

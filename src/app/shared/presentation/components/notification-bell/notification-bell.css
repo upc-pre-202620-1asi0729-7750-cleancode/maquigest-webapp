@@ -17,3 +17,7 @@
 .notification-panel button, .notification-actions a { border: 0; padding: 2px; background: transparent; color: #1d4ed8; font: inherit; font-size: .75rem; cursor: pointer; }
 .notification-panel button:disabled { opacity: .55; cursor: default; }
 @media (max-width: 520px) { .notification-panel { position: fixed; top: 68px; right: 12px; } }
+.notification-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-size: .75rem; }
+.notification-filters label { display: flex; align-items: center; gap: 5px; }
+.notification-filters select { max-width: 150px; border: 1px solid #dce5f0; border-radius: 4px; padding: 4px; background: #fff; color: #1e293b; }
+.notification-source { display: block; color: #52647c; font-size: .7rem; margin-bottom: 4px; }
