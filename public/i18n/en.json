@@ -1,4 +1,15 @@
 {
+  "rental-notifications": {
+    "title": "Notifications",
+    "category": "Rentals",
+    "refresh": "Refresh",
+    "close": "Close notifications",
+    "loading": "Loading notifications...",
+    "empty": "No notifications yet.",
+    "error": "Unable to update notifications. Please try again.",
+    "mark-read": "Mark as read",
+    "view-operation": "View operation"
+  },
   "app": {
     "name": "MaquiGest"
   },

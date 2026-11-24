@@ -15,11 +15,12 @@ import { Navigation } from '../navigation/navigation';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
 import { Footer } from '../footer/footer';
+import { RentalNotificationBell } from '../../../../rentals/presentation/components/rental-notification-bell/rental-notification-bell';
 
 @Component({
   selector: 'app-layout',
 
-  imports: [RouterOutlet, Navigation, LanguageSwitcher, Footer, TranslatePipe],
+  imports: [RouterOutlet, Navigation, LanguageSwitcher, Footer, TranslatePipe, RentalNotificationBell],
 
   templateUrl: './layout.html',
 

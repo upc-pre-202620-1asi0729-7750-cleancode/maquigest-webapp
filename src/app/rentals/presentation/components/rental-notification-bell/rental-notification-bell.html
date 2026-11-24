@@ -1,0 +1,45 @@
+<div class="notification-control">
+  <button type="button" class="notification-trigger" (click)="toggle()"
+          [attr.aria-label]="'rental-notifications.title' | translate"
+          [attr.aria-expanded]="open()" aria-controls="rental-notification-panel">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+    </svg>
+    @if (store.unreadCount() > 0) {
+      <span class="notification-count">{{ store.unreadCount() > 99 ? '99+' : store.unreadCount() }}</span>
+    }
+  </button>
+  @if (open()) {
+    <section class="notification-panel" id="rental-notification-panel" [attr.aria-label]="'rental-notifications.title' | translate">
+      <header class="notification-heading">
+        <h2>{{ 'rental-notifications.title' | translate }}</h2>
+        <button type="button" (click)="store.refresh()" [disabled]="store.loading()">{{ 'rental-notifications.refresh' | translate }}</button>
+        <button type="button" (click)="close()" [attr.aria-label]="'rental-notifications.close' | translate">×</button>
+      </header>
+      <p class="notification-caption">{{ 'rental-notifications.category' | translate }}</p>
+      @if (store.error()) {
+        <p role="alert" class="notification-error">{{ 'rental-notifications.error' | translate }}</p>
+      }
+      @if (store.loading() && store.notifications().length === 0) {
+        <p class="notification-caption" role="status">{{ 'rental-notifications.loading' | translate }}</p>
+      } @else if (!store.error() && store.notifications().length === 0) {
+        <p class="notification-caption">{{ 'rental-notifications.empty' | translate }}</p>
+      }
+      <div class="notification-list">
+        @for (item of store.notifications(); track item.id) {
+          <article class="notification-item" [class.unread]="!item.read">
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.message }}</p>
+            <time [attr.datetime]="item.occurredAt.toISOString()">{{ item.occurredAt | date:'dd/MM/yyyy HH:mm' }}</time>
+            <div class="notification-actions">
+              @if (!item.read) {
+                <button type="button" (click)="store.markAsRead(item.id)" [disabled]="store.loading()">{{ 'rental-notifications.mark-read' | translate }}</button>
+              }
+              <a [routerLink]="operationLink(item)" (click)="close()">{{ 'rental-notifications.view-operation' | translate }}</a>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</div>
