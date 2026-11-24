@@ -16,6 +16,7 @@ export const environment = {
   platformProviderRentalRequestsEndpointPath: '/rental-requests',
 
   platformProviderRentalsEndpointPath: '/rentals',
+  platformProviderRentalNotificationsEndpointPath: '/rental-notifications',
 
   platformProviderDeliveriesEndpointPath: '/deliveries',
 

@@ -11,6 +11,7 @@ export const environment = {
   platformProviderEquipmentEndpointPath: '/equipment',
   platformProviderRentalRequestsEndpointPath: '/rental-requests',
   platformProviderRentalsEndpointPath: '/rentals',
+  platformProviderRentalNotificationsEndpointPath: '/rental-notifications',
   platformProviderDeliveriesEndpointPath: '/deliveries',
   platformProviderEquipmentReturnsEndpointPath: '/equipment-returns',
   platformProviderMaintenancesEndpointPath: '/maintenances',
