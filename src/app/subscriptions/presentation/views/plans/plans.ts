@@ -1,4 +1,4 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -6,6 +6,8 @@
   inject,
   signal,
 } from '@angular/core';
+
+import { ActivatedRoute } from '@angular/router';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -34,6 +36,7 @@ export class Plans {
   readonly store = inject(SubscriptionsStore);
 
   readonly #iamStore = inject(IamStore);
+  readonly checkoutReference = inject(ActivatedRoute).snapshot.queryParamMap.get('checkout');
 
   protected readonly selectedPlan = signal<SubscriptionPlan | null>(null);
   protected readonly showCancelConfirmation = signal(false);
@@ -67,7 +70,8 @@ export class Plans {
         return;
       }
 
-      this.store.loadCurrentSubscription(userId);
+      if (this.checkoutReference) this.store.confirmCheckout(userId, this.checkoutReference);
+      else this.store.loadCurrentSubscription(userId);
     });
 
     effect(() => {
@@ -113,7 +117,7 @@ export class Plans {
   }
 
   protected selectPlan(plan: SubscriptionPlan): void {
-    if (this.isCurrentPlan(plan) || this.store.subscriptionLoading()) {
+    if (this.store.currentSubscription() || this.store.subscriptionLoading()) {
       return;
     }
 
@@ -137,11 +141,7 @@ export class Plans {
 
     const currentSubscription = this.store.currentSubscription();
 
-    if (currentSubscription) {
-      this.store.changePlan(plan.id);
-
-      return;
-    }
+    if (currentSubscription) return;
 
     const userId = this.#iamStore.currentUserId();
 
@@ -150,6 +150,12 @@ export class Plans {
     }
 
     this.store.subscribeToPlan(userId, plan.id);
+  }
+
+  protected refreshCheckout(): void {
+    const userId = this.#iamStore.currentUserId();
+    const reference = this.store.checkout()?.reference ?? this.checkoutReference;
+    if (userId !== null && reference) this.store.confirmCheckout(userId, reference);
   }
 
   protected planNameKey(plan: SubscriptionPlan): string {
