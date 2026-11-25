@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -33,9 +33,9 @@ export class IamStore {
 
   readonly currentStatus = this.#currentStatusSignal.asReadonly();
 
-  readonly currentToken = computed(() =>
-    this.isSignedIn() ? localStorage.getItem('token') : null,
-  );
+  readonly #currentTokenSignal = signal<string | null>(null);
+
+  readonly currentToken = this.#currentTokenSignal.asReadonly();
 
   constructor() {
     this.#restoreSession();
@@ -54,6 +54,7 @@ export class IamStore {
 
         localStorage.setItem('status', signInResource.status);
 
+        this.#currentTokenSignal.set(signInResource.token);
         this.#isSignedInSignal.set(true);
 
         this.#currentUserIdSignal.set(signInResource.id);
@@ -123,10 +124,14 @@ export class IamStore {
 
     const status = localStorage.getItem('status');
 
-    if (!token || !userId || !email || !role || !status) {
+    if (!token || !userId || !email || !role || !status ||
+        !Number.isSafeInteger(Number(userId)) || Number(userId) < 1 ||
+        !this.#hasUnexpiredToken(token)) {
+      this.#clearPersistedSession();
       return;
     }
 
+    this.#currentTokenSignal.set(token);
     this.#isSignedInSignal.set(true);
 
     this.#currentUserIdSignal.set(Number(userId));
@@ -136,6 +141,19 @@ export class IamStore {
     this.#currentRoleSignal.set(role);
 
     this.#currentStatusSignal.set(status);
+  }
+
+  // A local expiry check is only a UX hint; the server verifies signature and authorization.
+  #hasUnexpiredToken(token: string): boolean {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3 || parts.some(part => !part)) return false;
+      const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const claims = JSON.parse(atob(payload.padEnd(Math.ceil(payload.length / 4) * 4, '=')));
+      return typeof claims.exp === 'number' && Number.isFinite(claims.exp) && claims.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
   }
 
   #clearPersistedSession(): void {
@@ -151,6 +169,7 @@ export class IamStore {
   }
 
   #clearSessionState(): void {
+    this.#currentTokenSignal.set(null);
     this.#isSignedInSignal.set(false);
 
     this.#currentUserIdSignal.set(null);
