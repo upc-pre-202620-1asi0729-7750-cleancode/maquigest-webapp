@@ -11,7 +11,10 @@ const recoverPassword = () =>
 
 const resetPassword = () => import('./views/reset-password/reset-password').then((m) => m.ResetPassword);
 
+const verifyEmail = () => import('./views/verify-email/verify-email').then((m) => m.VerifyEmail);
+
 export const iamRoutes: Routes = [
+  { path: 'verify-email', loadComponent: verifyEmail, title: 'MaquiGest - Verify email' },
   { path: 'reset-password', loadComponent: resetPassword, title: 'MaquiGest - Reset password' },
   {
     path: 'sign-in',

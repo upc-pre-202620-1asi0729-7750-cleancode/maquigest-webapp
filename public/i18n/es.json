@@ -90,6 +90,19 @@
       "success": "Contraseña actualizada. Inicia sesión con tu nueva contraseña.",
       "error": "El enlace es inválido, caducó, ya fue utilizado o la solicitud falló. Solicita otro enlace.",
       "request-again": "Solicitar otro enlace"
+    },
+    "verification": {
+      "title": "Verifica tu correo",
+      "confirm": "Confirma la contraseña que elegiste al registrarte.",
+      "check-inbox": "Revisa tu bandeja de entrada para encontrar el enlace. Si es necesario, solicita otro.",
+      "password": "Contraseña de registro",
+      "submit": "Verificar correo",
+      "success": "Correo verificado. Ya puedes iniciar sesión.",
+      "error": "Enlace inválido o vencido, o contraseña incorrecta.",
+      "email": "Correo electrónico",
+      "resend-link": "Reenviar correo de verificación",
+      "resent": "Si existe una cuenta pendiente de verificación, recibirás las instrucciones.",
+      "unavailable": "No se pudo procesar la solicitud. Inténtalo más tarde."
     }
   },
   "dashboard": {

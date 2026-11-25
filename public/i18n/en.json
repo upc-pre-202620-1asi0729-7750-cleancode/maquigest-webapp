@@ -90,6 +90,19 @@
       "success": "Password changed. Sign in with your new password.",
       "error": "The recovery link is invalid, expired, already used, or the request failed. Request a new link.",
       "request-again": "Request a new recovery link"
+    },
+    "verification": {
+      "title": "Verify your email",
+      "confirm": "Confirm the password you chose when registering.",
+      "check-inbox": "Check your inbox for the verification link. If needed, request a new one.",
+      "password": "Registration password",
+      "submit": "Verify email",
+      "success": "Email verified. You can now sign in.",
+      "error": "Invalid or expired link or incorrect password.",
+      "email": "Email address",
+      "resend-link": "Resend verification email",
+      "resent": "If an account is pending verification, instructions will be sent.",
+      "unavailable": "Unable to process the request. Try again later."
     }
   },
   "dashboard": {

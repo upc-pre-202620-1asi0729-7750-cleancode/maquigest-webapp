@@ -1,4 +1,4 @@
-﻿import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -80,7 +80,11 @@ export class IamStore {
 
   signUp(signUpCommand: SignUpCommand, router: Router): void {
     this.#iamApi.signUp(signUpCommand).subscribe({
-      next: () => {
+      next: (account) => {
+        if (account.status === 'pending_email_verification') {
+          router.navigate(['/iam/verify-email'], { state: { verificationPending: true } }).then();
+          return;
+        }
         router
           .navigate(['/iam/sign-in'], {
             state: {
