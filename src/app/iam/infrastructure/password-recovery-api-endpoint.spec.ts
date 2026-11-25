@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { environment } from '../../../environments/environment';
 import { PasswordRecoveryCommand } from '../domain/model/password-recovery.command';
+import { ResetPasswordCommand } from '../domain/model/reset-password.command';
 import { PasswordRecoveryApiEndpoint } from './password-recovery-api-endpoint';
 
 describe('PasswordRecoveryApiEndpoint', () => {
@@ -19,6 +20,14 @@ describe('PasswordRecoveryApiEndpoint', () => {
   });
 
   afterEach(() => httpTesting.verify());
+
+  it('posts the reset command without putting secrets in the URL', () => {
+    endpoint.resetPassword(new ResetPasswordCommand('a'.repeat(43), 'NewPassword123!')).subscribe();
+    const request = httpTesting.expectOne(`${environment.platformProviderApiBaseUrl}/authentication/reset-password`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ token: 'a'.repeat(43), password: 'NewPassword123!' });
+    request.flush(null, { status: 204, statusText: 'No Content' });
+  });
 
   it('sends the recovery command to the Platform REST API', () => {
     let completed = false;

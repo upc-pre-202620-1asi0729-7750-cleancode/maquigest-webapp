@@ -2,7 +2,8 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { DateRange } from '../../shared/domain/value-object/date-range.value-object';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SubscriptionCheckout } from '../domain/model/subscription-checkout.entity';
 
 import { PlanStatus } from '../domain/model/plan-status.enum';
 
@@ -46,6 +47,9 @@ export class SubscriptionsStore {
   readonly #subscriptionErrorSignal = signal<string | null>(null);
 
   readonly subscriptionError = this.#subscriptionErrorSignal.asReadonly();
+  #checkoutRequestVersion = 0;
+  readonly #checkoutSignal = signal<SubscriptionCheckout | null>(null);
+  readonly checkout = this.#checkoutSignal.asReadonly();
 
   loadPlans(): void {
     this.#loadingSignal.set(true);
@@ -90,7 +94,8 @@ export class SubscriptionsStore {
           const currentSubscription =
             subscriptions.find(
               (subscription) =>
-                subscription.userId === userId && subscription.status === SubscriptionStatus.ACTIVE,
+                subscription.userId === userId && subscription.status === SubscriptionStatus.ACTIVE &&
+                subscription.period.endDate.getTime() > Date.now() && subscription.period.startDate.getTime() <= Date.now(),
             ) ?? null;
 
           this.#currentSubscriptionSignal.set(currentSubscription);
@@ -114,6 +119,8 @@ export class SubscriptionsStore {
   }
 
   clearCurrentSubscription(): void {
+    ++this.#checkoutRequestVersion;
+    this.#checkoutSignal.set(null);
     ++this.#subscriptionRequestVersion;
     this.#currentSubscriptionSignal.set(null);
     this.#subscriptionLoadingSignal.set(false);
@@ -121,128 +128,45 @@ export class SubscriptionsStore {
   }
 
   subscribeToPlan(userId: number, planId: number): void {
-    if (this.#currentSubscriptionSignal()) {
-      this.#subscriptionErrorSignal.set('The user already has an active subscription');
-
-      return;
-    }
-
-    const plan = this.#plansSignal().find((currentPlan) => currentPlan.id === planId);
-
-    if (!plan || plan.status !== PlanStatus.ACTIVE) {
-      this.#subscriptionErrorSignal.set('The selected plan is not available');
-
-      return;
-    }
-
+    if (this.#subscriptionLoadingSignal() || this.#currentSubscriptionSignal()) return;
     this.#subscriptionLoadingSignal.set(true);
-
     this.#subscriptionErrorSignal.set(null);
-
-    const startDate = new Date();
-
-    const endDate = this.#calculateMonthlyEndDate(startDate);
-
-    const subscription = new UserSubscription({
-      id: 0,
-
-      userId,
-
-      planId,
-
-      period: new DateRange({
-        startDate,
-        endDate,
-      }),
-
-      status: SubscriptionStatus.ACTIVE,
-
-      autoRenew: true,
+    const version = ++this.#checkoutRequestVersion;
+    this.#subscriptionsApi.createCheckout(planId).pipe(takeUntilDestroyed(this.#destroyRef)).subscribe({
+      next: (checkout) => {
+        if (version !== this.#checkoutRequestVersion) return;
+        this.#checkoutSignal.set(checkout);
+        this.#subscriptionLoadingSignal.set(false);
+        if (checkout.status === 'PAID') { this.loadCurrentSubscription(userId); return; }
+        if (checkout.checkoutUrl && checkout.checkoutUrl.startsWith('https://checkout.stripe.com/')) {
+          window.location.assign(checkout.checkoutUrl);
+        }
+      },
+      error: (error) => {
+        if (version !== this.#checkoutRequestVersion) return;
+        this.#subscriptionErrorSignal.set(this.#formatError(error, 'Failed to start checkout'));
+        this.#subscriptionLoadingSignal.set(false);
+      },
     });
-
-    this.#subscriptionsApi
-      .createUserSubscription(subscription)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: (createdSubscription) => {
-          this.#currentSubscriptionSignal.set(createdSubscription);
-
-          this.#subscriptionLoadingSignal.set(false);
-
-          this.#subscriptionErrorSignal.set(null);
-        },
-
-        error: (error) => {
-          this.#subscriptionErrorSignal.set(
-            this.#formatError(error, 'Failed to create subscription'),
-          );
-
-          this.#subscriptionLoadingSignal.set(false);
-        },
-      });
   }
 
-  changePlan(planId: number): void {
-    const currentSubscription = this.#currentSubscriptionSignal();
-
-    if (!currentSubscription) {
-      this.#subscriptionErrorSignal.set('There is no active subscription to update');
-
-      return;
-    }
-
-    if (currentSubscription.planId === planId) {
-      this.#subscriptionErrorSignal.set('The selected plan is already the current plan');
-
-      return;
-    }
-
-    const selectedPlan = this.#plansSignal().find((plan) => plan.id === planId);
-
-    if (!selectedPlan || selectedPlan.status !== PlanStatus.ACTIVE) {
-      this.#subscriptionErrorSignal.set('The selected plan is not available');
-
-      return;
-    }
-
+  confirmCheckout(userId: number, reference: string): void {
     this.#subscriptionLoadingSignal.set(true);
-
     this.#subscriptionErrorSignal.set(null);
-
-    const updatedSubscription = new UserSubscription({
-      id: currentSubscription.id,
-
-      userId: currentSubscription.userId,
-
-      planId,
-
-      period: currentSubscription.period,
-
-      status: currentSubscription.status,
-
-      autoRenew: currentSubscription.autoRenew,
+    const version = ++this.#checkoutRequestVersion;
+    this.#subscriptionsApi.confirmCheckout(reference).pipe(takeUntilDestroyed(this.#destroyRef)).subscribe({
+      next: (checkout) => {
+        if (version !== this.#checkoutRequestVersion) return;
+        this.#checkoutSignal.set(checkout);
+        this.#subscriptionLoadingSignal.set(false);
+        this.loadCurrentSubscription(userId);
+      },
+      error: (error) => {
+        if (version !== this.#checkoutRequestVersion) return;
+        this.#subscriptionErrorSignal.set(this.#formatError(error, 'Failed to confirm checkout'));
+        this.#subscriptionLoadingSignal.set(false);
+      },
     });
-
-    this.#subscriptionsApi
-      .updateUserSubscription(updatedSubscription)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: (subscription) => {
-          this.#currentSubscriptionSignal.set(subscription);
-
-          this.#subscriptionLoadingSignal.set(false);
-
-          this.#subscriptionErrorSignal.set(null);
-        },
-
-        error: (error) => {
-          this.#subscriptionErrorSignal.set(
-            this.#formatError(error, 'Failed to update subscription'),
-          );
-
-          this.#subscriptionLoadingSignal.set(false);
-        },
-      });
   }
 
   cancelCurrentSubscription(): void {
@@ -274,23 +198,8 @@ export class SubscriptionsStore {
       });
   }
 
-  #calculateMonthlyEndDate(startDate: Date): Date {
-    const result = new Date(startDate);
-
-    const originalDay = result.getDate();
-
-    result.setDate(1);
-
-    result.setMonth(result.getMonth() + 1);
-
-    const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
-
-    result.setDate(Math.min(originalDay, lastDay));
-
-    return result;
-  }
-
   #formatError(error: unknown, fallbackMessage: string): string {
+    if (error instanceof HttpErrorResponse && typeof error.error?.detail === 'string') return error.error.detail;
     if (error instanceof Error && error.message) {
       return error.message;
     }

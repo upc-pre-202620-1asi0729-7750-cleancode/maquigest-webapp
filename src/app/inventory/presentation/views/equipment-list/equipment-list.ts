@@ -3,7 +3,6 @@ import { Component, computed, effect, inject, signal, viewChild } from '@angular
 import { Router } from '@angular/router';
 
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatError } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -35,7 +34,6 @@ import { AvailabilityBadge } from '../../components/availability-badge/availabil
     MatButton,
     MatIconButton,
     MatIcon,
-    MatError,
     MatPaginator,
     MatProgressSpinner,
     MatTable,

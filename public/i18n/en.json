@@ -1,4 +1,27 @@
 {
+  "notifications": {
+    "title": "Notifications",
+    "refresh": "Refresh",
+    "close": "Close notifications",
+    "loading": "Loading notifications...",
+    "empty": "No notifications yet.",
+    "error": "Unable to update notifications. Please try again.",
+    "mark-read": "Mark as read",
+    "view-operation": "View operation",
+    "filter": "Context",
+    "all": "All",
+    "unread": "Unread only",
+    "partial": "Some sources are unavailable; the unread count may be incomplete.",
+    "no-matches": "No notifications match these filters.",
+    "sources": {
+      "iam": "Account",
+      "profiles": "Profiles",
+      "inventory": "Inventory",
+      "rentals": "Rentals",
+      "maintenance": "Maintenance",
+      "subscriptions": "Subscriptions"
+    }
+  },
   "app": {
     "name": "MaquiGest"
   },
@@ -52,10 +75,34 @@
       "submit": "Request recovery",
       "sending": "Sending request…",
       "invalid-email": "Enter a valid email address.",
-      "success": "If this account exists, instructions will be sent once email delivery is configured.",
-      "unavailable": "Password recovery is not yet supported by this server. It will be enabled with the MaquiGest backend.",
+      "success": "If the account exists, recovery instructions will be sent.",
+      "unavailable": "Password recovery is unavailable. Please try again later.",
       "error": "We could not process the request. Please try again later.",
       "back-to-sign-in": "Back to sign in"
+    },
+    "reset": {
+      "title": "Reset your password",
+      "subtitle": "Choose a new password of at least 8 characters (up to 72 UTF-8 bytes).",
+      "password": "New password",
+      "confirm": "Confirm password",
+      "invalid-password": "Passwords must match and contain 8 or more characters, up to 72 UTF-8 bytes.",
+      "submit": "Reset password",
+      "success": "Password changed. Sign in with your new password.",
+      "error": "The recovery link is invalid, expired, already used, or the request failed. Request a new link.",
+      "request-again": "Request a new recovery link"
+    },
+    "verification": {
+      "title": "Verify your email",
+      "confirm": "Confirm the password you chose when registering.",
+      "check-inbox": "Check your inbox for the verification link. If needed, request a new one.",
+      "password": "Registration password",
+      "submit": "Verify email",
+      "success": "Email verified. You can now sign in.",
+      "error": "Invalid or expired link or incorrect password.",
+      "email": "Email address",
+      "resend-link": "Resend verification email",
+      "resent": "If an account is pending verification, instructions will be sent.",
+      "unavailable": "Unable to process the request. Try again later."
     }
   },
   "dashboard": {
@@ -293,6 +340,16 @@
     }
   },
   "rentals": {
+    "location": {
+      "title": "Location planning (optional)",
+      "help": "Search for an address using Google Maps. You can continue without a lookup. Verify the result before using it.",
+      "address": "Planning address",
+      "loading": "Searching...",
+      "search": "Find location",
+      "no-results": "No matching location. Check the address.",
+      "unavailable": "Maps lookup is unavailable. You can still register the operation.",
+      "open-map": "Open in Google Maps"
+    },
     "requests": {
       "section": "Rental operations",
       "title": "Rental Requests",
@@ -472,7 +529,13 @@
       "current-plan-button": "Current plan",
       "confirmation-label": "Subscription confirmation",
       "confirmation-title": "Confirm your subscription",
-      "confirmation-description": "Review the selected plan before activating your subscription.",
+      "confirmation-description": "Continue to Stripe test checkout for one month. No automatic renewal.",
+      "checkout-pending": "Payment pending. Your plan is not active until Stripe confirms payment.",
+      "checkout-paid": "Payment confirmed.",
+      "checkout-expired": "Checkout expired. Choose a plan to start again.",
+      "checkout-checking": "Checking payment status.",
+      "checkout-refresh": "Refresh payment status",
+      "checkout-change-unavailable": "Plan change after current period",
       "change-confirmation-label": "Plan change",
       "change-confirmation-title": "Confirm plan change",
       "change-confirmation-description": "Review the selected plan before updating your subscription.",

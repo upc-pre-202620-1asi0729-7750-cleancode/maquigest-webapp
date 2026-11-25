@@ -1,0 +1,14 @@
+<main class="auth-page">
+  <section class="brand-panel"><div class="brand-top"><img src="/maquigest-logo.png" alt="MaquiGest" class="brand-logo"></div>
+    <div class="brand-message"><h1>{{ 'iam.auth.hero-title-line-1' | translate }}<br>{{ 'iam.auth.hero-title-line-2' | translate }}</h1><p>{{ 'iam.auth.hero-description' | translate }}</p></div><span class="brand-credit">MaquiGest by CleanCode</span></section>
+  <section class="auth-panel"><div class="auth-language"><app-language-switcher /></div><section class="auth-card">
+    <header class="auth-card-header"><h2>{{ 'iam.verification.title' | translate }}</h2><p>{{ (validLink() ? 'iam.verification.confirm' : 'iam.verification.check-inbox') | translate }}</p></header>
+    @if (message()) { <div class="recovery-feedback" [class.success]="completed() || message() === 'iam.verification.resent'" role="status">{{ message()! | translate }}</div> }
+    @if (validLink() && !completed()) {
+      <form class="auth-form" [formGroup]="verificationForm" (ngSubmit)="verify()"><div class="form-field"><label for="verification-password">{{ 'iam.verification.password' | translate }}</label><input id="verification-password" type="password" autocomplete="current-password" formControlName="password"></div>
+      <button mat-flat-button type="submit" class="auth-button" [disabled]="busy() || password.invalid">{{ 'iam.verification.submit' | translate }}</button></form>
+    }
+    @if (!completed()) { <form class="auth-form" [formGroup]="resendForm" (ngSubmit)="resend()"><div class="form-field"><label for="verification-email">{{ 'iam.verification.email' | translate }}</label><input id="verification-email" type="email" autocomplete="email" formControlName="email"></div><button mat-flat-button type="submit" class="auth-button" [disabled]="busy() || email.invalid">{{ 'iam.verification.resend-link' | translate }}</button></form> }
+    <p class="auth-footer-link"><a routerLink="/iam/sign-in">{{ 'iam.recovery.back-to-sign-in' | translate }}</a></p>
+  </section></section>
+</main>

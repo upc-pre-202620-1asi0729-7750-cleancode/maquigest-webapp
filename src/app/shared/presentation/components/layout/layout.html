@@ -1,4 +1,4 @@
-@if (store.isSignedIn()) {
+@if (store.isSignedIn() && !isAuthenticationPage()) {
 
   <div class="workspace-shell">
 
@@ -120,6 +120,10 @@
         </div>
 
         <div class="topbar-actions">
+
+          @if (store.currentRole() === 'rental_company' || store.currentRole() === 'construction_company') {
+            <app-notification-bell />
+          }
 
           <app-language-switcher />
 

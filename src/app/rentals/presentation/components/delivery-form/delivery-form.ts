@@ -16,6 +16,8 @@ import { Rental } from '../../../domain/model/rental.entity';
 
 import { RentalLifecycleDatePolicy } from '../../../domain/policy/rental-lifecycle-date.policy';
 
+import { RentalLocationLookup } from '../rental-location-lookup/rental-location-lookup';
+
 export interface DeliveryFormValue {
   deliveredAt: Date;
   notes: string;
@@ -30,6 +32,7 @@ export interface DeliveryFormValue {
     MatFormFieldModule,
     MatInputModule,
     TranslatePipe,
+    RentalLocationLookup,
   ],
 
   templateUrl: './delivery-form.html',

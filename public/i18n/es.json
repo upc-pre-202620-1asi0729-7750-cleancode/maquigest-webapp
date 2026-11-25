@@ -1,4 +1,27 @@
 {
+  "notifications": {
+    "title": "Notificaciones",
+    "refresh": "Actualizar",
+    "close": "Cerrar notificaciones",
+    "loading": "Cargando notificaciones...",
+    "empty": "Aún no tienes notificaciones.",
+    "error": "No se pudieron actualizar las notificaciones. Inténtalo nuevamente.",
+    "mark-read": "Marcar como leída",
+    "view-operation": "Ver operación",
+    "filter": "Contexto",
+    "all": "Todos",
+    "unread": "Solo no leídas",
+    "partial": "Algunas fuentes no están disponibles; el contador puede estar incompleto.",
+    "no-matches": "No hay notificaciones con estos filtros.",
+    "sources": {
+      "iam": "Cuenta",
+      "profiles": "Perfiles",
+      "inventory": "Inventario",
+      "rentals": "Alquileres",
+      "maintenance": "Mantenimiento",
+      "subscriptions": "Suscripciones"
+    }
+  },
   "app": {
     "name": "MaquiGest"
   },
@@ -52,10 +75,34 @@
       "submit": "Solicitar recuperación",
       "sending": "Enviando solicitud…",
       "invalid-email": "Ingresa un correo electrónico válido.",
-      "success": "Si la cuenta existe, recibirás instrucciones cuando el servicio de correo esté configurado.",
-      "unavailable": "La recuperación aún no está disponible en este servidor. Se habilitará con el backend de MaquiGest.",
+      "success": "Si la cuenta existe, recibirás las instrucciones de recuperación.",
+      "unavailable": "La recuperación no está disponible. Inténtalo más tarde.",
       "error": "No se pudo procesar la solicitud. Inténtalo más tarde.",
       "back-to-sign-in": "Volver al inicio de sesión"
+    },
+    "reset": {
+      "title": "Restablecer contraseña",
+      "subtitle": "Elige una nueva contraseña de al menos 8 caracteres (hasta 72 bytes UTF-8).",
+      "password": "Nueva contraseña",
+      "confirm": "Confirmar contraseña",
+      "invalid-password": "Las contraseñas deben coincidir y tener 8 caracteres o más, hasta 72 bytes UTF-8.",
+      "submit": "Restablecer contraseña",
+      "success": "Contraseña actualizada. Inicia sesión con tu nueva contraseña.",
+      "error": "El enlace es inválido, caducó, ya fue utilizado o la solicitud falló. Solicita otro enlace.",
+      "request-again": "Solicitar otro enlace"
+    },
+    "verification": {
+      "title": "Verifica tu correo",
+      "confirm": "Confirma la contraseña que elegiste al registrarte.",
+      "check-inbox": "Revisa tu bandeja de entrada para encontrar el enlace. Si es necesario, solicita otro.",
+      "password": "Contraseña de registro",
+      "submit": "Verificar correo",
+      "success": "Correo verificado. Ya puedes iniciar sesión.",
+      "error": "Enlace inválido o vencido, o contraseña incorrecta.",
+      "email": "Correo electrónico",
+      "resend-link": "Reenviar correo de verificación",
+      "resent": "Si existe una cuenta pendiente de verificación, recibirás las instrucciones.",
+      "unavailable": "No se pudo procesar la solicitud. Inténtalo más tarde."
     }
   },
   "dashboard": {
@@ -293,6 +340,16 @@
     }
   },
   "rentals": {
+    "location": {
+      "title": "Planificación de ubicación (opcional)",
+      "help": "Busca una dirección con Google Maps. Puedes continuar sin consultar. Verifica el resultado antes de usarlo.",
+      "address": "Dirección de planificación",
+      "loading": "Buscando...",
+      "search": "Buscar ubicación",
+      "no-results": "No se encontró una ubicación. Revisa la dirección.",
+      "unavailable": "La consulta de mapas no está disponible. Puedes registrar la operación.",
+      "open-map": "Abrir en Google Maps"
+    },
     "requests": {
       "section": "Operaciones de alquiler",
       "title": "Solicitudes de alquiler",
@@ -472,7 +529,13 @@
       "current-plan-button": "Plan actual",
       "confirmation-label": "Confirmación de suscripción",
       "confirmation-title": "Confirma tu suscripción",
-      "confirmation-description": "Revisa el plan seleccionado antes de activar tu suscripción a MaquiGest.",
+      "confirmation-description": "Continúa al pago de prueba de Stripe por un mes. Sin renovación automática.",
+      "checkout-pending": "Pago pendiente. Tu plan no se activa hasta que Stripe confirme el pago.",
+      "checkout-paid": "Pago confirmado.",
+      "checkout-expired": "Pago expirado. Selecciona un plan para volver a empezar.",
+      "checkout-checking": "Consultando el estado del pago.",
+      "checkout-refresh": "Actualizar estado del pago",
+      "checkout-change-unavailable": "Cambio de plan al finalizar el periodo",
       "change-confirmation-label": "Cambio de plan",
       "change-confirmation-title": "Confirma el cambio de plan",
       "change-confirmation-description": "Revisa el plan seleccionado antes de actualizar tu suscripción.",

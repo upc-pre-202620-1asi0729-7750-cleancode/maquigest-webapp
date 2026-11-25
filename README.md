@@ -5,242 +5,71 @@
 
 **Plataforma web para la gestión del alquiler de maquinaria de construcción**
 
-**CleanCode** · Aplicaciones Open Source · UPC · NRC 7750
-
-[Landing Page](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-website) · [Informe del proyecto](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-report) · [Historial de commits](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-webapp/commits/develop/)
+**CleanCode · Aplicaciones Open Source · UPC · NRC 7750**
 </div>
-
----
 
 ## Descripción
 
-**MaquiGest** es una aplicación web orientada a pequeñas y medianas empresas que participan en el alquiler de maquinaria de construcción. Centraliza el registro y la consulta de equipos, las solicitudes de alquiler, el seguimiento de operaciones, los planes de suscripción y la gestión del mantenimiento.
-
-El proyecto separa las responsabilidades por *bounded contexts*, siguiendo principios de **Domain-Driven Design (DDD)**. Utiliza **Angular**, **TypeScript** y una **Fake API basada en JSON Server** para el desarrollo y las pruebas locales.
-
-> **Estado:** primera versión `v1.0.0` en preparación. El frontend funciona con una API de desarrollo local; el despliegue público completo requiere configurar un backend accesible desde Internet.
+MaquiGest centraliza el registro de maquinaria, las solicitudes de alquiler, las entregas y devoluciones, los mantenimientos y las suscripciones para empresas constructoras y arrendadoras. Esta aplicación Angular consume exclusivamente la API REST de [MaquiGest Platform](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-platform). No utiliza JSON Server ni una Fake API. La autenticación, autorización, persistencia y reglas de negocio definitivas se ejecutan en el backend.
 
 ## Funcionalidades
 
-| Contexto | Funcionalidades principales |
+| Contexto | Funcionalidades |
 |---|---|
-| **IAM** | Registro, inicio y cierre de sesión, persistencia de sesión, guards de navegación y control de acceso por roles. |
-| **Profiles** | Consulta y edición de perfiles de empresa. |
-| **Inventory** | Registro y actualización de maquinaria, categorías, detalle, búsqueda y consulta de disponibilidad. |
-| **Rentals** | Solicitudes de alquiler, aprobación o rechazo, consulta de solicitudes, alquileres activos, entregas y devoluciones. |
-| **Subscriptions** | Consulta y gestión de planes, suscripciones y restricciones de acceso a funcionalidades. |
-| **Maintenance** | Registro y programación de mantenimientos; reporte, seguimiento y resolución de incidencias. |
-| **Shared** | Componentes compartidos, navegación, manejo de errores e internacionalización en español e inglés. |
+| IAM | Registro, inicio/cierre de sesión, recuperación de contraseña, verificación de correo y recuperación de sesiones inválidas o expiradas. |
+| Profiles | Consulta y edición de perfil de empresa. |
+| Inventory | Registro, edición, búsqueda y disponibilidad de maquinaria. |
+| Rentals | Solicitudes, cambios de periodo, aprobación/rechazo, alquileres activos, entregas y devoluciones; búsqueda geográfica opcional. |
+| Maintenance | Mantenimiento, programación, seguimiento, incidencias e historial. |
+| Subscriptions | Planes, restricciones por suscripción y redirección a Stripe Checkout de prueba con reconciliación de pago. |
+| Shared | Layout, dashboard, navegación, traducciones, manejo de errores y bandeja unificada de notificaciones de los seis contextos. |
 
-### Flujos de negocio implementados
+## Tecnologías y arquitectura
 
-- **US20–US22 — Rentals:** consulta de alquileres activos, seguimiento de solicitudes, entregas y devoluciones.
-- **US23–US24 — Maintenance:** registro y programación de mantenimientos de equipos.
-- **US25 — Equipment Incidents:** registro de incidencias, bloqueo de disponibilidad cuando corresponda, resolución y reactivación bajo validaciones de negocio.
-- **Sincronización entre contextos:** consultas y operaciones coordinadas mediante puertos y adaptadores ACL para evitar dependencias directas entre módulos.
+Angular 22, TypeScript 6, Angular Material/CDK, Router, formularios reactivos, Signals, HttpClient, RxJS, ngx-translate (es/en) y Vitest. El código se organiza en `src/app/{iam,profiles,inventory,rentals,maintenance,subscriptions,shared}`. Los módulos separan dominio (modelos y reglas), infraestructura (contratos HTTP, endpoints y ensambladores), aplicación (servicios/stores) y presentación (vistas, componentes y rutas), según corresponda. `shared` contiene componentes transversales; no reemplaza a los propietarios de las notificaciones en el backend. Los guards y controles visuales no sustituyen la autorización del servidor.
 
-> Las restricciones implementadas en el frontend y en la Fake API son apropiadas para desarrollo y demostración. No sustituyen controles de autenticación, autorización y concurrencia de un backend productivo.
+## Instalación local
 
-## Tecnologías
-
-- **Angular 22** y **TypeScript 6**.
-- **Angular Material / CDK** para componentes de interfaz.
-- **Angular Router**, formularios reactivos y **Signals** para navegación y estado.
-- **HttpClient** para comunicación HTTP.
-- **ngx-translate** para español (`es`) e inglés (`en`).
-- **JSON Server 0.17** como API REST simulada.
-- **Vitest** para pruebas unitarias mediante Angular CLI.
-- **Git, GitHub y GitFlow** para control de versiones.
-
-## Arquitectura
-
-Cada *bounded context* organiza el código por responsabilidades: `domain`, `infrastructure`, `application` y `presentation`. Los módulos se comunican mediante contratos y adaptadores cuando necesitan datos de otro contexto.
-
-```text
-maquigest-webapp/
-├── public/
-│   ├── i18n/                    # Traducciones es/en
-│   ├── maquigest-logo.png
-│   └── maquigest-symbol.png
-├── server/
-│   ├── db.json                  # Datos de demostración de la Fake API
-│   └── routes.json              # Reescritura de rutas /api/v1
-├── src/
-│   ├── app/
-│   │   ├── iam/
-│   │   ├── profiles/
-│   │   ├── inventory/
-│   │   ├── rentals/
-│   │   ├── subscriptions/
-│   │   ├── maintenance/
-│   │   ├── shared/
-│   │   ├── app.config.ts
-│   │   └── app.routes.ts
-│   └── environments/
-│       ├── environment.ts
-│       └── environment.development.ts
-├── angular.json
-├── package.json
-└── README.md
-```
-
-### Principios de diseño
-
-1. **Domain:** entidades, objetos de valor, enumeraciones y reglas del negocio.
-2. **Infrastructure:** endpoints HTTP, ensambladores, contratos y adaptadores de integración.
-3. **Application:** stores y coordinación de casos de uso.
-4. **Presentation:** vistas, formularios, componentes y rutas.
-
-Se emplean **ports** y **Anti-Corruption Layers (ACL)** para integrar Inventory, Rentals, Maintenance, Profiles y Subscriptions sin acoplar directamente sus modelos de dominio.
-
-## Requisitos
-
-- **Node.js** en una versión compatible con Angular 22.
-- **npm** (el proyecto declara `npm@11.19.0`).
-- **Git** y un editor de código, como Visual Studio Code o IntelliJ IDEA.
-
-## Instalación y ejecución local
-
-### 1. Clonar el repositorio
+Requisitos verificados: Node.js 24.21.0, npm 11.19.0 y Git. Iniciar primero el backend con MySQL según su README. Después:
 
 ```powershell
 git clone https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-webapp.git
 cd maquigest-webapp
 git switch develop
 npm ci
-```
-
-### 2. Iniciar la Fake API
-
-En una primera terminal PowerShell:
-
-```powershell
-npx json-server --watch server/db.json --routes server/routes.json --port 3000
-```
-
-La API de desarrollo se expone en `http://localhost:3000/api/v1` mediante las reglas definidas en `server/routes.json`.
-
-### 3. Iniciar Angular
-
-En una segunda terminal PowerShell:
-
-```powershell
 npm start
 ```
 
-Abrir **http://localhost:4200** en el navegador.
-
-**Nota:** los datos de `server/db.json` se pueden modificar durante las pruebas. Es recomendable guardar una copia antes de probar operaciones de escritura; no publicar credenciales reales ni información sensible en este archivo.
+Abrir `http://localhost:4200`. La API utiliza `/api/v1` en ambos entornos. `proxy.conf.json` reenvía las peticiones de desarrollo a `http://127.0.0.1:8080`; no se necesita una segunda API simulada. Usar una cuenta registrada en el backend real. Las integraciones externas dependen de las variables configuradas en el backend.
 
 ## Rutas principales
 
-| Ruta | Descripción |
+| Ruta | Funcionalidad |
 |---|---|
-| `/iam/sign-in` | Inicio de sesión. |
-| `/iam/sign-up` | Registro de cuenta. |
-| `/dashboard` | Panel principal. |
-| `/profiles/profile` | Perfil de empresa. |
-| `/inventory/equipment` | Inventario de maquinaria. |
-| `/inventory/search` | Búsqueda de equipos. |
-| `/rentals/requests` | Gestión de solicitudes de alquiler. |
-| `/rentals/active` | Alquileres activos. |
-| `/rentals/my-requests` | Seguimiento de solicitudes propias. |
-| `/maintenance` | Gestión de mantenimientos. |
-| `/maintenance/incidents` | Gestión de incidencias. |
+| `/iam/sign-in`, `/iam/sign-up` | Autenticación y registro. |
+| `/iam/recover-password`, `/iam/reset-password`, `/iam/verify-email` | Recuperación y verificación. |
+| `/dashboard`, `/profiles/profile` | Panel y perfil. |
+| `/inventory/equipment`, `/inventory/search` | Inventario y búsqueda. |
+| `/rentals/requests`, `/rentals/active`, `/rentals/my-requests` | Solicitudes, alquileres y seguimiento. |
+| `/maintenance`, `/maintenance/incidents` | Mantenimiento e incidencias. |
 | `/subscriptions/plans` | Planes y suscripciones. |
 
-La disponibilidad de las rutas y operaciones depende de la sesión, el rol y las restricciones de acceso del módulo correspondiente.
+La disponibilidad depende del rol, sesión y restricciones del módulo. El backend valida propiedad, autorización y reglas de negocio. La bandeja de notificaciones combina los seis endpoints; no requiere un nuevo bounded context. Stripe solo admite pagos de prueba; el buscador geográfico no equivale a rastreo GPS ni almacena ubicaciones en el alquiler.
 
 ## Compilación y pruebas
 
 ```powershell
-# Generar la compilación de producción
+npm ci
+npm test -- --watch=false
 npm run build
-
-# Ejecutar las pruebas unitarias
-npm test
 ```
 
-El resultado compilado se genera en `dist/`. Un build satisfactorio no implica que la API esté lista para producción: son comprobaciones distintas.
+Resultado en `dist/maquigest-webapp/browser`. En el baseline `ac07e11`, las 16 suites (42 pruebas) y la compilación de producción pasaron. El bundle inicial fue de 600.05 kB (transferencia estimada 148.30 kB); existen advertencias de presupuesto de bundle y CSS. La auditoría npm identificó 7 paquetes afectados (1 al excluir dev). Los intentos de actualización produjeron conflictos de dependencias y no se publicaron; se conserva el lockfile validado. No se afirma que las vulnerabilidades estén corregidas.
 
-## Configuración de la API
+## Despliegue
 
-Los endpoints se configuran en:
+`vercel.json` configura primero la reescritura de `/api/v1/:path*` al backend HTTPS y después el fallback de la SPA a `/index.html`. Verificar que el destino coincide con el backend publicado en Northflank y que la salida de build y la rama de producción de Vercel son correctas. No incluir secretos de SendGrid, Stripe, Maps, JWT o MySQL en el frontend. El backend y su esquema deben estar preparados antes de publicar la WebApp. El ensayo local de producción no implica un nuevo despliegue cloud.
 
-- `src/environments/environment.development.ts`: URL base local `http://localhost:3000/api/v1`.
-- `src/environments/environment.ts`: configuración de producción, pendiente de apuntar a una API pública operativa.
-- `server/routes.json`: reglas de reescritura utilizadas con JSON Server.
+## GitFlow
 
-**Para publicar en Vercel:** configurar una API HTTPS accesible, revisar la URL base en producción, habilitar el CORS necesario en la API y asegurar el fallback de rutas de la SPA. **Vercel no ejecutará automáticamente el JSON Server local del proyecto.**
-
-## Flujo de trabajo GitFlow
-
-```text
-feature/* ──> develop ──> release/1.0.0 ──> main
-                 ^               |
-                 └───────────────┘
-                           tag: v1.0.0 (al publicar)
-```
-
-- `feature/*`: implementación de historias de usuario y correcciones.
-- `develop`: integración continua del equipo.
-- `release/1.0.0`: preparación y validación de la primera versión.
-- `main`: versión estable destinada a publicación.
-- `v1.0.0`: tag que se creará cuando la release esté validada.
-
-Consultar los autores y commits registrados en `develop`:
-
-```powershell
-git shortlog -sne origin/develop
-git log origin/develop --no-merges --format="%h | %an <%ae> | %s"
-git log origin/develop --first-parent --merges --oneline
-```
-
-## Equipo — CleanCode
-
-| Integrante / identidad Git | GitHub |
-|---|---|
-| James Delgado | [@JAmsy06](https://github.com/JAmsy06) |
-| Bruno | [@TartaroZ](https://github.com/TartaroZ) |
-| Miroslav | [@Miroa123](https://github.com/Miroa123) |
-| Carlos | [@CarlossUPC](https://github.com/CarlossUPC) |
-| Eshnikeee | [@Eshnikeee](https://github.com/Eshnikeee) |
-
-La relación de autores de cada commit puede consultarse directamente en el [historial de `develop`](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-webapp/commits/develop/).
-
-## Repositorios relacionados
-
-- [MaquiGest — Landing Page](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-website)
-- [MaquiGest — Informe académico](https://github.com/upc-pre-202620-1asi0729-7750-cleancode/maquigest-report)
-
----
-
-<div align="center">
-  <strong>MaquiGest · CleanCode · Universidad Peruana de Ciencias Aplicadas</strong>
-</div>
-
-
----
-
-## Integracion con MaquiGest Platform
-
-Este repositorio contiene exclusivamente el frontend Angular de MaquiGest.
-
-- Angular gestiona interfaces, formularios, navegacion y estados de presentacion.
-- Spring Boot gestiona autenticacion, autorizacion, reglas de negocio y persistencia.
-- La Fake API y json-server fueron retirados.
-
-### Configuracion local
-
-- Instalar dependencias: npm ci
-- Iniciar Angular: npm start
-- API base: /api/v1
-- Backend local: http://127.0.0.1:8080
-- El proxy de desarrollo esta configurado en proxy.conf.json.
-
-### Verificacion
-
-- Compilar: npm run build
-- Ejecutar pruebas: npm test -- --watch=false
-
-Las operaciones con datos requieren los endpoints reales de maquigest-platform.
+`feature/*` y `fix/*` parten de `develop`; `develop` integra cambios validados; `release/*` prepara la versión y `main` recibe releases estables. Usar Conventional Commits (`type(scope): description.`) y Semantic Versioning. La versión de release se definirá al preparar los tags, no en este cambio documental.

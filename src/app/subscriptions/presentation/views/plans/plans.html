@@ -1,4 +1,4 @@
-﻿<div class="plans-page">
+<div class="plans-page">
 
   <header class="plans-header">
 
@@ -25,6 +25,18 @@
 
   </header>
 
+  @if (checkoutReference || store.checkout()) {
+    <section class="current-subscription-section" aria-live="polite">
+      @if (store.checkout(); as payment) {
+        <p>{{ ('subscriptions.plans.checkout-' + payment.status.toLowerCase()) | translate }}</p>
+      } @else {
+        <p>{{ 'subscriptions.plans.checkout-checking' | translate }}</p>
+      }
+      <button type="button" [disabled]="store.subscriptionLoading()" (click)="refreshCheckout()">
+        {{ 'subscriptions.plans.checkout-refresh' | translate }}
+      </button>
+    </section>
+  }
   <section class="current-subscription-section">
 
     <div class="section-heading">
@@ -534,24 +546,9 @@
                 </button>
 
               } @else {
-
-                <button
-                  type="button"
-                  class="plan-action-button primary"
-                  [disabled]="
-                    store.subscriptionLoading()
-                  "
-                  (click)="
-                    selectPlan(plan)
-                  ">
-
-                  {{
-                    'subscriptions.plans.change-plan'
-                      | translate
-                  }}
-
+                <button type="button" class="plan-action-button" disabled>
+                  {{ 'subscriptions.plans.checkout-change-unavailable' | translate }}
                 </button>
-
               }
 
             </div>
