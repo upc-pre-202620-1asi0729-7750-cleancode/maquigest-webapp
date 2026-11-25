@@ -40,15 +40,11 @@ export class SubscriptionInventoryAccessAclAdapter
   }
 
   getActiveProviderUserIds(): Observable<number[]> {
-    return this.#getSubscriptions().pipe(
-      map((subscriptions) => [
-        ...new Set(
-          subscriptions
-            .filter((subscription) => this.#isActive(subscription))
-            .map((subscription) => subscription.userId),
-        ),
-      ]),
-    );
+    return this.#http
+      .get<number[]>(`${this.#endpointUrl}/active-provider-user-ids`)
+      .pipe(
+        catchError(this.handleError('Failed to validate inventory access')),
+      );
   }
 
   #getSubscriptions(): Observable<ExternalUserSubscriptionResource[]> {

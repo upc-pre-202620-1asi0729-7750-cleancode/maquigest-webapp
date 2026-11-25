@@ -40,98 +40,49 @@ export class SubscriptionAccessAclAdapter
 {
   readonly #http = inject(HttpClient);
 
-  readonly #endpointUrl =
-    `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserSubscriptionsEndpointPath}`;
+  readonly #endpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderUserSubscriptionsEndpointPath}`;
 
-  hasActiveSubscription(
-    userId: number,
-  ): Observable<boolean> {
-    return this.#http
-      .get<ExternalUserSubscriptionResource[]>(
-        this.#endpointUrl,
-      )
-      .pipe(
-        map((subscriptions) =>
-          subscriptions.some(
-            (subscription) =>
-              subscription.userId === userId &&
-              this.#isActive(subscription),
-          ),
-        ),
-
-        catchError(
-          this.handleError(
-            'Failed to validate subscription access',
-          ),
-        ),
-      );
-  }
-
-  canManageRentals(
-    userId: number,
-  ): Observable<boolean> {
-    return this.#http
-      .get<ExternalUserSubscriptionResource[]>(
-        this.#endpointUrl,
-      )
-      .pipe(
-        map((subscriptions) =>
-          subscriptions.some(
-            (subscription) =>
-              subscription.userId === userId &&
-              this.#isActive(subscription) &&
-              this.#supportsRentalManagement(
-                subscription,
-              ),
-          ),
-        ),
-
-        catchError(
-          this.handleError(
-            'Failed to validate rental management access',
-          ),
-        ),
-      );
-  }
-
-  #supportsRentalManagement(
-    subscription:
-    ExternalUserSubscriptionResource,
-  ): boolean {
-    return (
-      subscription.planId === 2 ||
-      subscription.planId === 3
+  hasActiveSubscription(userId: number): Observable<boolean> {
+    return this.#http.get<number[]>(`${this.#endpointUrl}/active-provider-user-ids`).pipe(
+      map((activeProviderUserIds) => activeProviderUserIds.includes(userId)),
+      catchError(this.handleError('Failed to validate subscription access')),
     );
   }
 
-  #isActive(
-    subscription:
-    ExternalUserSubscriptionResource,
-  ): boolean {
-    if (
-      subscription.status !== 'ACTIVE'
-    ) {
+  canManageRentals(userId: number): Observable<boolean> {
+    return this.#http.get<ExternalUserSubscriptionResource[]>(this.#endpointUrl).pipe(
+      map((subscriptions) =>
+        subscriptions.some(
+          (subscription) =>
+            subscription.userId === userId &&
+            this.#isActive(subscription) &&
+            this.#supportsRentalManagement(subscription),
+        ),
+      ),
+
+      catchError(this.handleError('Failed to validate rental management access')),
+    );
+  }
+
+  #supportsRentalManagement(subscription: ExternalUserSubscriptionResource): boolean {
+    return subscription.planId === 2 || subscription.planId === 3;
+  }
+
+  #isActive(subscription: ExternalUserSubscriptionResource): boolean {
+    if (subscription.status !== 'ACTIVE') {
       return false;
     }
 
     const now = new Date();
 
-    const startDate =
-      new Date(subscription.startDate);
+    const startDate = new Date(subscription.startDate);
 
-    const endDate =
-      new Date(subscription.endDate);
+    const endDate = new Date(subscription.endDate);
 
-    if (
-      Number.isNaN(startDate.getTime()) ||
-      Number.isNaN(endDate.getTime())
-    ) {
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
       return false;
     }
 
-    return (
-      startDate <= now &&
-      now <= endDate
-    );
+    return startDate <= now && now <= endDate;
   }
 }
