@@ -340,6 +340,16 @@
     }
   },
   "rentals": {
+    "location": {
+      "title": "Planificación de ubicación (opcional)",
+      "help": "Busca una dirección con Google Maps. Puedes continuar sin consultar. Verifica el resultado antes de usarlo.",
+      "address": "Dirección de planificación",
+      "loading": "Buscando...",
+      "search": "Buscar ubicación",
+      "no-results": "No se encontró una ubicación. Revisa la dirección.",
+      "unavailable": "La consulta de mapas no está disponible. Puedes registrar la operación.",
+      "open-map": "Abrir en Google Maps"
+    },
     "requests": {
       "section": "Operaciones de alquiler",
       "title": "Solicitudes de alquiler",

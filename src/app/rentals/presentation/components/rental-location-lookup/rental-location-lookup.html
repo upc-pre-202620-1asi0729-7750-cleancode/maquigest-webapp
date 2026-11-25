@@ -1,0 +1,21 @@
+<section class="location-lookup">
+  <h3>{{ 'rentals.location.title' | translate }}</h3>
+  <p>{{ 'rentals.location.help' | translate }}</p>
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'rentals.location.address' | translate }}</mat-label>
+    <input matInput #addressInput maxlength="250" [value]="address()" [disabled]="busy()"
+      (input)="updateAddress(addressInput.value)" (keydown.enter)="$event.preventDefault(); lookup()">
+  </mat-form-field>
+  <button mat-stroked-button type="button" (click)="lookup()" [disabled]="busy() || address().trim().length < 3">
+    {{ (busy() ? 'rentals.location.loading' : 'rentals.location.search') | translate }}
+  </button>
+  @if (error()) { <p role="alert" class="location-error">{{ error() | translate }}</p> }
+  @if (location(); as result) {
+    <div class="location-result" aria-live="polite">
+      <strong>{{ result.formattedAddress }}</strong>
+      <span>{{ result.latitude }}, {{ result.longitude }}</span>
+      <a [href]="mapsUrl(result)" target="_blank" rel="noopener noreferrer">{{ 'rentals.location.open-map' | translate }}</a>
+      <small class="maps-attribution" translate="no">Google Maps</small>
+    </div>
+  }
+</section>

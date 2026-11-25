@@ -340,6 +340,16 @@
     }
   },
   "rentals": {
+    "location": {
+      "title": "Location planning (optional)",
+      "help": "Search for an address using Google Maps. You can continue without a lookup. Verify the result before using it.",
+      "address": "Planning address",
+      "loading": "Searching...",
+      "search": "Find location",
+      "no-results": "No matching location. Check the address.",
+      "unavailable": "Maps lookup is unavailable. You can still register the operation.",
+      "open-map": "Open in Google Maps"
+    },
     "requests": {
       "section": "Rental operations",
       "title": "Rental Requests",
