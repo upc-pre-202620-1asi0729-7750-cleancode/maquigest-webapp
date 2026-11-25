@@ -1,8 +1,9 @@
-﻿import { inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { SignInCommand } from '../domain/model/sign-in.command';
 import { PasswordRecoveryCommand } from '../domain/model/password-recovery.command';
+import { ResetPasswordCommand } from '../domain/model/reset-password.command';
 import { SignUpCommand } from '../domain/model/sign-up.command';
 
 import { SIGN_IN_PORT } from './sign-in.port';
@@ -22,6 +23,10 @@ export class IamApi {
 
   signIn(signInCommand: SignInCommand): Observable<SignInResource> {
     return this.#signInEndpoint.signIn(signInCommand);
+  }
+
+  resetPassword(command: ResetPasswordCommand): Observable<void> {
+    return this.#passwordRecoveryEndpoint.resetPassword(command);
   }
 
   recoverPassword(command: PasswordRecoveryCommand): Observable<void> {

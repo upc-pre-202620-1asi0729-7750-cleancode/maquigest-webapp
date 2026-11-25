@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { anonymousGuard } from '../infrastructure/anonymous.guard';
 
@@ -9,7 +9,10 @@ const signUp = () => import('./views/sign-up/sign-up').then((m) => m.SignUp);
 const recoverPassword = () =>
   import('./views/recover-password/recover-password').then((m) => m.RecoverPassword);
 
+const resetPassword = () => import('./views/reset-password/reset-password').then((m) => m.ResetPassword);
+
 export const iamRoutes: Routes = [
+  { path: 'reset-password', loadComponent: resetPassword, title: 'MaquiGest - Reset password' },
   {
     path: 'sign-in',
     loadComponent: signIn,

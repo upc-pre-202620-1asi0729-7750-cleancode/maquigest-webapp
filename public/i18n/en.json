@@ -75,10 +75,21 @@
       "submit": "Request recovery",
       "sending": "Sending request…",
       "invalid-email": "Enter a valid email address.",
-      "success": "If this account exists, instructions will be sent once email delivery is configured.",
-      "unavailable": "Password recovery is not yet supported by this server. It will be enabled with the MaquiGest backend.",
+      "success": "If the account exists, recovery instructions will be sent.",
+      "unavailable": "Password recovery is unavailable. Please try again later.",
       "error": "We could not process the request. Please try again later.",
       "back-to-sign-in": "Back to sign in"
+    },
+    "reset": {
+      "title": "Reset your password",
+      "subtitle": "Choose a new password of at least 8 characters (up to 72 UTF-8 bytes).",
+      "password": "New password",
+      "confirm": "Confirm password",
+      "invalid-password": "Passwords must match and contain 8 or more characters, up to 72 UTF-8 bytes.",
+      "submit": "Reset password",
+      "success": "Password changed. Sign in with your new password.",
+      "error": "The recovery link is invalid, expired, already used, or the request failed. Request a new link.",
+      "request-again": "Request a new recovery link"
     }
   },
   "dashboard": {
