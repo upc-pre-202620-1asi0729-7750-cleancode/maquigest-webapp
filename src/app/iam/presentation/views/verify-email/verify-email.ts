@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -21,6 +21,8 @@ export class VerifyEmail {
   protected readonly message = signal<string | null>(null);
   protected readonly password = new FormControl('', {nonNullable:true,validators:[Validators.required,Validators.maxLength(72)]});
   protected readonly email = new FormControl('', {nonNullable:true,validators:[Validators.required,Validators.email]});
+  protected readonly verificationForm = new FormGroup({ password: this.password });
+  protected readonly resendForm = new FormGroup({ email: this.email });
   constructor() { inject(Location).replaceState('/iam/verify-email'); }
   protected verify(): void {
     if (!this.validLink() || this.busy() || this.completed() || this.password.invalid) return;

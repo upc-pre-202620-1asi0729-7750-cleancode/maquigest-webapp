@@ -5,10 +5,10 @@
     <header class="auth-card-header"><h2>{{ 'iam.verification.title' | translate }}</h2><p>{{ (validLink() ? 'iam.verification.confirm' : 'iam.verification.check-inbox') | translate }}</p></header>
     @if (message()) { <div class="recovery-feedback" [class.success]="completed() || message() === 'iam.verification.resent'" role="status">{{ message()! | translate }}</div> }
     @if (validLink() && !completed()) {
-      <form class="auth-form" (ngSubmit)="verify()"><div class="form-field"><label for="verification-password">{{ 'iam.verification.password' | translate }}</label><input id="verification-password" type="password" autocomplete="current-password" [formControl]="password"></div>
+      <form class="auth-form" [formGroup]="verificationForm" (ngSubmit)="verify()"><div class="form-field"><label for="verification-password">{{ 'iam.verification.password' | translate }}</label><input id="verification-password" type="password" autocomplete="current-password" formControlName="password"></div>
       <button mat-flat-button type="submit" class="auth-button" [disabled]="busy() || password.invalid">{{ 'iam.verification.submit' | translate }}</button></form>
     }
-    @if (!completed()) { <form class="auth-form" (ngSubmit)="resend()"><div class="form-field"><label for="verification-email">{{ 'iam.verification.email' | translate }}</label><input id="verification-email" type="email" autocomplete="email" [formControl]="email"></div><button mat-flat-button type="submit" class="auth-button" [disabled]="busy() || email.invalid">{{ 'iam.verification.resend-link' | translate }}</button></form> }
+    @if (!completed()) { <form class="auth-form" [formGroup]="resendForm" (ngSubmit)="resend()"><div class="form-field"><label for="verification-email">{{ 'iam.verification.email' | translate }}</label><input id="verification-email" type="email" autocomplete="email" formControlName="email"></div><button mat-flat-button type="submit" class="auth-button" [disabled]="busy() || email.invalid">{{ 'iam.verification.resend-link' | translate }}</button></form> }
     <p class="auth-footer-link"><a routerLink="/iam/sign-in">{{ 'iam.recovery.back-to-sign-in' | translate }}</a></p>
   </section></section>
 </main>
